@@ -54,15 +54,14 @@ namespace AMS.Controllers
         }
 
         // GET: CustomListItems/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name");
+            ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync();
+
             return View();
         }
 
         // POST: CustomListItems/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CustomListId,Key,Value")] CustomListItem customListItem)
@@ -73,7 +72,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name", customListItem.CustomListId);
+            ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync(customListItem.CustomListId);
             return View(customListItem);
         }
 
@@ -90,13 +89,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name", customListItem.CustomListId);
+            ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync(customListItem.CustomListId);
             return View(customListItem);
         }
 
         // POST: CustomListItems/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CustomListId,Key,Value")] CustomListItem customListItem)
@@ -126,7 +123,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name", customListItem.CustomListId);
+            ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync(customListItem.CustomListId);
             return View(customListItem);
         }
 

@@ -53,16 +53,13 @@ namespace AMS.Controllers
         }
 
         // GET: MetaFields/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name");
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: MetaFields/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TenantId,FieldType,CustomListId,Name")] MetaField metaField)
@@ -73,8 +70,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name", metaField.CustomListId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", metaField.TenantId);
+            await SetViewData(metaField);
             return View(metaField);
         }
 
@@ -91,14 +87,17 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name", metaField.CustomListId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", metaField.TenantId);
+            await SetViewData(metaField);
             return View(metaField);
         }
 
+        private async Task SetViewData(MetaField metaField = null)
+        {
+            ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync(metaField?.CustomListId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
+        }
+
         // POST: MetaFields/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,FieldType,CustomListId,Name")] MetaField metaField)
@@ -128,8 +127,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomListId"] = new SelectList(_context.CustomLists, "Id", "Name", metaField.CustomListId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", metaField.TenantId);
+            await SetViewData(metaField);
             return View(metaField);
         }
 

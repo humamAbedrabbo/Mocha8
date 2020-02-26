@@ -55,16 +55,13 @@ namespace AMS.Controllers
         }
 
         // GET: TicketAssets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name");
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary");
+            await SetViewData();
             return View();
         }
 
         // POST: TicketAssets/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AssetId,TicketId")] TicketAsset ticketAsset)
@@ -75,9 +72,14 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", ticketAsset.AssetId);
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", ticketAsset.TicketId);
+            await SetViewData(ticketAsset);
             return View(ticketAsset);
+        }
+
+        private async Task SetViewData(TicketAsset ticketAsset = null)
+        {
+            ViewData["AssetId"] = await userService.GetAssetsSelectAsync(ticketAsset?.AssetId);
+            ViewData["TicketId"] = await userService.GetTicketsSelectAsync(ticketAsset?.TicketId);
         }
 
         // GET: TicketAssets/Edit/5
@@ -93,14 +95,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", ticketAsset.AssetId);
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", ticketAsset.TicketId);
+            await SetViewData(ticketAsset);
             return View(ticketAsset);
         }
 
         // POST: TicketAssets/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AssetId,TicketId")] TicketAsset ticketAsset)
@@ -130,8 +129,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", ticketAsset.AssetId);
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", ticketAsset.TicketId);
+            await SetViewData(ticketAsset);
             return View(ticketAsset);
         }
 

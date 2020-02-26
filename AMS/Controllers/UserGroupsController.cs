@@ -30,8 +30,7 @@ namespace AMS.Controllers
         // GET: UserGroups
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.UserGroups.Include(u => u.Tenant);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetUserGroupsAsync());
         }
 
         // GET: UserGroups/Details/5
@@ -56,13 +55,11 @@ namespace AMS.Controllers
         // GET: UserGroups/Create
         public IActionResult Create()
         {
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View();
         }
 
         // POST: UserGroups/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TenantId,Name")] UserGroup userGroup)
@@ -73,7 +70,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", userGroup.TenantId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View(userGroup);
         }
 
@@ -90,13 +87,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", userGroup.TenantId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View(userGroup);
         }
 
         // POST: UserGroups/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name")] UserGroup userGroup)
@@ -126,7 +121,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", userGroup.TenantId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View(userGroup);
         }
 

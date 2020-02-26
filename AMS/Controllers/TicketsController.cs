@@ -30,8 +30,7 @@ namespace AMS.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.Tickets.Include(t => t.Client).Include(t => t.Location).Include(t => t.Tenant).Include(t => t.TicketType);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetTicketsAsync());
         }
 
         // GET: Tickets/Details/5
@@ -57,18 +56,13 @@ namespace AMS.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name");
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name");
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: Tickets/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,CodeNumber,Code,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
@@ -79,11 +73,16 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", ticket.ClientId);
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name", ticket.LocationId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", ticket.TenantId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            await SetViewData(ticket);
             return View(ticket);
+        }
+
+        private async Task SetViewData(Ticket ticket = null)
+        {
+            ViewData["ClientId"] = await userService.GetClientsSelectAsync(ticket?.ClientId);
+            ViewData["LocationId"] = await userService.GetLocationsSelectAsync(ticket?.LocationId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
+            ViewData["TicketTypeId"] = await userService.GetTicketTypesSelectAsync(ticket?.TicketTypeId);
         }
 
         // GET: Tickets/Edit/5
@@ -99,16 +98,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", ticket.ClientId);
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name", ticket.LocationId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", ticket.TenantId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            await SetViewData(ticket);
             return View(ticket);
         }
 
         // POST: Tickets/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,CodeNumber,Code,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
@@ -138,10 +132,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", ticket.ClientId);
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name", ticket.LocationId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", ticket.TenantId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            await SetViewData(ticket);
             return View(ticket);
         }
 

@@ -33,12 +33,12 @@ namespace AMS.Services
             return await userManager.FindByNameAsync(name);
         }
 
-        public int? GetUserTenantIdAsync()
+        public int? GetUserTenantId()
             => CurrentUser?.TenantId;
 
         public async Task<IEnumerable<AmsUser>> GetUsersAsync()
             => await context.Users
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.DisplayName)
             .ToListAsync();
 
@@ -49,7 +49,7 @@ namespace AMS.Services
             => await context.TodoTasks
             .Include(x => x.Ticket)
             .Include(x => x.TodoTaskType)
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Summary)
             .ToListAsync();
 
@@ -59,7 +59,7 @@ namespace AMS.Services
         public async Task<IEnumerable<Ticket>> GetTicketsAsync()
             => await context.Tickets
             .Include(x => x.TicketType)
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Summary)
             .ToListAsync();
 
@@ -69,7 +69,7 @@ namespace AMS.Services
         public async Task<IEnumerable<Asset>> GetAssetsAsync()
             => await context.Assets
             .Include(x => x.AssetType)
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -78,7 +78,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<MetaField>> GetMetaFieldsAsync()
             => await context.MetaFields
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -87,16 +87,27 @@ namespace AMS.Services
 
         public async Task<IEnumerable<CustomList>> GetCustomListsAsync()
             => await context.CustomLists
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
         public async Task<SelectList> GetCustomListsSelectAsync(int? id = null)
             => new SelectList(await GetCustomListsAsync(), "Id", "Name", id);
 
+        public async Task<IEnumerable<Location>> GetLocationsAsync()
+            => await context.Locations
+            .Include(x => x.LocationType)
+            .Where(x => x.TenantId == GetUserTenantId())
+            .OrderBy(x => x.Name)
+            .ToListAsync();
+
+        public async Task<SelectList> GetLocationsSelectAsync(int? id = null)
+            => new SelectList(await GetLocationsAsync(), "Id", "Name", id, "GroupTitle");
+
         public async Task<IEnumerable<Client>> GetClientsAsync()
             => await context.Clients
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Include(x => x.ClientType)
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -107,7 +118,7 @@ namespace AMS.Services
             => await context.Members
             .Include(x => x.UserGroup)
             .Include(x => x.User)
-            .Where(x => x.UserGroup.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.UserGroup.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -116,7 +127,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<UserGroup>> GetUserGroupsAsync()
             => await context.UserGroups
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -125,7 +136,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<ClientType>> GetClientTypesAsync()
             => await context.ClientTypes
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -134,7 +145,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<LocationType>> GetLocationTypesAsync()
             => await context.LocationTypes
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -143,7 +154,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<ItemType>> GetItemTypesAsync()
             => await context.ItemTypes
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -152,7 +163,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<AssetType>> GetAssetTypesAsync()
             => await context.AssetTypes
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -161,7 +172,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<TicketType>> GetTicketTypesAsync()
             => await context.TicketTypes
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 
@@ -170,7 +181,7 @@ namespace AMS.Services
 
         public async Task<IEnumerable<TodoTaskType>> GetTodoTaskTypesAsync()
             => await context.TodoTaskTypes
-            .Where(x => x.TenantId == GetUserTenantIdAsync())
+            .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
 

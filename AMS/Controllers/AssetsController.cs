@@ -30,8 +30,7 @@ namespace AMS.Controllers
         // GET: Assets
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.Assets.Include(a => a.AssetType).Include(a => a.Client).Include(a => a.Location).Include(a => a.Parent).Include(a => a.Tenant);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetAssetsAsync());
         }
 
         // GET: Assets/Details/5
@@ -58,19 +57,13 @@ namespace AMS.Controllers
         }
 
         // GET: Assets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssetTypeId"] = new SelectList(_context.AssetTypes, "Id", "Name");
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name");
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name");
-            ViewData["ParentId"] = new SelectList(_context.Assets, "Id", "Name");
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: Assets/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TenantId,Name,CodeNumber,Code,ClientId,AssetTypeId,LocationId,ParentId,IsOn")] Asset asset)
@@ -81,11 +74,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetTypeId"] = new SelectList(_context.AssetTypes, "Id", "Name", asset.AssetTypeId);
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", asset.ClientId);
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name", asset.LocationId);
-            ViewData["ParentId"] = new SelectList(_context.Assets, "Id", "Name", asset.ParentId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", asset.TenantId);
+            await SetViewData();
             return View(asset);
         }
 
@@ -102,17 +91,20 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["AssetTypeId"] = new SelectList(_context.AssetTypes, "Id", "Name", asset.AssetTypeId);
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", asset.ClientId);
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name", asset.LocationId);
-            ViewData["ParentId"] = new SelectList(_context.Assets, "Id", "Name", asset.ParentId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", asset.TenantId);
+            await SetViewData(asset);
             return View(asset);
         }
 
+        private async Task SetViewData(Asset asset = null)
+        {
+            ViewData["AssetTypeId"] = await userService.GetAssetTypesSelectAsync(asset?.AssetTypeId);
+            ViewData["ClientId"] = await userService.GetClientsSelectAsync(asset?.ClientId);
+            ViewData["LocationId"] = await userService.GetLocationsSelectAsync(asset?.LocationId);
+            ViewData["ParentId"] = await userService.GetAssetsSelectAsync(asset?.ParentId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
+        }
+
         // POST: Assets/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,CodeNumber,Code,ClientId,AssetTypeId,LocationId,ParentId,IsOn")] Asset asset)
@@ -142,11 +134,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetTypeId"] = new SelectList(_context.AssetTypes, "Id", "Name", asset.AssetTypeId);
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", asset.ClientId);
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Name", asset.LocationId);
-            ViewData["ParentId"] = new SelectList(_context.Assets, "Id", "Name", asset.ParentId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", asset.TenantId);
+            await SetViewData(asset);
             return View(asset);
         }
 

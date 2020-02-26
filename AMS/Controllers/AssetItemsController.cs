@@ -55,16 +55,13 @@ namespace AMS.Controllers
         }
 
         // GET: AssetItems/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name");
-            ViewData["ItemTypeId"] = new SelectList(_context.ItemTypes, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: AssetItems/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AssetId,ItemTypeId,PartNumber")] AssetItem assetItem)
@@ -75,9 +72,14 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", assetItem.AssetId);
-            ViewData["ItemTypeId"] = new SelectList(_context.ItemTypes, "Id", "Name", assetItem.ItemTypeId);
+            await SetViewData(assetItem);
             return View(assetItem);
+        }
+
+        private async Task SetViewData(AssetItem assetItem = null)
+        {
+            ViewData["AssetId"] = await userService.GetAssetsSelectAsync(assetItem?.Id);
+            ViewData["ItemTypeId"] = await userService.GetItemTypesSelectAsync(assetItem?.Id);
         }
 
         // GET: AssetItems/Edit/5
@@ -93,14 +95,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", assetItem.AssetId);
-            ViewData["ItemTypeId"] = new SelectList(_context.ItemTypes, "Id", "Name", assetItem.ItemTypeId);
+            await SetViewData(assetItem);
             return View(assetItem);
         }
 
         // POST: AssetItems/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AssetId,ItemTypeId,PartNumber")] AssetItem assetItem)
@@ -130,8 +129,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", assetItem.AssetId);
-            ViewData["ItemTypeId"] = new SelectList(_context.ItemTypes, "Id", "Name", assetItem.ItemTypeId);
+            await SetViewData(assetItem);
             return View(assetItem);
         }
 

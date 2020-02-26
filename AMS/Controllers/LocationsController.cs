@@ -31,7 +31,7 @@ namespace AMS.Controllers
         public async Task<IActionResult> Index()
         {
             var amsContext = _context.Locations.Include(l => l.LocationType).Include(l => l.Parent).Include(l => l.Tenant);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetLocationsAsync());
         }
 
         // GET: Locations/Details/5
@@ -56,17 +56,13 @@ namespace AMS.Controllers
         }
 
         // GET: Locations/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["LocationTypeId"] = new SelectList(_context.LocationTypes, "Id", "Name");
-            ViewData["ParentId"] = new SelectList(_context.Locations, "Id", "Name");
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: Locations/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TenantId,Name,LocationTypeId,ParentId")] Location location)
@@ -77,9 +73,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationTypeId"] = new SelectList(_context.LocationTypes, "Id", "Name", location.LocationTypeId);
-            ViewData["ParentId"] = new SelectList(_context.Locations, "Id", "Name", location.ParentId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", location.TenantId);
+            await SetViewData(location);
             return View(location);
         }
 
@@ -96,15 +90,18 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["LocationTypeId"] = new SelectList(_context.LocationTypes, "Id", "Name", location.LocationTypeId);
-            ViewData["ParentId"] = new SelectList(_context.Locations, "Id", "Name", location.ParentId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", location.TenantId);
+            await SetViewData(location);
             return View(location);
         }
 
+        private async Task SetViewData(Location location = null)
+        {
+            ViewData["LocationTypeId"] = await userService.GetLocationTypesSelectAsync(location?.LocationTypeId);
+            ViewData["ParentId"] = await userService.GetLocationsSelectAsync(location?.ParentId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
+        }
+
         // POST: Locations/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,LocationTypeId,ParentId")] Location location)
@@ -134,9 +131,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationTypeId"] = new SelectList(_context.LocationTypes, "Id", "Name", location.LocationTypeId);
-            ViewData["ParentId"] = new SelectList(_context.Locations, "Id", "Name", location.ParentId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", location.TenantId);
+            await SetViewData(location);
             return View(location);
         }
 

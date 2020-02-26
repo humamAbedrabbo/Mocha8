@@ -30,8 +30,7 @@ namespace AMS.Controllers
         // GET: TodoTasks
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.TodoTasks.Include(t => t.Tenant).Include(t => t.Ticket).Include(t => t.TodoTaskType);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetTodoTasksAsync());
         }
 
         // GET: TodoTasks/Details/5
@@ -56,17 +55,13 @@ namespace AMS.Controllers
         }
 
         // GET: TodoTasks/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary");
-            ViewData["TodoTaskTypeId"] = new SelectList(_context.TodoTaskTypes, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: TodoTasks/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,TicketId,TodoTaskTypeId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] TodoTask todoTask)
@@ -77,10 +72,15 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", todoTask.TenantId);
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", todoTask.TicketId);
-            ViewData["TodoTaskTypeId"] = new SelectList(_context.TodoTaskTypes, "Id", "Name", todoTask.TodoTaskTypeId);
+            await SetViewData(todoTask);
             return View(todoTask);
+        }
+
+        private async Task SetViewData(TodoTask todoTask = null)
+        {
+            ViewData["TenantId"] = userService.GetUserTenantId();
+            ViewData["TicketId"] = await userService.GetTicketsSelectAsync(todoTask?.TicketId);
+            ViewData["TodoTaskTypeId"] = await userService.GetTodoTaskTypesSelectAsync(todoTask?.TodoTaskTypeId);
         }
 
         // GET: TodoTasks/Edit/5
@@ -96,15 +96,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", todoTask.TenantId);
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", todoTask.TicketId);
-            ViewData["TodoTaskTypeId"] = new SelectList(_context.TodoTaskTypes, "Id", "Name", todoTask.TodoTaskTypeId);
+            await SetViewData(todoTask);
             return View(todoTask);
         }
 
         // POST: TodoTasks/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Description,TicketId,TodoTaskTypeId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] TodoTask todoTask)
@@ -134,9 +130,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", todoTask.TenantId);
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", todoTask.TicketId);
-            ViewData["TodoTaskTypeId"] = new SelectList(_context.TodoTaskTypes, "Id", "Name", todoTask.TodoTaskTypeId);
+            await SetViewData(todoTask);
             return View(todoTask);
         }
 

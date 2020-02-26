@@ -30,8 +30,7 @@ namespace AMS.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.Members.Include(m => m.User).Include(m => m.UserGroup);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetMembersAsync());
         }
 
         // GET: Members/Details/5
@@ -55,16 +54,13 @@ namespace AMS.Controllers
         }
 
         // GET: Members/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: Members/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserGroupId,UserId,Name")] Member member)
@@ -75,8 +71,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", member.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", member.UserGroupId);
+            await SetViewData(member);
             return View(member);
         }
 
@@ -93,14 +88,17 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", member.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", member.UserGroupId);
+            await SetViewData(member);
             return View(member);
         }
 
+        private async Task SetViewData(Member member = null)
+        {
+            ViewData["UserId"] = await userService.GetUsersSelectAsync(member?.UserId);
+            ViewData["UserGroupId"] = await userService.GetUserGroupsSelectAsync(member?.UserGroupId);
+        }
+
         // POST: Members/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserGroupId,UserId,Name")] Member member)
@@ -130,8 +128,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", member.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", member.UserGroupId);
+            await SetViewData(member);
             return View(member);
         }
 

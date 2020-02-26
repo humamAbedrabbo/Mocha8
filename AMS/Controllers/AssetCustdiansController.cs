@@ -55,16 +55,13 @@ namespace AMS.Controllers
         }
 
         // GET: AssetCustdians/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            await SetViewData();
             return View();
         }
 
         // POST: AssetCustdians/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AssetId,UserId,Name,RoleName")] AssetCustdian assetCustdian)
@@ -75,9 +72,14 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", assetCustdian.AssetId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", assetCustdian.UserId);
+            await SetViewData(assetCustdian);
             return View(assetCustdian);
+        }
+
+        private async Task SetViewData(AssetCustdian assetCustdian = null)
+        {
+            ViewData["AssetId"] = await userService.GetAssetsSelectAsync(assetCustdian?.AssetId);
+            ViewData["UserId"] = await userService.GetUsersSelectAsync(assetCustdian?.UserId);
         }
 
         // GET: AssetCustdians/Edit/5
@@ -93,14 +95,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", assetCustdian.AssetId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", assetCustdian.UserId);
+            await SetViewData(assetCustdian);
             return View(assetCustdian);
         }
 
         // POST: AssetCustdians/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AssetId,UserId,Name,RoleName")] AssetCustdian assetCustdian)
@@ -130,8 +129,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssetId"] = new SelectList(_context.Assets, "Id", "Name", assetCustdian.AssetId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", assetCustdian.UserId);
+            await SetViewData(assetCustdian);
             return View(assetCustdian);
         }
 

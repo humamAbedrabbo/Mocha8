@@ -57,18 +57,13 @@ namespace AMS.Controllers
         }
 
         // GET: Assignments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary");
-            ViewData["TodoTaskId"] = new SelectList(_context.TodoTasks, "Id", "Summary");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name");
+            await SetViewData();
             return View();
         }
 
         // POST: Assignments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserGroupId,UserId,RoleName,TicketId,TodoTaskId")] Assignment assignment)
@@ -79,11 +74,16 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", assignment.TicketId);
-            ViewData["TodoTaskId"] = new SelectList(_context.TodoTasks, "Id", "Summary", assignment.TodoTaskId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", assignment.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", assignment.UserGroupId);
+            await SetViewData(assignment);
             return View(assignment);
+        }
+
+        private async Task SetViewData(Assignment assignment = null)
+        {
+            ViewData["TicketId"] = await userService.GetTicketsSelectAsync(assignment?.TicketId);
+            ViewData["TodoTaskId"] = await userService.GetTodoTasksSelectAsync(assignment?.TodoTaskId);
+            ViewData["UserId"] = await userService.GetUsersSelectAsync(assignment?.UserId);
+            ViewData["UserGroupId"] = await userService.GetUserGroupsSelectAsync(assignment?.UserGroupId);
         }
 
         // GET: Assignments/Edit/5
@@ -99,16 +99,11 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", assignment.TicketId);
-            ViewData["TodoTaskId"] = new SelectList(_context.TodoTasks, "Id", "Summary", assignment.TodoTaskId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", assignment.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", assignment.UserGroupId);
+            await SetViewData(assignment);
             return View(assignment);
         }
 
         // POST: Assignments/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserGroupId,UserId,RoleName,TicketId,TodoTaskId")] Assignment assignment)
@@ -138,10 +133,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Summary", assignment.TicketId);
-            ViewData["TodoTaskId"] = new SelectList(_context.TodoTasks, "Id", "Summary", assignment.TodoTaskId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", assignment.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", assignment.UserGroupId);
+            await SetViewData(assignment);
             return View(assignment);
         }
 

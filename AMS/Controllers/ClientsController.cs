@@ -30,8 +30,7 @@ namespace AMS.Controllers
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.Clients.Include(c => c.ClientType).Include(c => c.Tenant);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetClientsAsync());
         }
 
         // GET: Clients/Details/5
@@ -55,16 +54,14 @@ namespace AMS.Controllers
         }
 
         // GET: Clients/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ClientTypeId"] = new SelectList(_context.ClientTypes, "Id", "Name");
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
+            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync();
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View();
         }
 
         // POST: Clients/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TenantId,ClientTypeId,Name")] Client client)
@@ -75,8 +72,8 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientTypeId"] = new SelectList(_context.ClientTypes, "Id", "Name", client.ClientTypeId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", client.TenantId);
+            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync(client.ClientTypeId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View(client);
         }
 
@@ -93,14 +90,12 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientTypeId"] = new SelectList(_context.ClientTypes, "Id", "Name", client.ClientTypeId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", client.TenantId);
+            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync(client.ClientTypeId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View(client);
         }
 
         // POST: Clients/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,ClientTypeId,Name")] Client client)
@@ -130,8 +125,8 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientTypeId"] = new SelectList(_context.ClientTypes, "Id", "Name", client.ClientTypeId);
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", client.TenantId);
+            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync(client.ClientTypeId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
             return View(client);
         }
 

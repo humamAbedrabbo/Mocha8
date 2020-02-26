@@ -20,6 +20,8 @@ namespace AMS.Services
         Task<SelectList> GetCustomListsSelectAsync(int? id = null);
         Task<IEnumerable<ItemType>> GetItemTypesAsync();
         Task<SelectList> GetItemTypesSelectAsync(int? id = null);
+        Task<IEnumerable<Location>> GetLocationsAsync();
+        Task<SelectList> GetLocationsSelectAsync(int? id = null);
         Task<IEnumerable<LocationType>> GetLocationTypesAsync();
         Task<SelectList> GetLocationTypesSelectAsync(int? id = null);
         Task<IEnumerable<Member>> GetMembersAsync();
@@ -38,6 +40,6 @@ namespace AMS.Services
         Task<SelectList> GetUserGroupsSelectAsync(int? id = null);
         Task<IEnumerable<AmsUser>> GetUsersAsync();
         Task<SelectList> GetUsersSelectAsync(int? id = null);
-        int? GetUserTenantIdAsync();
+        int? GetUserTenantId();
     }
 }
