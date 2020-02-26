@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
+using AMS.Services;
 
 namespace AMS.Controllers
 {
@@ -14,10 +15,12 @@ namespace AMS.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUserService userService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUserService userService)
         {
             _logger = logger;
+            this.userService = userService;
         }
 
         public IActionResult Index()

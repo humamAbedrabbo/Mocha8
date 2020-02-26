@@ -19,5 +19,6 @@ namespace AMS.Models
         public string Name { get; set; }
         public List<Asset> Assets { get; set; }
         public List<Ticket> Tickets { get; set; }
+        public string GroupTitle => $"{ClientType?.Name}";
     }
 }

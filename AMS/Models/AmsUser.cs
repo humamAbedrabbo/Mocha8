@@ -32,5 +32,6 @@ namespace AMS.Models
         public List<AssetCustdian> AssetCustodians { get; set; }
         public List<Member> Members { get; set; }
         public List<Assignment> Assignments { get; set; }
+        public string Title => DisplayName;
     }
 }

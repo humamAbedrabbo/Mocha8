@@ -8,5 +8,7 @@
         public int UserId { get; set; }
         public AmsUser User { get; set; }
         public string Name { get; set; }
+        public string Title => $"{Name}:{User?.DisplayName}";
+        public string GroupTitle => $"{UserGroup?.Name}";
     }
 }

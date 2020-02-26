@@ -32,6 +32,9 @@ namespace AMS.Models
         public List<AssetItem> Items { get; set; }
         public List<AssetCustdian> Custodians { get; set; }
         public List<MetaFieldValue> Values { get; set; }
+        public string Active => IsOn ? "On" : "Off";
+        public string Title => $"{Code}:{Name}({Active})";
+        public string GroupTitle => $"{AssetType?.Name}";
 
     }
 }

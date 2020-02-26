@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AMS.Data;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
+using AMS.Services;
 
 namespace AMS.Controllers
 {
@@ -15,10 +16,12 @@ namespace AMS.Controllers
     public class ClientTypesController : Controller
     {
         private readonly AmsContext _context;
+        private readonly IUserService userService;
 
-        public ClientTypesController(AmsContext context)
+        public ClientTypesController(AmsContext context, IUserService userService)
         {
             _context = context;
+            this.userService = userService;
         }
 
         // GET: ClientTypes

@@ -21,5 +21,6 @@ namespace AMS.Models
         public List<Location> Childs { get; set; }
         public List<Asset> Assets { get; set; }
         public List<Ticket> Tickets { get; set; }
+        public string GroupTitle => $"{LocationType?.Name}";
     }
 }

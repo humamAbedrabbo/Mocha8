@@ -27,5 +27,7 @@ namespace AMS.Models
         public bool MarkCompleted { get; set; }
         public int EstDuration { get; set; }
         public List<Assignment> Assignments { get; set; }
+        public string Title => $"{Ticket?.Code}:{Summary}({Status.ToString()})";
+        public string GroupTitle => $"{TodoTaskType?.Name}";
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AMS.Models;
+using AMS.Services;
 
 namespace AMS
 {
@@ -58,6 +59,7 @@ namespace AMS
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddHttpContextAccessor();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

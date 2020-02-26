@@ -37,5 +37,7 @@ namespace AMS.Models
         public List<TicketAsset> TicketAssets { get; set; }
         public List<Assignment> Assignments { get; set; }
         public List<MetaFieldValue> Values { get; set; }
+        public string Title => $"{Code}:{Summary}({Status.ToString()})";
+        public string GroupTitle => $"{TicketType?.Name}";
     }
 }
