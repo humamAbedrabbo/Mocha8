@@ -180,5 +180,9 @@ namespace AMS.Data
             // Assignment
             builder.Entity<Assignment>().Property(p => p.RoleName).HasMaxLength(100);
         }
+
+        public DbSet<AMS.Models.Assignment> Assignment { get; set; }
+
+        public DbSet<AMS.Models.TicketAsset> TicketAsset { get; set; }
     }
 }
