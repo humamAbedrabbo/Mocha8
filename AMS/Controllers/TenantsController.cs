@@ -8,16 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using AMS.Data;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace AMS.Controllers
 {
     [Authorize]
     public class TenantsController : Controller
     {
+        private readonly ILogger<TenantsController> logger;
         private readonly AmsContext _context;
 
-        public TenantsController(AmsContext context)
+        public TenantsController(ILogger<TenantsController> logger, AmsContext context)
         {
+            this.logger = logger;
             _context = context;
         }
 

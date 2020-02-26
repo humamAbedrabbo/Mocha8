@@ -9,17 +9,20 @@ using AMS.Data;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
+using Microsoft.Extensions.Logging;
 
 namespace AMS.Controllers
 {
     [Authorize]
     public class MembersController : Controller
     {
+        private readonly ILogger<MembersController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
 
-        public MembersController(AmsContext context, IUserService userService)
+        public MembersController(ILogger<MembersController> logger, AmsContext context, IUserService userService)
         {
+            this.logger = logger;
             _context = context;
             this.userService = userService;
         }

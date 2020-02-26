@@ -9,6 +9,7 @@ using AMS.Data;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
+using Microsoft.Extensions.Logging;
 
 namespace AMS.Controllers
 {
@@ -18,7 +19,7 @@ namespace AMS.Controllers
         private readonly AmsContext _context;
         private readonly IUserService userService;
 
-        public MetaFieldsController(AmsContext context, IUserService userService)
+        public MetaFieldsController(ILogger<MetaFieldsController> logger, AmsContext context, IUserService userService)
         {
             _context = context;
             this.userService = userService;

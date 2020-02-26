@@ -9,17 +9,20 @@ using AMS.Data;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
+using Microsoft.Extensions.Logging;
 
 namespace AMS.Controllers
 {
     [Authorize]
     public class CustomListsController : Controller
     {
+        private readonly ILogger<CustomListsController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
 
-        public CustomListsController(AmsContext context, IUserService userService)
+        public CustomListsController(ILogger<CustomListsController> logger, AmsContext context, IUserService userService)
         {
+            this.logger = logger;
             _context = context;
             this.userService = userService;
         }

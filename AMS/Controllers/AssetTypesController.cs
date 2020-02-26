@@ -9,17 +9,20 @@ using AMS.Data;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
+using Microsoft.Extensions.Logging;
 
 namespace AMS.Controllers
 {
     [Authorize]
     public class AssetTypesController : Controller
     {
+        private readonly ILogger<AssetTypesController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
 
-        public AssetTypesController(AmsContext context, IUserService userService)
+        public AssetTypesController(ILogger<AssetTypesController> logger, AmsContext context, IUserService userService)
         {
+            this.logger = logger;
             _context = context;
             this.userService = userService;
         }

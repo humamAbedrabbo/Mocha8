@@ -9,17 +9,20 @@ using AMS.Data;
 using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
+using Microsoft.Extensions.Logging;
 
 namespace AMS.Controllers
 {
     [Authorize]
     public class TicketTypesController : Controller
     {
+        private readonly ILogger<TicketTypesController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
 
-        public TicketTypesController(AmsContext context, IUserService userService)
+        public TicketTypesController(ILogger<TicketTypesController> logger, AmsContext context, IUserService userService)
         {
+            this.logger = logger;
             _context = context;
             this.userService = userService;
         }
