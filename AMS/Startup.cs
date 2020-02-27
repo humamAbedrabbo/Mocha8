@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AMS.Models;
 using AMS.Services;
+using Hangfire;
+using Hangfire.MemoryStorage;
 
 namespace AMS
 {
@@ -61,6 +63,12 @@ namespace AMS
             services.AddHttpContextAccessor();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICodeGenerator, CodeGenerator>();
+            services.AddScoped<ITicketGenerator, TicketGenerator>();
+
+            services.AddHangfire(cfg => {
+                cfg.UseMemoryStorage();
+            });
+            services.AddHangfireServer();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -78,6 +86,8 @@ namespace AMS
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseHangfireDashboard();
 
             app.UseRouting();
 

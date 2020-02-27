@@ -10,6 +10,7 @@ using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
 using Microsoft.Extensions.Logging;
+using Hangfire;
 
 namespace AMS.Controllers
 {
@@ -19,12 +20,14 @@ namespace AMS.Controllers
         private readonly ILogger<TicketTypesController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
+        private readonly ITicketGenerator ticketGenerator;
 
-        public TicketTypesController(ILogger<TicketTypesController> logger, AmsContext context, IUserService userService)
+        public TicketTypesController(ILogger<TicketTypesController> logger, AmsContext context, IUserService userService, ITicketGenerator ticketGenerator)
         {
             this.logger = logger;
             _context = context;
             this.userService = userService;
+            this.ticketGenerator = ticketGenerator;
         }
 
         // GET: TicketTypes
@@ -63,17 +66,36 @@ namespace AMS.Controllers
         // POST: TicketTypes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code")] TicketType ticketType)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code")] TicketType ticketType, int interval, int repeat, string summary)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(ticketType);
                 await _context.SaveChangesAsync();
+                if (interval > 0 && repeat > 0)
+                {
+                    if (string.IsNullOrEmpty(summary))
+                    {
+                        summary = ticketType.Name;
+                    }
+                    for (int i = 0; i < repeat; i++)
+                    {
+                        var jobId = BackgroundJob.Schedule(
+                            () => ticketGenerator.AddTicket(ticketType.Id, summary, userService.GetUserTenantId().Value),
+                            TimeSpan.FromSeconds(interval));
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TenantId"] = userService.GetUserTenantId();
+
+
+            
+
             return View(ticketType);
         }
+
+
 
         // GET: TicketTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
