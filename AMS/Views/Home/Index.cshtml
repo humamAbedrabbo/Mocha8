@@ -99,6 +99,74 @@
 </div>
 <!--/.row-->
 
+<div class="row">
+    <div class="card-columns cols-2">
+        <div class="card">
+            <div class="card-header">
+                Line Chart
+                <div class="card-header-actions">
+                    <a href="http://www.chartjs.org" class="card-header-action" target="_blank">
+                        <small class="text-muted">docs</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-wrapper">
+                    <canvas id="canvas-1"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Bar Chart
+                <div class="card-header-actions">
+                    <a href="http://www.chartjs.org" class="card-header-action" target="_blank">
+                        <small class="text-muted">docs</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-wrapper">
+                    <canvas id="canvas-2"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Doughnut Chart
+                <div class="card-header-actions">
+                    <a href="http://www.chartjs.org" class="card-header-action" target="_blank">
+                        <small class="text-muted">docs</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-wrapper">
+                    <canvas id="canvas-3"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                Pie Chart
+                <div class="card-header-actions">
+                    <a href="http://www.chartjs.org" class="card-header-action" target="_blank">
+                        <small class="text-muted">docs</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-wrapper">
+                    <canvas id="canvas-5"></canvas>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
 <div class="card">
     <div class="card-body">
         <div class="row">
@@ -139,6 +207,9 @@
 
 @* view-scripts *@
 @section Scripts {
+    <script src="~/lib/chart.js/dist/Chart.min.js"></script>
+    <script src="~/lib/@@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js"></script>
+    <script src="~/js/charts.js"></script>
     <script>
         function showMap() {
             var map = L.map('map').setView([33.4977, 36.3013], 11);
