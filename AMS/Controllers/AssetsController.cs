@@ -77,6 +77,14 @@ namespace AMS.Controllers
                 {
                     var type = await _context.AssetTypes.FindAsync(asset.AssetTypeId);
                     asset.Code = $"{type.Code}{asset.CodeNumber.ToString("D5")}";
+                    var metaValues = await _context.MetaFieldValues
+                        .Include(x => x.Field)
+                        .Where(x => x.AssetTypeId == type.Id)
+                        .ToListAsync();
+                    foreach(var value in metaValues)
+                    {
+                        asset.Values.Add(new MetaFieldValue { FieldId = value.FieldId, Value = value.Value });
+                    }
                 }
                 else
                 {

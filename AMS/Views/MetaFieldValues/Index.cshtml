@@ -1,7 +1,7 @@
-﻿@model IEnumerable<AMS.Models.AssetType>
+﻿@model IEnumerable<AMS.Models.MetaFieldValue>
 
 @{
-    ViewData["Title"] = "Asset Types";
+    ViewData["Title"] = "Meta Field Values";
 }
 
 
@@ -18,7 +18,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <i class="fa fa-align-justify"></i> Asset Types
+                <i class="fa fa-tags"></i> Meta Field Values
             </div>
             <div class="card-body">
 
@@ -26,10 +26,22 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Name)
+                                @Html.DisplayNameFor(model => model.Field)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Code)
+                                @Html.DisplayNameFor(model => model.AssetType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Asset)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TicketType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Ticket)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Value)
                             </th>
                             <th></th>
                         </tr>
@@ -39,14 +51,25 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
+                                    @Html.DisplayFor(modelItem => item.Field.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Code)
+                                    @Html.DisplayFor(modelItem => item.AssetType.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Asset.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Ticket.Summary)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Value)
                                 </td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-controller="MetaFieldValues" asp-action="Index" asp-route-assetTypeId="@item.Id">Meta</a> |
                                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                                 </td>

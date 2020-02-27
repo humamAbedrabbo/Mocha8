@@ -76,6 +76,14 @@ namespace AMS.Controllers
                 {
                     var type = await _context.TicketTypes.FindAsync(ticket.TicketTypeId);
                     ticket.Code = $"{type.Code}{ticket.CodeNumber.ToString("D5")}";
+                    var metaValues = await _context.MetaFieldValues
+                        .Include(x => x.Field)
+                        .Where(x => x.TicketTypeId == type.Id)
+                        .ToListAsync();
+                    foreach (var value in metaValues)
+                    {
+                        ticket.Values.Add(new MetaFieldValue { FieldId = value.FieldId, Value = value.Value });
+                    }
                 }
                 else
                 {
