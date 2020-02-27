@@ -35,6 +35,11 @@ namespace AMS.Controllers
             return View(assets);
         }
 
+        public IActionResult Floors()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
