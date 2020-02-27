@@ -28,7 +28,10 @@ namespace AMS.Models
                 }
                 else
                 {
-                    return Convert.ToDateTime(Value);
+                    if (this.Field?.FieldType == FieldType.Date || this.Field?.FieldType == FieldType.DateTime)
+                        return Convert.ToDateTime(Value);
+                    else 
+                        return null;
                 }
             }
             set
@@ -47,7 +50,11 @@ namespace AMS.Models
                 }
                 else
                 {
-                    return Convert.ToDateTime(Value);
+                    if (this.Field?.FieldType == FieldType.Date || this.Field?.FieldType == FieldType.DateTime)
+                        return Convert.ToDateTime(Value);
+                    else
+                        return null;
+
                 }
             }
             set
@@ -66,7 +73,11 @@ namespace AMS.Models
                 }
                 else
                 {
-                    return Convert.ToInt32(Value);
+                    if (this.Field?.FieldType == FieldType.Number)
+                        return Convert.ToInt32(Value);
+                    else
+                        return null;
+
                 }
             }
             set
@@ -85,7 +96,34 @@ namespace AMS.Models
                 }
                 else
                 {
-                    return Convert.ToDouble(Value);
+                    if (this.Field?.FieldType == FieldType.Decimal)
+                        return Convert.ToDouble(Value);
+                    else
+                        return null;
+
+                }
+            }
+            set
+            {
+                Value = value.HasValue ? value.Value.ToString() : null;
+            }
+        }
+
+        public bool? BooleanValue
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Value))
+                {
+                    return null;
+                }
+                else
+                {
+                    if (this.Field?.FieldType == FieldType.Boolean)
+                        return Convert.ToBoolean(Value);
+                    else
+                        return null;
+
                 }
             }
             set

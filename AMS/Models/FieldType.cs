@@ -9,6 +9,7 @@
         Date,
         DateTime,
         Url,
+        Boolean,
         ListItem
     }
 }
