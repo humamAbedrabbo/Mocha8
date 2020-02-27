@@ -1,0 +1,56 @@
+﻿@model IEnumerable<TodoTask>
+@{
+    ViewData["Title"] = "Calendar";
+}
+
+
+@* view-styles *@
+@section Styles {
+}
+
+@*view-breadcrumbs*@
+@section Breadcrumbs {
+}
+
+@* view-content *@
+<div class="row">
+    <div class="col-lg-12">
+        <div id='calendar'></div>
+    </div>
+    <!--/.col-->
+</div>
+
+@* view-modals *@
+@section Modals {
+}
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        $(function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['dayGrid', 'timeGrid', 'list'],
+                views: {
+                    dayGrid: {
+                      // options apply to dayGridMonth, dayGridWeek, and dayGridDay views
+                    },
+                    timeGrid: {
+                      // options apply to timeGridWeek and timeGridDay views
+                    },
+                    week: {
+                      // options apply to dayGridWeek and timeGridWeek views
+                    },
+                    day: {
+                      // options apply to dayGridDay and timeGridDay views
+                    }
+                },
+                events: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => new { title = x.Title, start = x.StartDate, allDay = true, textColor = "white" })))
+                
+            });
+
+            calendar.render();
+        });
+    </script>
+}

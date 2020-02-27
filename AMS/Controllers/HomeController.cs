@@ -40,6 +40,12 @@ namespace AMS.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Calendar()
+        {
+            var todoTasks = (await userService.GetTodoTasksAsync()).Where(x => x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending);
+            return View(todoTasks);
+        }
+
         public IActionResult Privacy()
         {
             return View();
