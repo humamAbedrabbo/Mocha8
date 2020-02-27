@@ -27,6 +27,8 @@ namespace AMS.Models
         public int? ParentId { get; set; }
         public Asset Parent { get; set; }
         public bool IsOn { get; set; }
+        public double Lng { get; set; }
+        public double Lat { get; set; }
         public List<Asset> Childs { get; set; }
         public List<TicketAsset> TicketAssets { get; set; }
         public List<AssetItem> Items { get; set; }

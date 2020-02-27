@@ -23,9 +23,16 @@ namespace AMS.Controllers
             this.userService = userService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var assets = await userService.GetAssetsAsync();
+            var tickets = await userService.GetTicketsAsync();
+            ViewData["OpenTickets"] = tickets.Where(x => x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending).Count();
+            ViewData["ClosedTickets"] = tickets.Where(x => x.Status == WorkStatus.Completed).Count();
+            ViewData["PendingTickets"] = tickets.Where(x => x.Status == WorkStatus.Pending).Count();
+            ViewData["OverdueTickets"] = tickets.Where(x => (x.Status == WorkStatus.Pending || x.Status == WorkStatus.Open)
+                && DateTime.Now > x.DueDate).Count();
+            return View(assets);
         }
 
         public IActionResult Privacy()

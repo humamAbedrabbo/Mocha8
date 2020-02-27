@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -373,6 +374,25 @@ namespace AMS.Data
                 item.Custodians.Add(new AssetCustdian { UserId = user.Id, Name = user.DisplayName, RoleName = roleNames[rnd.Next(0, 3)] });
             }
             context.SaveChanges();
+
+            using (var reader = new StreamReader(@"locations.csv"))
+            {
+                List<string> listA = new List<string>();
+                List<string> listB = new List<string>();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+
+                    var asset = context.Assets.FirstOrDefault(x => x.Id.ToString() == values[0]);
+                    if(asset != null)
+                    {
+                        asset.Lat = Convert.ToDouble(values[1]);
+                        asset.Lng = Convert.ToDouble(values[2]);
+                        context.SaveChanges();
+                    }
+                }
+            }
 
             for (int year = 2019; year <= 2020; year++)
             {

@@ -1,8 +1,170 @@
-﻿@{
+﻿@model IEnumerable<Asset>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+@* view-styles *@
+@section Styles {
+}
+
+@*view-breadcrumbs*@
+@section Breadcrumbs {
+}
+
+@* view-content *@
+<div class="row">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+                <div class="text-value">@ViewBag.OpenTickets</div>
+                <div>Open Tickets</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+                <canvas id="card-chart1" class="chart" height="70"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-info">
+            <div class="card-body pb-0">
+                <button type="button" class="btn btn-transparent p-0 float-right">
+                    <i class="icon-location-pin"></i>
+                </button>
+                <div class="text-value">@ViewBag.ClosedTickets</div>
+                <div>Closed Tickets</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+                <canvas id="card-chart2" class="chart" height="70"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+                <div class="text-value">@ViewBag.PendingTickets</div>
+                <div>Pending Tickets</div>
+            </div>
+            <div class="chart-wrapper mt-3" style="height:70px;">
+                <canvas id="card-chart3" class="chart" height="70"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+                <div class="text-value">@ViewBag.OverdueTickets</div>
+                <div>Overdue Tickets</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+                <canvas id="card-chart4" class="chart" height="70"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
 </div>
+<!--/.row-->
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-5">
+                <h4 class="card-title mb-0">Map</h4>
+                <div class="small text-muted">@System.DateTime.Today.ToString("dd MMM yyyy")</div>
+            </div>
+            <!--/.col-->
+            <div class="col-sm-7 d-none d-md-block">
+                <button type="button" class="btn btn-primary float-right">
+                    <i class="icon-cloud-download"></i>
+                </button>
+                <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary">
+                        <input type="radio" name="options" id="option1" autocomplete="off"> Option1
+                    </label>
+                    <label class="btn btn-outline-secondary active">
+                        <input type="radio" name="options" id="option2" autocomplete="off" checked> Option2
+                    </label>
+                    <label class="btn btn-outline-secondary">
+                        <input type="radio" name="options" id="option3" autocomplete="off"> Option3
+                    </label>
+                </div>
+            </div>
+            <!--/.col-->
+        </div>
+        <!--/.row-->
+        <div class="chart-wrapper" style="height:500px;margin-top:40px;">
+            <div id="map" style="height: 500px;"></div>
+        </div>
+    </div>
+
+</div>
+<!--/.card-->
+@* view-modals *@
+@section Modals {
+}
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        function showMap() {
+            var map = L.map('map').setView([33.4977, 36.3013], 11);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: ''
+                }).addTo(map);
+
+                @foreach(var asset in Model)
+                {
+                    <text>
+                        L.marker([@asset.Lng, @asset.Lat]).addTo(map)
+                            .bindPopup('@asset.Name')
+                            .openPopup();
+                        @*var circle = L.circle([@asset.Lng, @asset.Lat], {
+                            color: 'red',
+                            fillColor: '#f03',
+                            fillOpacity: 0.5,
+                            radius: 500
+                        }).addTo(map);*@
+                    </text>
+                }
+        }
+
+        $(function () {
+            showMap();
+        });
+    </script>
+}
+
