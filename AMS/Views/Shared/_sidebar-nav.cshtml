@@ -1,0 +1,145 @@
+﻿<nav class="sidebar-nav">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="CoreUI" asp-action="Index">
+                <i class="nav-icon icon-speedometer"></i> Dashboard
+                <span class="badge badge-primary"></span>
+            </a>
+        </li>
+        <li class="nav-title">General</li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Index">
+                <i class="nav-icon icon-globe"></i> Clients
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="Assets" asp-action="Index">
+                <i class="nav-icon fa fa-cubes"></i> Assets
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="Tickets" asp-action="Index">
+                <i class="nav-icon fa-exclamation-circle fa"></i> Tickets
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="TodoTasks" asp-action="Index">
+                <i class="nav-icon fa fa-tasks"></i> Tasks
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="UserGroups" asp-action="Index">
+                <i class="nav-icon fa fa-users"></i> User Groups
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="CustomLists" asp-action="Index">
+                <i class="nav-icon fa fa-list"></i> Custom Lists
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="Locations" asp-action="Index">
+                <i class="nav-icon icon-location-pin"></i> Locations
+            </a>
+        </li>
+        <li class="nav-title">Administration</li>
+        <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+                <i class="nav-icon fa fa-tags"></i> Masters
+            </a>
+            <ul class="nav-dropdown-items">
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="MetaFields" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Meta Fields
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="AssetTypes" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Asset Types
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="TicketTypes" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Ticket Types
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="TodoTaskTypes" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Todo Task Types
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="ClientTypes" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Client Types
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="ItemTypes" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Item Types
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="LocationTypes" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Location Types
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="divider"></li>
+        <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+                <i class="nav-icon fa fa-gear"></i> Security
+            </a>
+            <ul class="nav-dropdown-items">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon icon-people"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon fa fa-user-secret"></i> Roles &amp; Permissions
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="nav-icon icon-pie-chart"></i> Reports
+            </a>
+        </li>
+        <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+                <i class="nav-icon icon-star"></i> Icons
+            </a>
+            <ul class="nav-dropdown-items">
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="CoreUI" asp-action="Index" asp-route-view="icons-coreui-icons">
+                        <i class="nav-icon icon-star"></i> CoreUI Icons
+                        <span class="badge badge-success"></span>
+                    </a>
+                    <a class="nav-link" asp-area="" asp-controller="CoreUI" asp-action="Index" asp-route-view="icons-flags">
+                        <i class="nav-icon icon-star"></i> Flags
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="CoreUI" asp-action="Index" asp-route-view="icons-font-awesome">
+                        <i class="nav-icon icon-star"></i> Font Awesome
+                        <span class="badge badge-secondary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="CoreUI" asp-action="Index" asp-route-view="icons-simple-line-icons">
+                        <i class="nav-icon icon-star"></i> Simple Line Icons
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item mt-auto">
+            <a class="nav-link nav-link-success" href="#" target="_top">
+                <i class="nav-icon icon-cloud-download"></i> Settings
+            </a>
+        </li>
+    </ul>
+</nav>
