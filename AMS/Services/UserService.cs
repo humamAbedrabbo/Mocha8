@@ -150,7 +150,7 @@ namespace AMS.Services
             .ToListAsync();
 
         public async Task<SelectList> GetLocationTypesSelectAsync(int? id = null)
-            => new SelectList(await GetLocationTypesAsync(), "Id", "Name", id, "GroupTitle");
+            => new SelectList(await GetLocationTypesAsync(), "Id", "Name", id);
 
         public async Task<IEnumerable<ItemType>> GetItemTypesAsync()
             => await context.ItemTypes

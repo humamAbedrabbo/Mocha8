@@ -60,6 +60,7 @@ namespace AMS
             services.AddServerSideBlazor();
             services.AddHttpContextAccessor();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICodeGenerator, CodeGenerator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

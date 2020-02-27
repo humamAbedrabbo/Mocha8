@@ -30,7 +30,6 @@ namespace AMS.Controllers
         // GET: Locations
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.Locations.Include(l => l.LocationType).Include(l => l.Parent).Include(l => l.Tenant);
             return View(await userService.GetLocationsAsync());
         }
 

@@ -21,13 +21,9 @@
                 <span asp-validation-for="Summary" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CodeNumber" class="control-label"></label>
-                <input asp-for="CodeNumber" class="form-control" />
-                <span asp-validation-for="CodeNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
+                <input readonly asp-for="Code" class="form-control" />
+                <input type="hidden" asp-for="CodeNumber" class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
             <div class="form-group">

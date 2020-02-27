@@ -19,12 +19,14 @@ namespace AMS.Controllers
         private readonly ILogger<AssetsController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
+        private readonly ICodeGenerator codeGenerator;
 
-        public AssetsController(ILogger<AssetsController> logger, AmsContext context, IUserService userService)
+        public AssetsController(ILogger<AssetsController> logger, AmsContext context, IUserService userService, ICodeGenerator codeGenerator)
         {
             this.logger = logger;
             _context = context;
             this.userService = userService;
+            this.codeGenerator = codeGenerator;
         }
 
         // GET: Assets
@@ -66,10 +68,22 @@ namespace AMS.Controllers
         // POST: Assets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,CodeNumber,Code,ClientId,AssetTypeId,LocationId,ParentId,IsOn")] Asset asset)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,ClientId,AssetTypeId,LocationId,ParentId,IsOn")] Asset asset)
         {
             if (ModelState.IsValid)
             {
+                asset.CodeNumber = codeGenerator.GetAssetCode(asset.TenantId).Result;
+                if(asset.AssetTypeId.HasValue)
+                {
+                    var type = await _context.AssetTypes.FindAsync(asset.AssetTypeId);
+                    asset.Code = $"{type.Code}{asset.CodeNumber.ToString("D5")}";
+                }
+                else
+                {
+                    asset.Code = $"{asset.CodeNumber.ToString("D5")}";
+                }
+                
+                
                 _context.Add(asset);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -107,7 +121,7 @@ namespace AMS.Controllers
         // POST: Assets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,CodeNumber,Code,ClientId,AssetTypeId,LocationId,ParentId,IsOn")] Asset asset)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code,CodeNumber,ClientId,AssetTypeId,LocationId,ParentId,IsOn")] Asset asset)
         {
             if (id != asset.Id)
             {

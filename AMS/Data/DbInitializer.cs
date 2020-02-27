@@ -1,4 +1,5 @@
 ﻿using AMS.Models;
+using AMS.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -162,6 +163,8 @@ namespace AMS.Data
             if (tenant == null)
                 return;
 
+            var codeGenerator = new CodeGenerator(context);
+
             var ctCompany = new ClientType { Name = "Company" };
             tenant.ClientTypes.Add(ctCompany);
 
@@ -298,6 +301,8 @@ namespace AMS.Data
                 var client = tenant.Clients.FirstOrDefault(x => x.TenantId == tenant.Id && x.Name == $"Client {r.Next(1,9)}");
                 var office = tenant.Locations.FirstOrDefault(x => x.TenantId == tenant.Id && x.LocationTypeId == ltOffice.Id && x.Name == $"Office {r.Next(1,25)}");
                 var asset = new Asset { TenantId = tenant.Id, ClientId = client?.Id, LocationId = office?.Id, AssetTypeId = atPC.Id, CodeNumber = i, Code = $"{atPC.Code}-{i:5}", Name = $"PC {i}" };
+                asset.CodeNumber = codeGenerator.GetAssetCode(tenant.Id).Result;
+                asset.Code = $"{atPC.Code}{asset.CodeNumber.ToString("D5")}";
                 asset.Values.Add(new MetaFieldValue { FieldId = fPcName.Id, Value = $"Desktop-{i}" });
                 asset.Values.Add(new MetaFieldValue { FieldId = fBrand.Id, Value = $"{Brands[r.Next(0,3)]}" });
                 asset.Values.Add(new MetaFieldValue { FieldId = fFloor.Id, Value = $"{r.Next(1,6)}" });
@@ -306,6 +311,7 @@ namespace AMS.Data
                 asset.Values.Add(new MetaFieldValue { FieldId = fUserName.Id, Value = $"User{i}" });
                 asset.Values.Add(new MetaFieldValue { FieldId = fBarCode.Id, Value = $"XXX-{i}-XXX" });
                 context.Assets.Add(asset);
+                context.SaveChanges();
             }
             context.SaveChanges();
 
@@ -395,7 +401,8 @@ namespace AMS.Data
                             WorkStatus.Open,
                             Summary = "PC Maintenance", Description = "Check list todo", 
                             TicketTypeId = ttPCMaintenance.Id, TenantId  = tenant.Id };
-
+                        ticket.CodeNumber = codeGenerator.GetTicketCode(tenant.Id).Result;
+                        ticket.Code = $"{ttPCMaintenance.Code}{ticket.CodeNumber.ToString("D5")}";
                         ticket.Assignments.Add(new Assignment { UserGroupId = 2, RoleName = "Assigned To" });
                         foreach (var ass in assetIDs)
                         {

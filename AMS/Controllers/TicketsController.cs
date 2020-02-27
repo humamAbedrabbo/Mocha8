@@ -19,12 +19,14 @@ namespace AMS.Controllers
         private readonly ILogger<TicketsController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
+        private readonly ICodeGenerator codeGenerator;
 
-        public TicketsController(ILogger<TicketsController> logger, AmsContext context, IUserService userService)
+        public TicketsController(ILogger<TicketsController> logger, AmsContext context, IUserService userService, ICodeGenerator codeGenerator)
         {
             this.logger = logger;
             _context = context;
             this.userService = userService;
+            this.codeGenerator = codeGenerator;
         }
 
         // GET: Tickets
@@ -65,10 +67,21 @@ namespace AMS.Controllers
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,CodeNumber,Code,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                ticket.CodeNumber = codeGenerator.GetTicketCode(ticket.TenantId).Result;
+                if (ticket.TicketTypeId.HasValue)
+                {
+                    var type = await _context.TicketTypes.FindAsync(ticket.TicketTypeId);
+                    ticket.Code = $"{type.Code}{ticket.CodeNumber.ToString("D5")}";
+                }
+                else
+                {
+                    ticket.Code = $"{ticket.CodeNumber.ToString("D5")}";
+                }
+
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -105,7 +118,7 @@ namespace AMS.Controllers
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,CodeNumber,Code,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Code,CodeNumber,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
         {
             if (id != ticket.Id)
             {
