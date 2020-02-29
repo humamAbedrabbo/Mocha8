@@ -59,6 +59,7 @@ namespace AMS.Services
         public async Task<IEnumerable<Ticket>> GetTicketsAsync()
             => await context.Tickets
             .Include(x => x.TicketType)
+            .Include(x => x.Location)
             .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Summary)
             .ToListAsync();

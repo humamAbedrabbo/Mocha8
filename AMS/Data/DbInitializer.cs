@@ -394,7 +394,7 @@ namespace AMS.Data
                 }
             }
 
-            for (int year = 2019; year <= 2020; year++)
+            for (int year = 2020; year <= 2020; year++)
             {
                 for (int month = 1; month <= 12; month++)
                 {
@@ -449,7 +449,7 @@ namespace AMS.Data
 
                         }
 
-                        var date2 = date.AddDays(rnd.Next(1, 25));
+                        var date2 = date.AddDays(rnd.Next(1, 3));
                         // 0 completed, 1 pending, 2 cancelled, 3 open
                         var result = rnd.Next(0, 8);
                         if (result > 3) result = 3;
