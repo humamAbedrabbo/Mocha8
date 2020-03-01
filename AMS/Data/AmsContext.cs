@@ -61,9 +61,11 @@ namespace AMS.Data
 
             // AssetType
             builder.Entity<AssetType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<AssetType>().Property(p => p.Code).IsRequired().HasMaxLength(5);
 
             // TicketType
             builder.Entity<TicketType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<TicketType>().Property(p => p.Code).IsRequired().HasMaxLength(5);
 
             // TodoTaskType
             builder.Entity<TodoTaskType>().Property(p => p.Name).IsRequired().HasMaxLength(50);

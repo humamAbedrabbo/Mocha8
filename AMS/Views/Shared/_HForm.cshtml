@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+<div class="row">
+    <div class="offset-2 col-md-8">
+        <div class="card">
+            <div class="card-header">
+                @RenderSection("FormHeader")
+            </div>
+            <div class="card-body">
+                @RenderSection("FormBody")
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+                <button type="reset" class="btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
