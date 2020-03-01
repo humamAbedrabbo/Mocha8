@@ -21,19 +21,25 @@
             </div>
             <div class="card-body">
 
-                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                <table id="table"
+                       data-search="true"
+                       data-pagination="true"
+                       data-show-export="true"
+                       data-filter-control="true"
+                       data-show-search-clear-button="true"
+                       class="table">
                     <thead>
                         <tr>
-                            <th>
+                            <th data-field="asset" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Asset)
                             </th>
-                            <th>
+                            <th data-field="user" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.User)
                             </th>
-                            <th>
+                            <th data-field="name" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Name)
                             </th>
-                            <th>
+                            <th data-field="role" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.RoleName)
                             </th>
                             <th></th>
@@ -64,28 +70,7 @@
                         }
                     </tbody>
                 </table>
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#">Prev</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">4</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                
             </div>
         </div>
     </div>
@@ -98,6 +83,11 @@
 
 @* view-scripts *@
 @section Scripts {
+    <script>
+        $(function () {
+            var $table = $("#table").bootstrapTable();
+        });
+    </script>
 }
 
 

@@ -70,6 +70,9 @@ namespace AMS.Services
         public async Task<IEnumerable<Asset>> GetAssetsAsync()
             => await context.Assets
             .Include(x => x.AssetType)
+            .Include(x => x.Client)
+            .Include(x => x.Location)
+            .Include(x => x.Parent)
             .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();

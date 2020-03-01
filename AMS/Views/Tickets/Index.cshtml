@@ -21,55 +21,58 @@
             </div>
             <div class="card-body">
 
-                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                <table id="table"
+                       data-search="true"
+                       data-pagination="true"
+                       data-show-export="true"
+                       data-filter-control="true"
+                       data-show-search-clear-button="true"
+                       class="table">
                     <thead>
                         <tr>
-                            <th>
+                            <th data-field="summary" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Summary)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CodeNumber)
-                            </th>
-                            <th>
+                            <th data-field="code" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Code)
                             </th>
-                            <th>
+                            <th data-field="description" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Description)
                             </th>
-                            <th>
+                            <th data-field="client" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.Client)
                             </th>
-                            <th>
+                            <th data-field="ticketType" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.TicketType)
                             </th>
-                            <th>
+                            <th data-field="location" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.Location)
                             </th>
-                            <th>
+                            <th data-field="status" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.Status)
                             </th>
-                            <th>
+                            <th data-field="dueDate" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.DueDate)
                             </th>
-                            <th>
+                            <th data-field="startDate" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.StartDate)
                             </th>
-                            <th>
+                            <th data-field="endDate" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.CompletionDate)
                             </th>
-                            <th>
+                            <th data-field="completionDate" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.CancellationDate)
                             </th>
-                            <th>
+                            <th data-field="pendingDate" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.PendingDate)
                             </th>
-                            <th>
+                            <th data-field="markCompleted" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.MarkCompleted)
                             </th>
-                            <th>
+                            <th data-field="estDuration" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.EstDuration)
                             </th>
-                            <th></th>
+                            <th data-field="actions"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,9 +81,6 @@
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Summary)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CodeNumber)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Code)
@@ -131,28 +131,7 @@
                         }
                     </tbody>
                 </table>
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#">Prev</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">4</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+
             </div>
         </div>
     </div>
@@ -165,6 +144,11 @@
 
 @* view-scripts *@
 @section Scripts {
+    <script>
+        $(function () {
+            var $table = $("#table").bootstrapTable();
+        });
+    </script>
 }
 
 

@@ -21,46 +21,52 @@
             </div>
             <div class="card-body">
 
-                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                <table id="table"
+                       data-search="true"
+                       data-pagination="true"
+                       data-show-export="true"
+                       data-filter-control="true"
+                       data-show-search-clear-button="true"
+                       class="table">
                     <thead>
                         <tr>
-                            <th>
+                            <th data-field="summary" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Summary)
                             </th>
-                            <th>
+                            <th data-field="description" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Description)
                             </th>
-                            <th>
+                            <th data-field="ticket" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Ticket)
                             </th>
-                            <th>
+                            <th data-field="todoTaskType" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.TodoTaskType)
                             </th>
-                            <th>
+                            <th data-field="status" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.Status)
                             </th>
-                            <th>
+                            <th data-field="dueDate" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.DueDate)
                             </th>
-                            <th>
+                            <th data-field="startDate" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.StartDate)
                             </th>
-                            <th>
+                            <th data-field="completionDate" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.CompletionDate)
                             </th>
-                            <th>
+                            <th data-field="cancellationDate" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.CancellationDate)
                             </th>
-                            <th>
+                            <th data-field="pendingDate" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.PendingDate)
                             </th>
-                            <th>
+                            <th data-field="markCompleted" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.MarkCompleted)
                             </th>
-                            <th>
+                            <th data-field="estDuration" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.EstDuration)
                             </th>
-                            <th></th>
+                            <th data-field="actions"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,28 +118,7 @@
                         }
                     </tbody>
                 </table>
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#">Prev</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">4</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                
             </div>
         </div>
     </div>
@@ -146,6 +131,11 @@
 
 @* view-scripts *@
 @section Scripts {
+    <script>
+        $(function () {
+            var $table = $("#table").bootstrapTable();
+        });
+    </script>
 }
 
 

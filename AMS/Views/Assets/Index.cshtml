@@ -22,34 +22,37 @@
             </div>
             <div class="card-body">
 
-                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                <table id="table"
+                       data-search="true"
+                       data-pagination="true"
+                       data-show-export="true"
+                       data-filter-control="true"
+                       data-show-search-clear-button="true"
+                       class="table">
                     <thead>
                         <tr>
-                            <th>
+                            <th data-field="name" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Name)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CodeNumber)
-                            </th>
-                            <th>
+                            <th data-field="code" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Code)
                             </th>
-                            <th>
+                            <th data-field="client" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.Client)
                             </th>
-                            <th>
+                            <th data-field="assetType" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.AssetType)
                             </th>
-                            <th>
+                            <th data-field="location" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.Location)
                             </th>
-                            <th>
+                            <th data-field="parent" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Parent)
                             </th>
-                            <th>
+                            <th data-field="isOn" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.IsOn)
                             </th>
-                            <th></th>
+                            <th data-field="actions"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,9 +61,6 @@
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CodeNumber)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Code)
@@ -90,28 +90,7 @@
                         }
                     </tbody>
                 </table>
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#">Prev</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">4</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                
             </div>
         </div>
     </div>
@@ -124,6 +103,11 @@
 
 @* view-scripts *@
 @section Scripts {
+    <script>
+        $(function () {
+            var $table = $("#table").bootstrapTable();
+        });
+    </script>
 }
 
 
