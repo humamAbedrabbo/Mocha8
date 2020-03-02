@@ -76,7 +76,7 @@ $.getJSON('/Home/GetLocationTicketsData', {}, function (data) {
                 highlightStroke: 'rgba(220, 220, 220, 1)',
                 data: chartTicketsByLocationModel.dataSetLabels[0].data
             }, {
-                label: chartMonthlyTicketsModel.dataSetLabels[1].label,
+                    label: chartTicketsByLocationModel.dataSetLabels[1].label,
                 backgroundColor: 'rgba(151, 187, 205, 0.5)',
                 borderColor: 'rgba(151, 187, 205, 0.8)',
                 highlightFill: 'rgba(151, 187, 205, 0.75)',
