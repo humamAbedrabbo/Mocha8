@@ -1,43 +1,73 @@
 ﻿@model AMS.Models.AssetItem
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Asset Item";
+    ViewData["Action"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>AssetItem</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="AssetId" class="control-label"></label>
-                <select asp-for="AssetId" class="form-control" asp-items="ViewBag.AssetId"></select>
-                <span asp-validation-for="AssetId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ItemTypeId" class="control-label"></label>
-                <select asp-for="ItemTypeId" class="form-control" asp-items="ViewBag.ItemTypeId"></select>
-                <span asp-validation-for="ItemTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PartNumber" class="control-label"></label>
-                <input asp-for="PartNumber" class="form-control" />
-                <span asp-validation-for="PartNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Id Hidden -->
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- Asset Select -->
+                    <div class="form-group row">
+                        <label asp-for="AssetId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="AssetId" class="form-control" asp-items="ViewBag.AssetId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="AssetId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- ItemTypeId Select -->
+                    <div class="form-group row">
+                        <label asp-for="ItemTypeId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="ItemTypeId" class="form-control" asp-items="ViewBag.ItemTypeId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="ItemTypeId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- PartNumber Input -->
+                    <div class="form-group row">
+                        <label asp-for="PartNumber" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="PartNumber" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="PartNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
             </div>
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -1,91 +1,156 @@
 ﻿@model AMS.Models.Ticket
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Ticket";
+    ViewData["Action"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Ticket</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="TenantId" type="hidden" value="@ViewBag.TenantId" />
-            <div class="form-group">
-                <label asp-for="Summary" class="control-label"></label>
-                <input asp-for="Summary" class="form-control" />
-                <span asp-validation-for="Summary" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClientId" class="control-label"></label>
-                <select asp-for="ClientId" class ="form-control" asp-items="ViewBag.ClientId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TicketTypeId" class="control-label"></label>
-                <select asp-for="TicketTypeId" class ="form-control" asp-items="ViewBag.TicketTypeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="LocationId" class="control-label"></label>
-                <select asp-for="LocationId" class ="form-control" asp-items="ViewBag.LocationId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DueDate" class="control-label"></label>
-                <input asp-for="DueDate" class="form-control" />
-                <span asp-validation-for="DueDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompletionDate" class="control-label"></label>
-                <input asp-for="CompletionDate" class="form-control" />
-                <span asp-validation-for="CompletionDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CancellationDate" class="control-label"></label>
-                <input asp-for="CancellationDate" class="form-control" />
-                <span asp-validation-for="CancellationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PendingDate" class="control-label"></label>
-                <input asp-for="PendingDate" class="form-control" />
-                <span asp-validation-for="PendingDate" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="MarkCompleted" /> @Html.DisplayNameFor(model => model.MarkCompleted)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstDuration" class="control-label"></label>
-                <input asp-for="EstDuration" class="form-control" />
-                <span asp-validation-for="EstDuration" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- TenantId Hidden -->
+                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    <div class="row">
+                        <!-- Summary Input -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label asp-for="Summary" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-12">
+                                <input asp-for="Summary" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="Summary" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <!-- TicketType Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="TicketTypeId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Selecting ticket type will define the properties of ticket</small></span>
+                                <span asp-validation-for="TicketTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <!-- Ticket Client and Location Select -->
+                    <div class="row">
+                        <!-- Ticket Client Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="ClientId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId">
+                                    <option value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Client is the owner of the ticket</small></span>
+                                <span asp-validation-for="ClientId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Location Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="LocationId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="LocationId" class="form-control" asp-items="ViewBag.LocationId">
+                                    <option value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Select the location of the ticket</small></span>
+                                <span asp-validation-for="LocationId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Ticket Start Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="StartDate" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="StartDate" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Ticket DueDate Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="DueDate" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="DueDate" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="DueDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Ticket EstDuration Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="EstDuration" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="EstDuration" class="form-control" />
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Estimated duration in days</small></span>
+                                <span asp-validation-for="EstDuration" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Status Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="Status" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select class="form-control" disabled asp-for="Status" asp-items="Html.GetEnumSelectList<WorkStatus>()"></select>
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row">
+                        <!-- Ticket Description TextArea -->
+                        <div class="form-group col-md-12">
+                            <label asp-for="Description" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <textarea asp-for="Description" rows="5" class="form-control"></textarea>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Describe the problem in 500 characters max</small></span>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+

@@ -1,65 +1,128 @@
 ﻿@model AMS.Models.Asset
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Asset";
+    ViewData["Action"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Asset</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="TenantId" />
-            
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input readonly asp-for="Code" class="form-control" />
-                <input type="hidden" asp-for="CodeNumber" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClientId" class="control-label"></label>
-                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
-                <span asp-validation-for="ClientId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AssetTypeId" class="control-label"></label>
-                <select asp-for="AssetTypeId" class="form-control" asp-items="ViewBag.AssetTypeId"></select>
-                <span asp-validation-for="AssetTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LocationId" class="control-label"></label>
-                <select asp-for="LocationId" class="form-control" asp-items="ViewBag.LocationId"></select>
-                <span asp-validation-for="LocationId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ParentId" class="control-label"></label>
-                <select asp-for="ParentId" class="form-control" asp-items="ViewBag.ParentId"><option value=""></option></select>
-                <span asp-validation-for="ParentId" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsOn" /> @Html.DisplayNameFor(model => model.IsOn)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Id Hidden -->
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- TenantId Hidden -->
+                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    <!-- CodeNumber Hidden -->
+                    <input type="hidden" asp-for="CodeNumber" />
+
+                    <!-- Asset On/Off Switch Input -->
+                    <div class="form-group">
+                        <label class="switch switch-label switch-pill switch-primary">
+                            <input asp-for="IsOn" class="switch-input">
+                            <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <!-- Code Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="Code" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="Code" class="form-control" disabled />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- AssetType Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="AssetTypeId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="AssetTypeId" class="form-control" asp-items="ViewBag.AssetTypeId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Selecting asset type will define the properties of asset</small></span>
+                                <span asp-validation-for="AssetTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Name Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="Name" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="Name" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asset Client and Location Select -->
+                    <div class="row">
+                        <!-- Asset Client Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="ClientId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId">
+                                    <option value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Client is the owner of the asset</small></span>
+                                <span asp-validation-for="ClientId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Asset Location Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="LocationId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="LocationId" class="form-control" asp-items="ViewBag.LocationId">
+                                    <option value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Select the current location of the asset</small></span>
+                                <span asp-validation-for="LocationId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Asset Parent Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="ParentId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="ParentId" class="form-control" asp-items="ViewBag.ParentId">
+                                    <option value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Select another asset as a parent for this asset</small></span>
+                                <span asp-validation-for="ParentId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace AMS.Models
 {
@@ -15,17 +16,35 @@ namespace AMS.Models
         public int Id { get; set; }
         public int TenantId { get; set; }
         public Tenant Tenant { get; set; }
+
+        [Display(Name = "Asset Name")]
+        [Required]
+        [StringLength(50, MinimumLength = 1)]
         public string Name { get; set; }
         public int CodeNumber { get; set; }
+
+        [Display(Name = "Code")]
+        [StringLength(50, MinimumLength = 1)]
         public string Code { get; set; }
+
+        [Display(Name = "Client")]
         public int? ClientId { get; set; }
         public Client Client { get; set; }
+
+        [Display(Name = "Asset Type")]
+        [Required]
         public int? AssetTypeId { get; set; }
         public AssetType AssetType { get; set; }
+
+        [Display(Name = "Location")]
         public int? LocationId { get; set; }
         public Location Location { get; set; }
+
+        [Display(Name = "Parent Asset")]
         public int? ParentId { get; set; }
         public Asset Parent { get; set; }
+
+        [Display(Name = "On/Off")]
         public bool IsOn { get; set; }
         public double Lng { get; set; }
         public double Lat { get; set; }

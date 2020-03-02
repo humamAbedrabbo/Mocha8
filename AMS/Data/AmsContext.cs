@@ -118,7 +118,7 @@ namespace AMS.Data
             // CustomList
             builder.Entity<CustomList>().Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Entity<CustomListItem>().Property(p => p.Key).IsRequired().HasMaxLength(10);
-            builder.Entity<CustomListItem>().Property(p => p.Value).IsRequired().HasMaxLength(100);
+            builder.Entity<CustomListItem>().Property(p => p.Value).HasMaxLength(100);
             builder.Entity<CustomListItem>().HasOne(p => p.CustomList)
                 .WithMany(p => p.Items)
                 .HasForeignKey(p => p.CustomListId)
@@ -156,7 +156,7 @@ namespace AMS.Data
 
             // Ticket
             builder.Entity<Ticket>().Property(p => p.Summary).IsRequired().HasMaxLength(100);
-            builder.Entity<Ticket>().Property(p => p.Description).HasMaxLength(250);
+            builder.Entity<Ticket>().Property(p => p.Description).HasMaxLength(500);
             builder.Entity<Ticket>().HasOne(p => p.TicketType)
                 .WithMany(p => p.Tickets)
                 .HasForeignKey(p => p.TicketTypeId)
@@ -177,7 +177,7 @@ namespace AMS.Data
 
             // TodoTask
             builder.Entity<TodoTask>().Property(p => p.Summary).IsRequired().HasMaxLength(100);
-            builder.Entity<TodoTask>().Property(p => p.Description).HasMaxLength(250);
+            builder.Entity<TodoTask>().Property(p => p.Description).HasMaxLength(500);
 
             // Assignment
             builder.Entity<Assignment>().Property(p => p.RoleName).HasMaxLength(100);

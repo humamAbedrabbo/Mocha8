@@ -58,7 +58,8 @@ namespace AMS.Controllers
         public async Task<IActionResult> Create()
         {
             await SetViewData();
-            return View();
+            var task = new TodoTask();
+            return View(task);
         }
 
         // POST: TodoTasks/Create

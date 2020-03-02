@@ -1,41 +1,68 @@
 ﻿@model AMS.Models.CustomListItem
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "List Item";
+    ViewData["Action"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>CustomListItem</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CustomListId" class="control-label"></label>
-                <select asp-for="CustomListId" class ="form-control" asp-items="ViewBag.CustomListId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Key" class="control-label"></label>
-                <input asp-for="Key" class="form-control" />
-                <span asp-validation-for="Key" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Value" class="control-label"></label>
-                <input asp-for="Value" class="form-control" />
-                <span asp-validation-for="Value" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- CustomListId Select -->
+                    <div class="form-group row">
+                        <label asp-for="CustomListId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="CustomListId" class="form-control" asp-items="ViewBag.CustomListId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="CustomListId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Key Input -->
+                    <div class="form-group row">
+                        <label asp-for="Key" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Key" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Key" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Value Input -->
+                    <div class="form-group row">
+                        <label asp-for="Value" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Value" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Value" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
             </div>
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

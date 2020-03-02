@@ -61,7 +61,8 @@ namespace AMS.Controllers
         public async Task<IActionResult> Create()
         {
             await SetViewData();
-            return View();
+            var ticket = new Ticket();
+            return View(ticket);
         }
 
         // POST: Tickets/Create

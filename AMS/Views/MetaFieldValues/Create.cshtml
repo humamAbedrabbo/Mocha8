@@ -1,51 +1,104 @@
 ﻿@model AMS.Models.MetaFieldValue
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Meta Field Value";
+    ViewData["Action"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>MetaFieldValue</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FieldId" class="control-label"></label>
-                <select asp-for="FieldId" class ="form-control" asp-items="ViewBag.FieldId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="AssetTypeId" class="control-label"></label>
-                <select asp-for="AssetTypeId" class ="form-control" asp-items="ViewBag.AssetTypeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="AssetId" class="control-label"></label>
-                <select asp-for="AssetId" class ="form-control" asp-items="ViewBag.AssetId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TicketTypeId" class="control-label"></label>
-                <select asp-for="TicketTypeId" class ="form-control" asp-items="ViewBag.TicketTypeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TicketId" class="control-label"></label>
-                <select asp-for="TicketId" class ="form-control" asp-items="ViewBag.TicketId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Value" class="control-label"></label>
-                <input asp-for="Value" class="form-control" />
-                <span asp-validation-for="Value" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- MetaFieldId Select -->
+                    <div class="form-group row">
+                        <label asp-for="FieldId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="FieldId" class="form-control" asp-items="ViewBag.FieldId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="FieldId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- AssetTypeId Select -->
+                    <div class="form-group row">
+                        <label asp-for="AssetTypeId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="AssetTypeId" class="form-control" asp-items="ViewBag.AssetTypeId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="AssetTypeId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- TicketTypeId Select -->
+                    <div class="form-group row">
+                        <label asp-for="TicketTypeId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="TicketTypeId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- AssetId Select -->
+                    <div class="form-group row">
+                        <label asp-for="AssetId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="AssetId" class="form-control" asp-items="ViewBag.AssetId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="AssetId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- TicketId Select -->
+                    <div class="form-group row">
+                        <label asp-for="TicketId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="AssetId" class="form-control" asp-items="ViewBag.TicketId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="TicketId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Field Value Input -->
+                    <div class="form-group row">
+                        <label asp-for="Value" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Value" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Value" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

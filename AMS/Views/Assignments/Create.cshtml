@@ -1,48 +1,94 @@
 ﻿@model AMS.Models.Assignment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Assignment";
+    ViewData["Action"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Assignment</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserGroupId" class="control-label"></label>
-                <select asp-for="UserGroupId" class ="form-control" asp-items="ViewBag.UserGroupId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoleName" class="control-label"></label>
-                <input asp-for="RoleName" class="form-control" />
-                <span asp-validation-for="RoleName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TicketId" class="control-label"></label>
-                <select asp-for="TicketId" class ="form-control" asp-items="ViewBag.TicketId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TodoTaskId" class="control-label"></label>
-                <select asp-for="TodoTaskId" class ="form-control" asp-items="ViewBag.TodoTaskId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Ticket Select -->
+                    <div class="form-group row">
+                        <label asp-for="TicketId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="TicketId" class="form-control" asp-items="ViewBag.TicketId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="TicketId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Task Select -->
+                    <div class="form-group row">
+                        <label asp-for="TodoTaskId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="TodoTaskId" class="form-control" asp-items="ViewBag.TodoTaskId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="TodoTaskId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- UserGroup Select -->
+                    <div class="form-group row">
+                        <label asp-for="UserGroupId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="UserGroupId" class="form-control" asp-items="ViewBag.UserGroupId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="UserGroupId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- User Select -->
+                    <div class="form-group row">
+                        <label asp-for="UserId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- RoleName Input -->
+                    <div class="form-group row">
+                        <label asp-for="RoleName" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="RoleName" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="RoleName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
             </div>
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
