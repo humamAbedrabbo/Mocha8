@@ -52,7 +52,7 @@ namespace AMS.Controllers
             ChartModel model = new ChartModel();
             int currentMonth = DateTime.Today.Month;
             int currentYear = DateTime.Today.Year;
-            var openTicketsDS = new ChartModel.DataSetLabel() { Label = "Open" };
+            var openTicketsDS = new ChartModel.DataSetLabel() { Label = "Open or Pending" };
             var completedTicketsDS = new ChartModel.DataSetLabel() { Label = "Closed" };
 
             var tickets = await userService.GetTicketsAsync();
@@ -147,7 +147,7 @@ namespace AMS.Controllers
             ChartModel model = new ChartModel();
             int currentMonth = DateTime.Today.Month;
             int currentYear = DateTime.Today.Year;
-            var openTicketsDS = new ChartModel.DataSetLabel() { Label = "Open" };
+            var openTicketsDS = new ChartModel.DataSetLabel() { Label = "Open or Pending" };
             var completedTicketsDS = new ChartModel.DataSetLabel() { Label = "Closed" };
 
             var tickets = await userService.GetTicketsAsync();
