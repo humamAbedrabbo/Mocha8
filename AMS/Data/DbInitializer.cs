@@ -166,7 +166,7 @@ namespace AMS.Data
 
             var codeGenerator = new CodeGenerator(context);
 
-            var ctCompany = new ClientType { Name = "Company" };
+            var ctCompany = new ClientType { Name = "Department" };
             tenant.ClientTypes.Add(ctCompany);
 
             var ltBld = new LocationType { Name = "Building" };
