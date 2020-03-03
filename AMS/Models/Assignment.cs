@@ -22,7 +22,7 @@ namespace AMS.Models
         public int? TicketId { get; set; }
         public Ticket Ticket { get; set; }
 
-        [Display(Name = "User Group")]
+        [Display(Name = "Todo Task")]
         public int? TodoTaskId { get; set; }
         public TodoTask TodoTask { get; set; }
     }
