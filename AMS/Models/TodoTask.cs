@@ -10,6 +10,7 @@ namespace AMS.Models
         {
             StartDate = DateTime.Now;
             EstDuration = 1;
+            DueDate = StartDate.AddDays(EstDuration);
             Status = WorkStatus.Open;
             Assignments = new List<Assignment>();
         }

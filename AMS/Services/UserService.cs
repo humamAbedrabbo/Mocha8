@@ -180,6 +180,12 @@ namespace AMS.Services
             .OrderBy(x => x.Name)
             .ToListAsync();
 
+        public async Task<int> GetTicketDefaultDuration(int ticketTypeId)
+            => await context.TicketTypes
+            .Where(x => x.Id == ticketTypeId && x.TenantId == GetUserTenantId())
+            .Select(x => x.DefaultDuration)
+            .FirstOrDefaultAsync();
+
         public async Task<SelectList> GetTicketTypesSelectAsync(int? id = null)
             => new SelectList(await GetTicketTypesAsync(), "Id", "Name", id);
 
@@ -188,6 +194,12 @@ namespace AMS.Services
             .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Name)
             .ToListAsync();
+
+        public async Task<int> GetTodoTaskDefaultDuration(int todoTaskTypeId)
+            => await context.TodoTaskTypes
+            .Where(x => x.Id == todoTaskTypeId && x.TenantId == GetUserTenantId())
+            .Select(x => x.DefaultDuration)
+            .FirstOrDefaultAsync();
 
         public async Task<SelectList> GetTodoTaskTypesSelectAsync(int? id = null)
             => new SelectList(await GetTodoTaskTypesAsync(), "Id", "Name", id);

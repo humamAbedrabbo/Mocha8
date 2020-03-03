@@ -28,10 +28,12 @@ namespace AMS.Services
         Task<SelectList> GetMembersSelectAsync(int? id = null);
         Task<IEnumerable<MetaField>> GetMetaFieldsAsync();
         Task<SelectList> GetMetaFieldsSelectAsync(int? id = null);
+        Task<int> GetTicketDefaultDuration(int ticketTypeId);
         Task<IEnumerable<Ticket>> GetTicketsAsync();
         Task<SelectList> GetTicketsSelectAsync(int? id = null);
         Task<IEnumerable<TicketType>> GetTicketTypesAsync();
         Task<SelectList> GetTicketTypesSelectAsync(int? id = null);
+        Task<int> GetTodoTaskDefaultDuration(int todoTaskTypeId);
         Task<IEnumerable<TodoTask>> GetTodoTasksAsync();
         Task<SelectList> GetTodoTasksSelectAsync(int? id = null);
         Task<IEnumerable<TodoTaskType>> GetTodoTaskTypesAsync();

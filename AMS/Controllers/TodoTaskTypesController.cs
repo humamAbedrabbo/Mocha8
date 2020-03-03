@@ -33,6 +33,12 @@ namespace AMS.Controllers
             return View(await userService.GetTodoTaskTypesAsync());
         }
 
+        // GET: int
+        public async Task<int> GetDefaultDuration(int todoTaskTypeId)
+        {
+            return await userService.GetTodoTaskDefaultDuration(todoTaskTypeId);
+        }
+
         // GET: TodoTaskTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -62,7 +68,7 @@ namespace AMS.Controllers
         // POST: TodoTaskTypes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Name")] TodoTaskType todoTaskType)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,DefaultDuration")] TodoTaskType todoTaskType)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +100,7 @@ namespace AMS.Controllers
         // POST: TodoTaskTypes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name")] TodoTaskType todoTaskType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,DefaultDuration")] TodoTaskType todoTaskType)
         {
             if (id != todoTaskType.Id)
             {

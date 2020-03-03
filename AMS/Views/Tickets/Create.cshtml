@@ -150,7 +150,37 @@
 </div>
 
 @section Scripts {
+
+    <script>
+        $(function () {
+            $("#TicketTypeId").change(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/TicketTypes/GetDefaultDuration',
+                    data: { ticketTypeId: $(this).val() },
+                    dataType: 'json',
+                    success: function (result) {
+                        $("#EstDuration").val(result);
+                        var $dueDate = $("#StartDate").val();
+                        var dt = new Date($dueDate);
+                        dt.setDate(dt.getDate() + result);
+                        var yyyy = dt.getFullYear();
+                        var mm = ((dt.getMonth()+1) > 10) ? dt.getMonth()+1 : ('0' + (dt.getMonth()+1));
+                        var dd = (dt.getDate() > 10) ? dt.getDate() : ('0' + dt.getDate());
+                        $("#DueDate").val(yyyy + '-' + mm + '-' + dd);
+                    }
+                });
+
+            });
+            //var $defaultDuration =  = $("#DefaultDuration");
+
+        });
+    </script>
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
 }
 
 

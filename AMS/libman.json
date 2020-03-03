@@ -5,6 +5,10 @@
     {
       "library": "leaflet@1.6.0",
       "destination": "wwwroot/lib/leaflet/"
+    },
+    {
+      "library": "jquery@3.4.1",
+      "destination": "wwwroot/lib/jquery/"
     }
   ]
 }

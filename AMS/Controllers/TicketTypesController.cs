@@ -37,6 +37,12 @@ namespace AMS.Controllers
             return View(await userService.GetTicketTypesAsync());
         }
 
+        // GET: int
+        public async Task<int> GetDefaultDuration(int ticketTypeId)
+        {
+            return await userService.GetTicketDefaultDuration(ticketTypeId);
+        }
+
         // GET: TicketTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -66,7 +72,7 @@ namespace AMS.Controllers
         // POST: TicketTypes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code")] TicketType ticketType, int interval, int repeat, string summary)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code,DefaultDuration")] TicketType ticketType, int interval, int repeat, string summary)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +123,7 @@ namespace AMS.Controllers
         // POST: TicketTypes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code")] TicketType ticketType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code,DefaultDuration")] TicketType ticketType)
         {
             if (id != ticketType.Id)
             {

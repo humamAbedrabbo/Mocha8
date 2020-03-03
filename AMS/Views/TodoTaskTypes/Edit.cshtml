@@ -31,6 +31,16 @@
                         </div>
                     </div>
 
+                    <!-- Default Duration Input -->
+                    <div class="form-group row">
+                        <label asp-for="DefaultDuration" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="DefaultDuration" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="DefaultDuration" class="text-danger"></span>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-sm btn-primary">

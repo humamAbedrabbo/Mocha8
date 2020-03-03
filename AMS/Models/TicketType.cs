@@ -23,6 +23,9 @@ namespace AMS.Models
         [Required]
         [StringLength(5, MinimumLength = 1)]
         public string Code { get; set; } = "TK";
+
+        [Display(Name = "Default Duration")]
+        public int DefaultDuration { get; set; } = 1;
         public List<Ticket> Tickets { get; set; }
         public List<MetaFieldValue> Values { get; set; }
     }

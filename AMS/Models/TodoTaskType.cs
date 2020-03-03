@@ -12,5 +12,9 @@ namespace AMS.Models
         [Required]
         [StringLength(50, MinimumLength = 1)]
         public string Name { get; set; }
+        
+        [Display(Name = "Default Duration")]
+        public int DefaultDuration { get; set; } = 1;
+
     }
 }
