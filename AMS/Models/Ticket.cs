@@ -52,7 +52,7 @@ namespace AMS.Models
         [Display(Name = "Due Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [DataType(DataType.Date)]
-        public DateTime? DueDate { get; set; }
+        public DateTime DueDate { get; set; }
 
         [Display(Name = "Start Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
