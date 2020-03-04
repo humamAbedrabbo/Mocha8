@@ -209,6 +209,7 @@ namespace AMS.Data
             var fDepartment = new MetaField { FieldType = FieldType.ListItem, Name = "Department", CustomListId = CLDepartments.Id, TenantId = tenant.Id };
             var fFloor = new MetaField { FieldType = FieldType.Number, Name = "Floor", TenantId = tenant.Id };
             var fDone = new MetaField { FieldType = FieldType.Boolean, Name = "Done", TenantId = tenant.Id };
+            var fWebsite = new MetaField { FieldType = FieldType.Url, Name = "Website", TenantId = tenant.Id };
             context.MetaFields.Add(fPcName);            
             context.MetaFields.Add(fBrand);            
             context.MetaFields.Add(fModel);            
@@ -217,6 +218,7 @@ namespace AMS.Data
             context.MetaFields.Add(fDepartment);            
             context.MetaFields.Add(fFloor);            
             context.MetaFields.Add(fDone);
+            context.MetaFields.Add(fWebsite);
             context.SaveChanges();
 
             var atPC = new AssetType { Name = "PC", Code = "PC", TenantId = tenant.Id };
@@ -227,6 +229,7 @@ namespace AMS.Data
             atPC.Values.Add(new MetaFieldValue { FieldId = fUserName.Id });
             atPC.Values.Add(new MetaFieldValue { FieldId = fDepartment.Id });
             atPC.Values.Add(new MetaFieldValue { FieldId = fFloor.Id });
+            atPC.Values.Add(new MetaFieldValue { FieldId = fWebsite.Id, UrlValue = "http://google.com" });
             var atTower = new AssetType { Name = "Tower", Code = "TW", TenantId = tenant.Id };
             context.AssetTypes.Add(atPC);
             context.AssetTypes.Add(atTower);
@@ -311,6 +314,8 @@ namespace AMS.Data
                 asset.Values.Add(new MetaFieldValue { FieldId = fDepartment.Id, Value = $"{dep}" });
                 asset.Values.Add(new MetaFieldValue { FieldId = fUserName.Id, Value = $"User{i}" });
                 asset.Values.Add(new MetaFieldValue { FieldId = fBarCode.Id, Value = $"XXX-{i}-XXX" });
+                asset.Values.Add(new MetaFieldValue { FieldId = fDone.Id, Value = $"true" });
+                asset.Values.Add(new MetaFieldValue { FieldId = fWebsite.Id, Value = $"http://google.com" });
                 context.Assets.Add(asset);
                 context.SaveChanges();
             }

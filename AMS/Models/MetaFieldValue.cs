@@ -122,26 +122,26 @@ namespace AMS.Models
         }
 
         [Display(Name = "True/False")]
-        public bool? BooleanValue
+        public bool BooleanValue
         {
             get
             {
                 if (string.IsNullOrEmpty(Value))
                 {
-                    return null;
+                    return false;
                 }
                 else
                 {
                     if (this.Field?.FieldType == FieldType.Boolean)
                         return Convert.ToBoolean(Value);
                     else
-                        return null;
+                        return false;
 
                 }
             }
             set
             {
-                Value = value.HasValue ? value.Value.ToString() : null;
+                Value = value.ToString();
             }
         }
 

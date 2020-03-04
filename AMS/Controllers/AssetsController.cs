@@ -94,7 +94,7 @@ namespace AMS.Controllers
                 
                 _context.Add(asset);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { id = asset.Id });
             }
             await SetViewData();
             return View(asset);
@@ -108,7 +108,9 @@ namespace AMS.Controllers
                 return NotFound();
             }
 
-            var asset = await _context.Assets.FindAsync(id);
+            var asset = await _context.Assets
+                .Include(x => x.Values).ThenInclude(x => x.Field)
+                .FirstAsync(x => x.Id == id);
             if (asset == null)
             {
                 return NotFound();
@@ -129,7 +131,7 @@ namespace AMS.Controllers
         // POST: Assets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code,CodeNumber,ClientId,AssetTypeId,LocationId,ParentId,IsOn")] Asset asset)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code,CodeNumber,ClientId,AssetTypeId,LocationId,ParentId,IsOn,Values")] Asset asset)
         {
             if (id != asset.Id)
             {
