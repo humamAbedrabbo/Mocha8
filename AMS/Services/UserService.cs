@@ -98,6 +98,15 @@ namespace AMS.Services
         public async Task<SelectList> GetCustomListsSelectAsync(int? id = null)
             => new SelectList(await GetCustomListsAsync(), "Id", "Name", id);
 
+        public async Task<IEnumerable<CustomListItem>> GetCustomListItemsAsync(int listId)
+            => await context.CustomListItems
+            .Where(x => x.CustomListId == listId)
+            .OrderBy(x => x.Key)
+            .ToListAsync();
+
+        public async Task<SelectList> GetCustomListItemsSelectAsync(int listId, string key = null)
+            => new SelectList(await GetCustomListItemsAsync(listId), "Key", "Value", key);
+
         public async Task<IEnumerable<Location>> GetLocationsAsync()
             => await context.Locations
             .Include(x => x.LocationType)

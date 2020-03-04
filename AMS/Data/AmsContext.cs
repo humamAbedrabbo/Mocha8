@@ -93,6 +93,13 @@ namespace AMS.Data
 
             // MetaFieldValue
             builder.Entity<MetaFieldValue>().Property(p => p.Value).HasMaxLength(250);
+            builder.Entity<MetaFieldValue>().Ignore(p => p.UrlValue);
+            builder.Entity<MetaFieldValue>().Ignore(p => p.NumberValue);
+            builder.Entity<MetaFieldValue>().Ignore(p => p.DecimalValue);
+            builder.Entity<MetaFieldValue>().Ignore(p => p.DateValue);
+            builder.Entity<MetaFieldValue>().Ignore(p => p.DateTimeValue);
+            builder.Entity<MetaFieldValue>().Ignore(p => p.BooleanValue);
+            
             builder.Entity<MetaFieldValue>().HasOne(p => p.Field)
                 .WithMany(p => p.Values)
                 .HasForeignKey(p => p.FieldId)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace AMS.Models
 {
@@ -16,8 +17,14 @@ namespace AMS.Models
         public int? TicketId { get; set; }
         public Ticket Ticket { get; set; }
         public string Value { get; set; }
+
+        [Display(Name = "Url")]
+        [DataType(DataType.Url)]
         public string UrlValue { get => Value; set => Value = value; }
 
+        [Display(Name = "Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
         public DateTime? DateValue
         {
             get
@@ -40,6 +47,9 @@ namespace AMS.Models
             }
         }
 
+        [Display(Name = "Date/Time")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.DateTime)]
         public DateTime? DateTimeValue
         {
             get
@@ -63,6 +73,7 @@ namespace AMS.Models
             }
         }
 
+        [Display(Name = "Number")]
         public int? NumberValue
         {
             get
@@ -86,6 +97,7 @@ namespace AMS.Models
             }
         }
 
+        [Display(Name = "Decimal")]
         public double? DecimalValue
         {
             get
@@ -109,6 +121,7 @@ namespace AMS.Models
             }
         }
 
+        [Display(Name = "True/False")]
         public bool? BooleanValue
         {
             get
@@ -130,6 +143,11 @@ namespace AMS.Models
             {
                 Value = value.HasValue ? value.Value.ToString() : null;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{Field?.Name}/{Value}";
         }
     }
 }

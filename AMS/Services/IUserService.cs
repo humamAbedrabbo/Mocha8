@@ -16,6 +16,8 @@ namespace AMS.Services
         Task<IEnumerable<ClientType>> GetClientTypesAsync();
         Task<SelectList> GetClientTypesSelectAsync(int? id = null);
         Task<AmsUser> GetCurrentUserAsync();
+        Task<IEnumerable<CustomListItem>> GetCustomListItemsAsync(int listId);
+        Task<SelectList> GetCustomListItemsSelectAsync(int listId, string key = null);
         Task<IEnumerable<CustomList>> GetCustomListsAsync();
         Task<SelectList> GetCustomListsSelectAsync(int? id = null);
         Task<IEnumerable<ItemType>> GetItemTypesAsync();

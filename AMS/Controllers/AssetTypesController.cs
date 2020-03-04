@@ -30,8 +30,7 @@ namespace AMS.Controllers
         // GET: AssetTypes
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.AssetTypes.Include(a => a.Tenant);
-            return View(await amsContext.ToListAsync());
+            return View(await userService.GetAssetTypesAsync());
         }
 
         // GET: AssetTypes/Details/5
@@ -54,24 +53,30 @@ namespace AMS.Controllers
         }
 
         // GET: AssetTypes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name");
+            await SetViewData();
             return View();
+        }
+
+        public async Task SetViewData()
+        {
+            ViewData["FieldId"] = await userService.GetMetaFieldsSelectAsync();
+            ViewData["TenantId"] = userService.GetUserTenantId();
         }
 
         // POST: AssetTypes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code")] AssetType assetType)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code,Values")] AssetType assetType)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(assetType);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { id = assetType.Id });
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", assetType.TenantId);
+            await SetViewData();
             return View(assetType);
         }
 
@@ -83,19 +88,21 @@ namespace AMS.Controllers
                 return NotFound();
             }
 
-            var assetType = await _context.AssetTypes.FindAsync(id);
+            var assetType = await _context.AssetTypes
+                .Include(x => x.Values).ThenInclude(x => x.Field)
+                .FirstAsync(x => x.Id == id);
             if (assetType == null)
             {
                 return NotFound();
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", assetType.TenantId);
+            await SetViewData();
             return View(assetType);
         }
 
         // POST: AssetTypes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code")] AssetType assetType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code,Values")] AssetType assetType)
         {
             if (id != assetType.Id)
             {
@@ -122,7 +129,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = new SelectList(_context.Tenants, "Id", "Name", assetType.TenantId);
+            await SetViewData();
             return View(assetType);
         }
 
@@ -136,6 +143,7 @@ namespace AMS.Controllers
 
             var assetType = await _context.AssetTypes
                 .Include(a => a.Tenant)
+                .Include(x => x.Values).ThenInclude(x => x.Field)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (assetType == null)
             {
