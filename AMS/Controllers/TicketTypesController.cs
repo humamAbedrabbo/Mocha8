@@ -33,7 +33,6 @@ namespace AMS.Controllers
         // GET: TicketTypes
         public async Task<IActionResult> Index()
         {
-            var amsContext = _context.TicketTypes.Include(t => t.Tenant);
             return View(await userService.GetTicketTypesAsync());
         }
 
@@ -63,16 +62,22 @@ namespace AMS.Controllers
         }
 
         // GET: TicketTypes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            await SetViewData();
             return View();
+        }
+
+        public async Task SetViewData()
+        {
+            ViewData["FieldId"] = await userService.GetMetaFieldsSelectAsync();
+            ViewData["TenantId"] = userService.GetUserTenantId();
         }
 
         // POST: TicketTypes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code,DefaultDuration")] TicketType ticketType, int interval, int repeat, string summary)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Name,Code,DefaultDuration,Values")] TicketType ticketType, int interval, int repeat, string summary)
         {
             if (ModelState.IsValid)
             {
@@ -91,13 +96,9 @@ namespace AMS.Controllers
                             TimeSpan.FromSeconds(interval));
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { id = ticketType.Id });
             }
-            ViewData["TenantId"] = userService.GetUserTenantId();
-
-
-            
-
+            await SetViewData();
             return View(ticketType);
         }
 
@@ -111,19 +112,21 @@ namespace AMS.Controllers
                 return NotFound();
             }
 
-            var ticketType = await _context.TicketTypes.FindAsync(id);
+            var ticketType = await _context.TicketTypes
+                .Include(x => x.Values).ThenInclude(x => x.Field)
+                .FirstAsync(x => x.Id == id);
             if (ticketType == null)
             {
                 return NotFound();
             }
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            await SetViewData();
             return View(ticketType);
         }
 
         // POST: TicketTypes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code,DefaultDuration")] TicketType ticketType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Name,Code,DefaultDuration,Values")] TicketType ticketType)
         {
             if (id != ticketType.Id)
             {
@@ -150,7 +153,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            await SetViewData();
             return View(ticketType);
         }
 

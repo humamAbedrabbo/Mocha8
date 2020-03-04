@@ -5,6 +5,8 @@
     ViewData["Action"] = "Edit";
 }
 
+@inject AMS.Services.IUserService userService
+
 <div class="row">
     <div class="offset-2 col-md-8">
         <form asp-action="@ViewBag.Action" class="form-horizontal">
@@ -50,6 +52,68 @@
                             <span asp-validation-for="DefaultDuration" class="text-danger"></span>
                         </div>
                     </div>
+
+                    @for (int i = 0; i < Model.Values.Count; i++)
+                    {
+                        <div>
+                            <div class="form-group row">
+                                <div class="offset-3 col-md-9">
+                                    <div class="row">
+                                        <label class="col-md-2 col-form-label">@Model.Values[i].Field.Name</label>
+                                        <input type="hidden" asp-for="Values[i].FieldId" />
+                                        <input type="hidden" asp-for="Values[i].TicketTypeId" />
+                                        <input type="hidden" asp-for="Values[i].Id" />
+                                        <div class="col-md-8">
+                                            @if (Model.Values[i].Field.FieldType == FieldType.Text)
+                                            {
+                                                <input asp-for="Values[i].Value" class="form-control" />
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.LargeText)
+                                            {
+                                                <textarea asp-for="Values[i].Value" class="form-control"></textarea>
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.Number)
+                                            {
+                                                <input type="number" asp-for="Values[i].NumberValue" class="form-control" />
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.Decimal)
+                                            {
+                                                <input type="number" asp-for="Values[i].DecimalValue" class="form-control" />
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.Date)
+                                            {
+                                                <input asp-for="Values[i].DateValue" class="form-control" />
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.DateTime)
+                                            {
+                                                <input asp-for="Values[i].DateTimeValue" class="form-control" />
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.Url)
+                                            {
+                                                <input asp-for="Values[i].UrlValue" class="form-control" />
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.Boolean)
+                                            {
+                                                <label class="switch switch-label switch-pill switch-primary">
+                                                    <input asp-for="Values[i].BooleanValue" class="switch-input" checked="">
+                                                    <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                                                </label>
+                                            }
+                                            @if (Model.Values[i].Field.FieldType == FieldType.ListItem)
+                                            {
+                                                <select asp-for="Values[i].Value" asp-items="await userService.GetCustomListItemsSelectAsync(Model.Values[i].Field.CustomListId.Value)" class="form-control">
+                                                    <option value="">--- SELECT ---</option>
+                                                </select>
+                                            }
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a data-repeater-delete href="#" class="btn btn-sm btn-danger">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-sm btn-primary">
