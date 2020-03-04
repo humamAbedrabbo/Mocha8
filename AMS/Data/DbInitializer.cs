@@ -236,6 +236,8 @@ namespace AMS.Data
 
             var ttGeneral = new TicketType { Name = "General", TenantId = tenant.Id };
             var ttPCMaintenance = new TicketType { Name = "PC Maintenance", Code = "PCM", TenantId = tenant.Id };
+            ttPCMaintenance.Values.Add(new MetaFieldValue { FieldId = fDone.Id, BooleanValue = true });
+            ttPCMaintenance.Values.Add(new MetaFieldValue { FieldId = fDepartment.Id, Value = null });
             context.TicketTypes.Add(ttGeneral);
             context.TicketTypes.Add(ttPCMaintenance);
 
@@ -428,6 +430,10 @@ namespace AMS.Data
                             TicketTypeId = ttPCMaintenance.Id, TenantId  = tenant.Id };
                         ticket.CodeNumber = codeGenerator.GetTicketCode(tenant.Id).Result;
                         ticket.Code = $"{ttPCMaintenance.Code}{ticket.CodeNumber.ToString("D5")}";
+                        foreach (var fld in ttPCMaintenance.Values)
+                        {
+                            ticket.Values.Add(new MetaFieldValue { FieldId = fld.FieldId, Value = fld.Value });
+                        }
                         ticket.Assignments.Add(new Assignment { UserGroupId = 2, RoleName = "Assigned To" });
                         foreach (var ass in assetIDs)
                         {

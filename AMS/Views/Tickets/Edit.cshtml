@@ -5,6 +5,8 @@
     ViewData["Action"] = "Edit";
 }
 
+@inject AMS.Services.IUserService userService
+
 <div class="row">
     <div class="offset-2 col-md-8">
         <form asp-action="@ViewBag.Action" class="form-horizontal">
@@ -147,6 +149,62 @@
                         </div>
                     </div>
 
+                    <!-- Meta Field Values -->
+                    <div class="row">
+                        @for (int i = 0; i < Model.Values.Count; i++)
+                        {
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label class="col-md-3 col-form-label">@Model.Values[i].Field.Name</label>
+                                <input type="hidden" asp-for="Values[i].FieldId" />
+                                <input type="hidden" asp-for="Values[i].TicketId" />
+                                <input type="hidden" asp-for="Values[i].Id" />
+                                <div class="col-md-9">
+                                    @if (Model.Values[i].Field.FieldType == FieldType.Text)
+                                    {
+                                        <input asp-for="Values[i].Value" class="form-control" />
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.LargeText)
+                                    {
+                                        <textarea asp-for="Values[i].Value" class="form-control"></textarea>
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.Number)
+                                    {
+                                        <input type="number" asp-for="Values[i].NumberValue" class="form-control" />
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.Decimal)
+                                    {
+                                        <input type="number" asp-for="Values[i].DecimalValue" class="form-control" />
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.Date)
+                                    {
+                                        <input asp-for="Values[i].DateValue" class="form-control" />
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.DateTime)
+                                    {
+                                        <input asp-for="Values[i].DateTimeValue" class="form-control" />
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.Url)
+                                    {
+                                        <input asp-for="Values[i].UrlValue" class="form-control" />
+                                        <span class="help-block"><small><a href="@Model.Values[i].UrlValue" target="_blank"><i class="fa fa-external-link mx-1"></i> @Model.Values[i].UrlValue</a></small></span>
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.Boolean)
+                                    {
+                                        <label class="switch switch-label switch-pill switch-primary">
+                                            <input asp-for="Values[i].BooleanValue" class="switch-input">
+                                            <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                                        </label>
+                                    }
+                                    @if (Model.Values[i].Field.FieldType == FieldType.ListItem)
+                                    {
+                                        <select asp-for="Values[i].Value" asp-items="await userService.GetCustomListItemsSelectAsync(Model.Values[i].Field.CustomListId.Value)" class="form-control">
+                                            <option value="">--- SELECT ---</option>
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
 
                 </div>
                 <div class="card-footer">

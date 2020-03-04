@@ -93,7 +93,7 @@ namespace AMS.Controllers
 
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { id = ticket.Id });
             }
             await SetViewData(ticket);
             return View(ticket);
@@ -115,7 +115,10 @@ namespace AMS.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _context.Tickets
+                .Include(x => x.Values).ThenInclude(x => x.Field)
+                .FirstAsync(x => x.Id == id);
+
             if (ticket == null)
             {
                 return NotFound();
@@ -127,7 +130,7 @@ namespace AMS.Controllers
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Code,CodeNumber,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Code,CodeNumber,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration,Values")] Ticket ticket)
         {
             if (id != ticket.Id)
             {
