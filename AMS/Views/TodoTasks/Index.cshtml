@@ -30,6 +30,9 @@
                        class="table">
                     <thead>
                         <tr>
+                            <th data-field="id" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
                             <th data-field="ticket" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Ticket)
                             </th>
@@ -54,6 +57,9 @@
                         @foreach (var item in Model)
                         {
                         <tr>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id">@item.Id</a>
+                            </td>
                             <td>
                                 @item.Ticket?.Code
                             </td>

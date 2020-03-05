@@ -49,8 +49,12 @@ namespace AMS.Controllers
 
             var todoTask = await _context.TodoTasks
                 .Include(t => t.Tenant)
-                .Include(t => t.Ticket)
+                .Include(t => t.Ticket).ThenInclude(x => x.Location)
+                .Include(t => t.Ticket).ThenInclude(x => x.Client)
+                .Include(t => t.Ticket).ThenInclude(x => x.Values).ThenInclude(v => v.Field)
                 .Include(t => t.TodoTaskType)
+                .Include(t => t.Assignments).ThenInclude(a => a.User)
+                .Include(t => t.Assignments).ThenInclude(a => a.UserGroup)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (todoTask == null)
             {

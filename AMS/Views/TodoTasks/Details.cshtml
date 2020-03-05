@@ -1,90 +1,116 @@
 ﻿@model AMS.Models.TodoTask
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Summary;
+    ViewData["Action"] = "Details";
+
 }
 
-<h1>Details</h1>
+@inject AMS.Services.IUserService userService
 
-<div>
-    <h4>TodoTask</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Summary)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Summary)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ticket)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ticket.Summary)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TodoTaskType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TodoTaskType.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DueDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DueDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompletionDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompletionDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CancellationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CancellationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PendingDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PendingDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MarkCompleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MarkCompleted)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EstDuration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EstDuration)
-        </dd>
-    </dl>
+
+<div class="row">
+    <div class="col-12">
+        <div class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    @Model.Id 
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#general" role="tab" aria-controls="general">General</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#assignments" role="tab" aria-controls="assignments">Assignments</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="general" role="tabpanel">
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.Summary)</strong></label>
+                                        <div class="col-10">@Model.Summary (@Model.Status.ToString())</div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.TicketId)</strong></label>
+                                        <div class="col-10"><a asp-controller="Tickets" asp-action="Details" asp-route-id="@Model.TicketId">@Model.Ticket?.Code</a> @Model.Ticket?.Summary</div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.TodoTaskTypeId)</strong></label>
+                                        <div class="col-10"><a class="btn-link" asp-controller="TodoTaskTypes" asp-action="Details" asp-route-id="@Model.TodoTaskTypeId">@Model.TodoTaskType?.Name</a></div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.Ticket.ClientId)</strong></label>
+                                        <div class="col-10"><a class="btn-link" asp-controller="Clients" asp-action="Details" asp-route-id="@Model.Ticket?.ClientId">@Model.Ticket?.Client?.Name</a></div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.Ticket.LocationId)</strong></label>
+                                        <div class="col-10"><a class="btn-link" asp-controller="Locations" asp-action="Details" asp-route-id="@Model.Ticket?.LocationId">@Model.Ticket?.Location?.Name</a></div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.DueDate)</strong></label>
+                                        <div class="col-10">@Model.DueDate.ToString("dd-MMM-yyyy")</div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.StartDate)</strong></label>
+                                        <div class="col-10">@Model.StartDate.ToString("dd-MMM-yyyy")</div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.EstDuration)</strong></label>
+                                        <div class="col-10">@Model.EstDuration days</div>
+                                    </div>
+
+                                    @if (Model.IsPending)
+                                    {
+                                        <div class="form-group row">
+                                            <label class="col-2"><strong>@Html.DisplayNameFor(m => m.PendingDate)</strong></label>
+                                            <div class="col-10">@Model.PendingDate.Value.ToString("dd-MMM-yyyy")</div>
+                                        </div>
+                                    }
+                                    @if (Model.CompletionDate.HasValue)
+                                    {
+                                        <div class="form-group row">
+                                            <label class="col-2"><strong>@Html.DisplayNameFor(m => m.CompletionDate)</strong></label>
+                                            <div class="col-10">@Model.CompletionDate.Value.ToString("dd-MMM-yyyy")</div>
+                                        </div>
+                                    }
+
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.Ticket.Description)</strong></label>
+                                        <p class="col-10">@Model.Ticket?.Description</p>
+                                    </div>
+                                    @if (Model.TicketId.HasValue)
+                                    {
+                                    <hr />
+                                    <partial name="_Fields" for="@Model.Ticket" />
+                                    }
+                                </div>
+                                <div class="tab-pane" id="assignments" role="tabpanel">
+                                    <partial name="_Assignments" for="@Model.Assignments" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        $(function () {
+            $(".table").bootstrapTable();
+        });
+    </script>
+}
