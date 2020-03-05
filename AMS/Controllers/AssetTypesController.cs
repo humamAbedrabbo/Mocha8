@@ -43,6 +43,8 @@ namespace AMS.Controllers
 
             var assetType = await _context.AssetTypes
                 .Include(a => a.Tenant)
+                .Include(a => a.Assets).ThenInclude(x => x.Client)
+                .Include(a => a.Assets).ThenInclude(x => x.Location)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (assetType == null)
             {

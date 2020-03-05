@@ -43,6 +43,7 @@ namespace AMS.Controllers
 
             var location = await _context.Locations
                 .Include(l => l.LocationType)
+                .Include(l => l.Childs)
                 .Include(l => l.Parent)
                 .Include(l => l.Tenant)
                 .FirstOrDefaultAsync(m => m.Id == id);

@@ -52,6 +52,8 @@ namespace AMS.Controllers
 
             var ticketType = await _context.TicketTypes
                 .Include(t => t.Tenant)
+                .Include(t => t.Tickets).ThenInclude(x => x.Client)
+                .Include(t => t.Tickets).ThenInclude(x => x.Location)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticketType == null)
             {

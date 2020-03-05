@@ -44,6 +44,7 @@ namespace AMS.Controllers
 
             var locationType = await _context.LocationTypes
                 .Include(l => l.Tenant)
+                .Include(l => l.Locations)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (locationType == null)
             {

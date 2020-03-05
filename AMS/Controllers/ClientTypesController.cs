@@ -43,6 +43,7 @@ namespace AMS.Controllers
 
             var clientType = await _context.ClientTypes
                 .Include(c => c.Tenant)
+                .Include(c => c.Clients)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (clientType == null)
             {

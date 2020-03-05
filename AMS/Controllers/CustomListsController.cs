@@ -43,6 +43,7 @@ namespace AMS.Controllers
 
             var customList = await _context.CustomLists
                 .Include(c => c.Tenant)
+                .Include(c => c.Items)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (customList == null)
             {

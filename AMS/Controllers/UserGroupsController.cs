@@ -43,6 +43,7 @@ namespace AMS.Controllers
 
             var userGroup = await _context.UserGroups
                 .Include(u => u.Tenant)
+                .Include(u => u.Members).ThenInclude(x => x.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (userGroup == null)
             {
