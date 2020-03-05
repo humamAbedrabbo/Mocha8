@@ -221,7 +221,7 @@
                 {
                     <text>
                         L.marker([@asset.Lng, @asset.Lat]).addTo(map)
-                            .bindPopup('@asset.Name')
+                            .bindPopup(`<p><a class="btn btn-sm btn-primary" href="/Assets/Details/@asset.Id">@asset.Name</a></p>`)
                             .openPopup();
                         @*var circle = L.circle([@asset.Lng, @asset.Lat], {
                             color: 'red',
