@@ -27,6 +27,12 @@ namespace AMS.Controllers
             this.userService = userService;
         }
 
+        public async Task<IActionResult> ChangeState(int id, WorkStatus status)
+        {
+            await userService.SetTaskState(id, status);
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: TodoTasks
         public async Task<IActionResult> Index()
         {

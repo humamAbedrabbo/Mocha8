@@ -29,6 +29,12 @@ namespace AMS.Controllers
             this.codeGenerator = codeGenerator;
         }
 
+        public async Task<IActionResult> ChangeState(int id, WorkStatus status)
+        {
+            await userService.SetTicketState(id, status);
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Tickets
         public async Task<IActionResult> Index()
         {

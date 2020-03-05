@@ -72,6 +72,14 @@ namespace AMS.Models
         [Display(Name = "Est. Duration")]
         [Range(0, 1000)]
         public int EstDuration { get; set; }
+
+        public bool IsOverdue => IsActive && (DueDate <= DateTime.Today);
+        public bool CanBeCompleted => (Status == WorkStatus.Open);
+        public bool CanBeCancelled => IsActive;
+        public bool IsPending => PendingDate.HasValue;
+        public bool IsActive => (Status == WorkStatus.Open || Status == WorkStatus.Pending);
+        public int Delay => IsOverdue ? (int)(DateTime.Today - DueDate).TotalDays : 0;
+
         public List<Assignment> Assignments { get; set; }
         public string Title => $"{Ticket?.Code}:{Summary}({Status.ToString()})";
         public string GroupTitle => $"{TodoTaskType?.Name}";

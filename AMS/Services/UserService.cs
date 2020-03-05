@@ -36,6 +36,107 @@ namespace AMS.Services
         public int? GetUserTenantId()
             => CurrentUser?.TenantId;
 
+        public async Task SetTicketState(int ticketId, WorkStatus status)
+        {
+            var ticket = await context.Tickets
+                .Include(x => x.Assignments)
+                .Where(x => x.TenantId == GetUserTenantId() && x.Id == ticketId)
+                .FirstOrDefaultAsync();
+            if(ticket != null && ticket.IsActive)
+            {
+                if(ticket.Status != status)
+                {
+                    if(status == WorkStatus.Cancelled)
+                    {
+                        if(ticket.CanBeCancelled)
+                        {
+                            ticket.Status = WorkStatus.Cancelled;
+                            ticket.CancellationDate = DateTime.Now;
+                            ticket.PendingDate = null;
+                        }
+                    }
+                    else if (status == WorkStatus.Completed)
+                    {
+                        if (ticket.CanBeCompleted)
+                        {
+                            ticket.Status = WorkStatus.Completed;
+                            ticket.CompletionDate = DateTime.Now;
+                            ticket.PendingDate = null;
+                        }
+                    }
+                    else if (status == WorkStatus.Open)
+                    {
+                        if (ticket.IsPending)
+                        {
+                            ticket.Status = WorkStatus.Open;
+                            ticket.PendingDate = null;
+                        }
+                    }
+                    else if (status == WorkStatus.Pending)
+                    {
+                        if (!ticket.IsPending)
+                        {
+                            ticket.Status = WorkStatus.Pending;
+                            ticket.PendingDate = DateTime.Now;
+                        }
+                    }
+
+                    await context.SaveChangesAsync();
+                }
+            }
+
+        }
+        
+        public async Task SetTaskState(int taskId, WorkStatus status)
+        {
+            var task = await context.TodoTasks
+                .Include(x => x.Assignments)
+                .Where(x => x.TenantId == GetUserTenantId() && x.Id == taskId)
+                .FirstOrDefaultAsync();
+            if (task != null && task.IsActive)
+            {
+                if (task.Status != status)
+                {
+                    if (status == WorkStatus.Cancelled)
+                    {
+                        if (task.CanBeCancelled)
+                        {
+                            task.Status = WorkStatus.Cancelled;
+                            task.CancellationDate = DateTime.Now;
+                            task.PendingDate = null;
+                        }
+                    }
+                    else if (status == WorkStatus.Completed)
+                    {
+                        if (task.CanBeCompleted)
+                        {
+                            task.Status = WorkStatus.Completed;
+                            task.CompletionDate = DateTime.Now;
+                            task.PendingDate = null;
+                        }
+                    }
+                    else if (status == WorkStatus.Open)
+                    {
+                        if (task.IsPending)
+                        {
+                            task.Status = WorkStatus.Open;
+                            task.PendingDate = null;
+                        }
+                    }
+                    else if (status == WorkStatus.Pending)
+                    {
+                        if (!task.IsPending)
+                        {
+                            task.Status = WorkStatus.Pending;
+                            task.PendingDate = DateTime.Now;
+                        }
+                    }
+
+                    await context.SaveChangesAsync();
+                }
+            }
+
+        }
         public async Task<IEnumerable<AmsUser>> GetUsersAsync()
             => await context.Users
             .Where(x => x.TenantId == GetUserTenantId())
