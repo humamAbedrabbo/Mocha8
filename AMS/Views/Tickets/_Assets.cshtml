@@ -1,8 +1,8 @@
-﻿@model IEnumerable<Ticket>
+﻿@model IEnumerable<Asset>
 
     <div class="card">
         <div class="card-header">
-            <i class="fa fa-align-justify"></i> Tickets
+            <i class="fa fa-align-justify"></i> Assets
         </div>
         <div class="card-body">
 
@@ -19,20 +19,12 @@
                             @Html.DisplayNameFor(model => model.Code)
                         </th>
 
-                        <th data-field="summary" data-sortable="true" data-filter-control="input">
-                            @Html.DisplayNameFor(model => model.Summary)
+                        <th data-field="name" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.Name)
                         </th>
 
-                        <th data-field="status" data-sortable="true" data-filter-control="select">
-                            @Html.DisplayNameFor(model => model.Status)
-                        </th>
-
-                        <th data-field="dueDate" data-sortable="true" data-filter-control="input">
-                            @Html.DisplayNameFor(model => model.DueDate)
-                        </th>
-
-                        <th data-field="ticketType" data-sortable="true" data-filter-control="select">
-                            @Html.DisplayNameFor(model => model.TicketTypeId)
+                        <th data-field="assetType" data-sortable="true" data-filter-control="select">
+                            @Html.DisplayNameFor(model => model.AssetTypeId)
                         </th>
                         <th data-field="location" data-sortable="true" data-filter-control="select">
                             @Html.DisplayNameFor(model => model.Location)
@@ -44,24 +36,17 @@
                     {
                         <tr>
                             <td>
-                                <a asp-controller="Tickets " asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Code)</a>
+                                <a asp-controller="Assets" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Code)</a>
                             </td>
 
                             <td>
-                                @Html.DisplayFor(modelItem => item.Summary)
+                                @Html.DisplayFor(modelItem => item.Name)
                             </td>
 
                             <td>
-                                @Html.DisplayFor(modelItem => item.Status)
+                                @Html.DisplayFor(modelItem => item.AssetType.Name)
                             </td>
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DueDate)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TicketType.Name)
-                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Location.Name)
                             </td>

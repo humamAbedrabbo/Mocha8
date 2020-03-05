@@ -165,6 +165,7 @@ namespace AMS.Data
             // Ticket
             builder.Entity<Ticket>().Property(p => p.Summary).IsRequired().HasMaxLength(100);
             builder.Entity<Ticket>().Property(p => p.Description).HasMaxLength(500);
+            builder.Entity<Ticket>().Ignore(p => p.RelatedAssets);
             builder.Entity<Ticket>().HasOne(p => p.TicketType)
                 .WithMany(p => p.Tickets)
                 .HasForeignKey(p => p.TicketTypeId)
@@ -189,6 +190,7 @@ namespace AMS.Data
 
             // Assignment
             builder.Entity<Assignment>().Property(p => p.RoleName).HasMaxLength(100);
+            builder.Entity<Assignment>().Ignore(p => p.Name);
         }
 
         public DbSet<AMS.Models.Assignment> Assignment { get; set; }

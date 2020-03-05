@@ -25,5 +25,7 @@ namespace AMS.Models
         [Display(Name = "Todo Task")]
         public int? TodoTaskId { get; set; }
         public TodoTask TodoTask { get; set; }
+
+        public string Name => UserId.HasValue ? User?.DisplayName : (UserGroupId.HasValue ? UserGroup?.Name : "");
     }
 }

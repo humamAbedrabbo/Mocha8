@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TodoTask>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-align-justify"></i> Tasks
+    </div>
+    <div class="card-body">
+
+        <table id="table"
+               data-search="true"
+               data-pagination="true"
+               data-show-export="true"
+               data-filter-control="true"
+               data-show-search-clear-button="true"
+               class="table">
+            <thead>
+                <tr>
+                    <th data-field="summary" data-sortable="true" data-filter-control="input">
+                        @Html.DisplayNameFor(model => model.Summary)
+                    </th>
+
+                    <th data-field="todoTaskType" data-sortable="true" data-filter-control="select">
+                        @Html.DisplayNameFor(model => model.TodoTaskTypeId)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Summary)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TodoTaskType.Name)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

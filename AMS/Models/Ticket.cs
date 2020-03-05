@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace AMS.Models
 {
@@ -96,5 +97,8 @@ namespace AMS.Models
         public List<MetaFieldValue> Values { get; set; }
         public string Title => $"{Code}:{Summary}({Status.ToString()})";
         public string GroupTitle => $"{TicketType?.Name}";
+
+        public IEnumerable<Asset> RelatedAssets => TicketAssets.Select(x => x.Asset);
+
     }
 }
