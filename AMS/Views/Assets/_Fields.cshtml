@@ -1,8 +1,18 @@
 ﻿@model Asset
 
-<ul>
-    @foreach(var f in Model.Values)
-    {
-        <li>@f.Field?.Name  : @f.Value</li>
-    }
-</ul>
+@foreach(var f in Model.Values)
+{
+    <div class="form-group row">
+        <label class="col-2"><strong>@f.Field?.Name</strong></label>
+        <div class="col-10">
+            @if(f.Field.FieldType == FieldType.Url && !string.IsNullOrEmpty(f.Value))
+            {
+                <a href="@f.Value" class="btn-link" target="_blank"><i class="fa fa-external-link mx-1"></i>@f.Value</a>
+            }
+            else
+            {
+                @f.Value
+            }
+        </div>
+    </div>
+}
