@@ -1,0 +1,8 @@
+﻿@model Asset
+
+<ul>
+    @foreach(var f in Model.Values)
+    {
+        <li>@f.Field?.Name  : @f.Value</li>
+    }
+</ul>

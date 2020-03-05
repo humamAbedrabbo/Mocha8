@@ -1,67 +1,139 @@
 ﻿@model AMS.Models.Asset
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Name;
+    ViewData["Action"] = "Details";
+
 }
 
-<h1>Details</h1>
+@inject AMS.Services.IUserService userService
 
-<div>
-    <h4>Asset</h4>
-    <hr />
-    <dl class="row">
+<div class="row">
+    <div class="col-12">
+        <div class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    @Model.Code
+                </div>
+                <div class="card-body">
 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CodeNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CodeNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Code)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Code)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Client)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Client.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AssetType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AssetType.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Parent)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Parent.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsOn)
-        </dd>
-    </dl>
+                    <!-- Asset On/Off Switch Input -->
+                    <div class="form-group">
+                        <label class="switch switch-label switch-pill switch-primary">
+                            <input asp-for="IsOn" class="switch-input" disabled>
+                            <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <!-- Code Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="Code" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">@Model.Code</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- AssetType Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="AssetTypeId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">@Model.AssetType?.Name</label>
+                            </div>
+                        </div>
+
+                        <!-- Name Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="Name" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">@Model.Name</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asset Client and Location Select -->
+                    <div class="row">
+                        <!-- Asset Client Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="ClientId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">@Model.Client?.Name</label>
+                            </div>
+                        </div>
+
+                        <!-- Asset Location Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="LocationId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">@Model.Location?.Name</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Asset Parent Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="ParentId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">@Model.Parent?.Name @Model.Parent?.Code</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="row mt-2">
+    <div class="col-12 mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#fields" role="tab" aria-controls="fields">Fields</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#subassets" role="tab" aria-controls="subassets">Sub Assets</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#items" role="tab" aria-controls="items">Items</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#custodians" role="tab" aria-controls="custodians">Custodians</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tickets" role="tab" aria-controls="tickets">Tickets</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="fields" role="tabpanel">
+                <partial name="_Fields" for="@Model" />
+            </div>
+            <div class="tab-pane" id="subassets" role="tabpanel">
+                <partial name="_SubAssets" for="@Model.Childs" />
+            </div>
+            <div class="tab-pane" id="items" role="tabpanel">
+                <partial name="_Items" for="@Model.Items" />
+            </div>
+            <div class="tab-pane" id="custodians" role="tabpanel">
+                <partial name="_Custodians" for="@Model.Custodians" />
+            </div>
+            <div class="tab-pane" id="tickets" role="tabpanel">
+                <partial name="_Tickets" for="@Model.ActiveTickets" />
+            </div>
+        </div>
+    </div>
 </div>
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        $(function () {
+            $(".table").bootstrapTable();
+        });
+    </script>
+}

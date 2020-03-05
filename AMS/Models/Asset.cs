@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace AMS.Models
 {
@@ -56,6 +57,8 @@ namespace AMS.Models
         public string Active => IsOn ? "On" : "Off";
         public string Title => $"{Code}:{Name}({Active})";
         public string GroupTitle => $"{AssetType?.Name}";
+
+        public IEnumerable<Ticket> ActiveTickets => TicketAssets.Select(x => x.Ticket).Where(x => x.IsActive);
 
     }
 }

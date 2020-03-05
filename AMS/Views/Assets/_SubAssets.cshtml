@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Asset>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> Assets
+        </div>
+        <div class="card-body">
+
+            <table id="table"
+                   data-search="true"
+                   data-pagination="true"
+                   data-show-export="true"
+                   data-filter-control="true"
+                   data-show-search-clear-button="true"
+                   class="table">
+                <thead>
+                    <tr>
+                        <th data-field="name" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th data-field="code" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.Code)
+                        </th>
+                        <th data-field="assetType" data-sortable="true" data-filter-control="select">
+                            @Html.DisplayNameFor(model => model.AssetType)
+                        </th>
+                        <th data-field="location" data-sortable="true" data-filter-control="select">
+                            @Html.DisplayNameFor(model => model.Location)
+                        </th>
+                        <th data-field="isOn" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.IsOn)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                <a class="btn-link" asp-action="Details" asp-route-id="@item.Id">@item.Code</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssetType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Location.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsOn)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>

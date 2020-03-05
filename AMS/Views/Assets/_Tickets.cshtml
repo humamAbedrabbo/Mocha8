@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Ticket>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> Tickets
+        </div>
+        <div class="card-body">
+
+            <table id="table"
+                   data-search="true"
+                   data-pagination="true"
+                   data-show-export="true"
+                   data-filter-control="true"
+                   data-show-search-clear-button="true"
+                   class="table">
+                <thead>
+                    <tr>
+                        <th data-field="code" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.Code)
+                        </th>
+
+                        <th data-field="summary" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.Summary)
+                        </th>
+
+                        <th data-field="status" data-sortable="true" data-filter-control="select">
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+
+                        <th data-field="dueDate" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.DueDate)
+                        </th>
+
+                        <th data-field="ticketType" data-sortable="true" data-filter-control="select">
+                            @Html.DisplayNameFor(model => model.TicketTypeId)
+                        </th>
+                        <th data-field="location" data-sortable="true" data-filter-control="select">
+                            @Html.DisplayNameFor(model => model.Location)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Code)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Summary)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DueDate)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TicketType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Location.Name)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>

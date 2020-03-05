@@ -1,0 +1,49 @@
+﻿@model IEnumerable<AssetCustdian>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> Custodians
+        </div>
+        <div class="card-body">
+
+            <table id="table"
+                   data-search="true"
+                   data-pagination="true"
+                   data-show-export="true"
+                   data-filter-control="true"
+                   data-show-search-clear-button="true"
+                   class="table">
+                <thead>
+                    <tr>
+                        <th data-field="user" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.User)
+                        </th>
+                        <th data-field="name" data-sortable="true" data-filter-control="input">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th data-field="role" data-sortable="true" data-filter-control="select">
+                            @Html.DisplayNameFor(model => model.RoleName)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.User.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RoleName)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>

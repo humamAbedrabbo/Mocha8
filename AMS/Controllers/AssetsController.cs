@@ -49,11 +49,20 @@ namespace AMS.Controllers
                 .Include(a => a.Location)
                 .Include(a => a.Parent)
                 .Include(a => a.Tenant)
+                .Include(a => a.Values).ThenInclude(x => x.Field)
+                .Include(a => a.Items).ThenInclude(x => x.ItemType)
+                .Include(a => a.Custodians).ThenInclude(x => x.User)
+                .Include(a => a.Childs)
+                .Include(a => a.TicketAssets).ThenInclude(x => x.Ticket).ThenInclude(x => x.TicketType)
+                .Include(a => a.TicketAssets).ThenInclude(x => x.Ticket).ThenInclude(x => x.Location)
+                .Include(a => a.TicketAssets).ThenInclude(x => x.Ticket).ThenInclude(x => x.Values).ThenInclude(x => x.Field)
+                .Where(x => x.TenantId == userService.GetUserTenantId())
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (asset == null)
             {
                 return NotFound();
             }
+
 
             return View(asset);
         }

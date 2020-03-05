@@ -144,6 +144,7 @@ namespace AMS.Data
 
             // Asset
             builder.Entity<Asset>().Property(p => p.Name).IsRequired().HasMaxLength(100);
+            builder.Entity<Asset>().Ignore(p => p.ActiveTickets);
             builder.Entity<Asset>().HasOne(p => p.AssetType)
                 .WithMany(p => p.Assets)
                 .HasForeignKey(p => p.AssetTypeId)
