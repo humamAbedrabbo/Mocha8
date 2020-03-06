@@ -31,6 +31,7 @@ namespace AMS.Services
         Task<IEnumerable<MetaField>> GetMetaFieldsAsync();
         Task<SelectList> GetMetaFieldsSelectAsync(int? id = null);
         Task<int> GetTicketDefaultDuration(int ticketTypeId);
+        Task<IEnumerable<TicketJob>> GetTicketJobsAsync();
         Task<IEnumerable<Ticket>> GetTicketsAsync();
         Task<SelectList> GetTicketsSelectAsync(int? id = null);
         Task<IEnumerable<TicketType>> GetTicketTypesAsync();

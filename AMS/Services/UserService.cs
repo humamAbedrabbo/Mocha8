@@ -169,6 +169,19 @@ namespace AMS.Services
         public async Task<SelectList> GetTicketsSelectAsync(int? id = null)
             => new SelectList(await GetTicketsAsync(), "Id", "Title", id, "GroupTitle");
 
+        public async Task<IEnumerable<TicketJob>> GetTicketJobsAsync()
+            => await context.TicketJobs
+            .Include(x => x.TicketType)
+            .Include(x => x.AssetType)
+            .Include(x => x.Client)
+            .Include(x => x.Location)
+            .Include(x => x.Owner)
+            .Include(x => x.UserGroup)
+            .Include(x => x.TodoTaskTypes)
+            .Where(x => x.TenantId == GetUserTenantId())
+            .OrderBy(x => x.Summary)
+            .ToListAsync();
+
         public async Task<IEnumerable<Asset>> GetAssetsAsync()
             => await context.Assets
             .Include(x => x.AssetType)

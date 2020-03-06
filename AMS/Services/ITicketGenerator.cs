@@ -3,5 +3,6 @@
     public interface ITicketGenerator
     {
         void AddTicket(int typeId, string summary, int tenantId);
+        void RunTicketJob(int id);
     }
 }

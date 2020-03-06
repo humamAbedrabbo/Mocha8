@@ -35,6 +35,7 @@ namespace AMS.Data
         public DbSet<AssetItem> AssetItems { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Member> Members { get; set; }
+        public DbSet<TicketJob> TicketJobs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -163,7 +164,7 @@ namespace AMS.Data
             builder.Entity<AssetCustdian>().Property(p => p.RoleName).HasMaxLength(50);
 
             // Ticket
-            builder.Entity<Ticket>().Property(p => p.Summary).IsRequired().HasMaxLength(100);
+            builder.Entity<Ticket>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
             builder.Entity<Ticket>().Property(p => p.Description).HasMaxLength(500);
             builder.Entity<Ticket>().Ignore(p => p.RelatedAssets);
             builder.Entity<Ticket>().HasOne(p => p.TicketType)
@@ -185,8 +186,11 @@ namespace AMS.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // TodoTask
-            builder.Entity<TodoTask>().Property(p => p.Summary).IsRequired().HasMaxLength(100);
+            builder.Entity<TodoTask>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
             builder.Entity<TodoTask>().Property(p => p.Description).HasMaxLength(500);
+
+            // TicketJob
+            builder.Entity<TicketJob>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
 
             // Assignment
             builder.Entity<Assignment>().Property(p => p.RoleName).HasMaxLength(100);

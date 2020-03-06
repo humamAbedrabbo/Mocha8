@@ -24,7 +24,7 @@ namespace AMS.Models
 
         [Display(Name = "Summary")]
         [Required]
-        [StringLength(50, MinimumLength = 1)]
+        [StringLength(150, MinimumLength = 1)]
         public string Summary { get; set; }
         public int CodeNumber { get; set; }
 

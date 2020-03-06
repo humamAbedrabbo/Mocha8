@@ -1,0 +1,115 @@
+﻿@model IEnumerable<AMS.Models.TicketJob>
+
+@{
+    ViewData["Title"] = "Ticket Jobs";
+}
+
+
+@* view-styles *@
+@section Styles {
+}
+
+@*view-breadcrumbs*@
+@section Breadcrumbs {
+}
+
+@* view-content *@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="icon-clock"></i> Ticket Jobs
+            </div>
+            <div class="card-body">
+
+                <table id="table"
+                       data-search="true"
+                       data-pagination="true"
+                       data-show-export="true"
+                       data-filter-control="true"
+                       data-show-search-clear-button="true"
+                       class="table">
+                    <thead>
+                        <tr>
+                            <th data-field="ticketType" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.TicketTypeId)
+                            </th>
+                            <th data-field="assetType" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.AssetTypeId)
+                            </th>
+                            <th data-field="client" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.ClientId)
+                            </th>
+                            <th data-field="location" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.LocationId)
+                            </th>
+                            <th data-field="owner" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.OwnerId)
+                            </th>
+                            <th data-field="userGroup" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.UserGroupId)
+                            </th>
+                            <th data-field="summary" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.Summary)
+                            </th>
+                            <th data-field="jobId" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.JobId)
+                            </th>
+                            <th data-field="actions"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AssetType.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Client.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Location.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Location.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Owner.DisplayName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserGroup.Name)
+                                </td>
+                                <td>
+                                    <a class="btn-sm btn-secondary mx-1" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil mx-1"></i>Edit</a>
+                                    <a class="btn-sm btn-secondary mx-1" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-list mx-1"></i>Details</a>
+                                    <a class="btn-sm btn-danger mx-1" asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-remove mx-1"></i>Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+
+@* view-modals *@
+@section Modals {
+}
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        $(function () {
+            var $table = $("#table").bootstrapTable();
+        });
+    </script>
+}
+
+

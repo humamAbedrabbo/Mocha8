@@ -105,7 +105,6 @@ namespace AMS.Controllers
         }
 
 
-
         // GET: TicketTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

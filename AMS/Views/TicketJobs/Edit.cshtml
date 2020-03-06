@@ -1,0 +1,163 @@
+﻿@model AMS.Models.TicketJob
+
+@{
+    ViewData["Title"] = "TicketJob";
+    ViewData["Action"] = "Edit";
+}
+
+@inject AMS.Services.IUserService userService
+
+<div class="row">
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Id Hidden -->
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- TenantId Hidden -->
+                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    <!-- Job On/Off Switch Input -->
+                    <div class="form-group">
+                        <label class="switch switch-label switch-pill switch-primary">
+                            <input asp-for="IsOn" class="switch-input">
+                            <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <!-- Summary Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="Summary" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="Summary" class="form-control" />
+                                <span class="help-block"></span>
+                                <span asp-validation-for="Summary" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Job Id Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="JobId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input readonly asp-for="JobId" class="form-control" />
+                                <span class="help-block"></span>
+                                <span asp-validation-for="JobId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <!-- TicketType Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="TicketTypeId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"></span>
+                                <span asp-validation-for="TicketTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- AssetType Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="AssetTypeId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="AssetTypeId" class="form-control" asp-items="ViewBag.AssetTypeId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"></span>
+                                <span asp-validation-for="AssetTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Ticket Job Client and Location Select -->
+                    <div class="row">
+                        <!-- Client Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="ClientId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId">
+                                    <option value="">--- ALL ---</option>
+                                </select>
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="ClientId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Job Location Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="LocationId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="LocationId" class="form-control" asp-items="ViewBag.LocationId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"></span>
+                                <span asp-validation-for="LocationId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Job Owner Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="OwnerId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"></span>
+                                <span asp-validation-for="OwnerId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Job User Group Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="UserGroupId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="UserGroupId" class="form-control" asp-items="ViewBag.UserGroupId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"></span>
+                                <span asp-validation-for="UserGroupId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                    <a class="btn btn-sm btn-success" href="#">
+                        <i class="fa fa-hourglass-start"></i> Start
+                    </a>
+                    <a class="btn btn-sm btn-secondary" href="#">
+                        <i class="fa fa-stop"></i> Stop
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

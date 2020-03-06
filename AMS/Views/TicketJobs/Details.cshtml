@@ -1,0 +1,84 @@
+﻿@model AMS.Models.TicketJob
+
+@{
+    ViewData["Title"] = Model.Summary;
+    ViewData["Action"] = "Details";
+
+}
+
+@inject AMS.Services.IUserService userService
+
+<div class="row">
+    <div class="col-12">
+        <div class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#general" role="tab" aria-controls="general">General</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="general" role="tabpanel">
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.TicketTypeId)</strong></label>
+                                        <div class="col-10">@Model.TicketType?.Name </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.AssetTypeId)</strong></label>
+                                        <div class="col-10">@Model.AssetType?.Name </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.ClientId)</strong></label>
+                                        <div class="col-10">@(Model.Client?.Name ?? "All Clients") </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.LocationId)</strong></label>
+                                        <div class="col-10">@Model.Location?.Name </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.OwnerId)</strong></label>
+                                        <div class="col-10">@Model.Owner?.DisplayName</div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.UserGroupId)</strong></label>
+                                        <div class="col-10">@Model.UserGroup?.Name </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group row">
+                                        <ul>
+                                            @foreach (var tt in Model.TodoTaskTypes)
+                                            {
+                                                <li>@tt.Name </li>
+                                            }
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        $(function () {
+            $(".table").bootstrapTable();
+        });
+    </script>
+}

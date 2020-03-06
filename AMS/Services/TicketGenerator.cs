@@ -16,6 +16,61 @@ namespace AMS.Services
         {
             this._context = context;
         }
+
+        public void RunTicketJob(int id)
+        {
+            var cg = new CodeGenerator(_context);
+            var ticketJob = _context.TicketJobs
+                .Include(x => x.TicketType)
+                .Include(x => x.AssetType)
+                .Include(x => x.Client)
+                .Include(x => x.Location)
+                .Include(x => x.Owner)
+                .Include(x => x.UserGroup)
+                .Include(x => x.TodoTaskTypes)
+                .FirstOrDefault(x => x.Id == id);
+            var ticket = new Ticket
+            {
+                TicketTypeId = ticketJob.TicketTypeId,
+                TenantId = ticketJob.TenantId,
+                ClientId = ticketJob.ClientId,
+                LocationId = ticketJob.LocationId,
+                Summary = ticketJob.Summary,
+                DueDate = DateTime.Now.AddDays(2),
+            };
+            ticket.CodeNumber = _context.Tickets.Count() + 1;
+            ticket.Code = $"{ticketJob.TicketType.Code}{ticket.CodeNumber.ToString("D5")}";
+            var metaValues = _context.MetaFieldValues
+            .Include(x => x.Field)
+            .Where(x => x.TicketTypeId == ticket.TicketTypeId)
+            .ToList();
+            foreach (var value in metaValues)
+            {
+                ticket.Values.Add(new MetaFieldValue { FieldId = value.FieldId, Value = value.Value });
+            }
+
+            ticket.Assignments.Add(new Assignment { RoleName = "Owner", UserId = ticketJob.OwnerId });
+            if (ticketJob.UserGroupId.HasValue)
+            {
+                ticket.Assignments.Add(new Assignment { RoleName = "Assigned To", UserGroupId = ticketJob.UserGroupId });
+            }
+
+            var assets = _context.Assets
+                .Where(x => (x.TenantId == ticketJob.TenantId)
+                    && (x.AssetTypeId == ticketJob.AssetTypeId)
+                    && (!ticketJob.ClientId.HasValue || x.ClientId == ticketJob.ClientId)
+                    && (x.LocationId == ticketJob.LocationId)
+                )
+                .Select(x => x.Id).ToList();
+            foreach (var a in assets)
+            {
+                ticket.TicketAssets.Add(new TicketAsset { AssetId = a });
+            }
+
+            _context.Tickets.Add(ticket);
+            _context.SaveChanges();
+        }
+
         public void AddTicket(int typeId, string summary, int tenantId)
         {
             var cg = new CodeGenerator(_context);
