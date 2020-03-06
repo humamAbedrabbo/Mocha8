@@ -9,6 +9,7 @@ using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
 using AMS.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace AMS.Controllers
 {
@@ -26,6 +27,11 @@ namespace AMS.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if(userService.IsSysAdmin())
+            {
+                return RedirectToAction("Index", "Tenants");
+            }
+
             var assets = await userService.GetAssetsAsync();
             var tickets = await userService.GetTicketsAsync();
             ViewData["OpenTickets"] = tickets.Where(x => x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending).Count();

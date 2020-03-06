@@ -79,6 +79,7 @@ namespace AMS.Data
 
                     um.CreateAsync(user, defaultAdmin.Password);
                     um.AddToRoleAsync(user, "Admin");
+                    um.AddClaimAsync(user, new System.Security.Claims.Claim("SYSADMIN", ""));
                 }
             }
 

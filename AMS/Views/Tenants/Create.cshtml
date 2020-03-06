@@ -1,31 +1,44 @@
 ﻿@model AMS.Models.Tenant
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tenant";
+    ViewData["Action"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Tenant</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Name Input -->
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Name" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

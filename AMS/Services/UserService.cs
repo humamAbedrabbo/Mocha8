@@ -36,6 +36,11 @@ namespace AMS.Services
         public int? GetUserTenantId()
             => CurrentUser?.TenantId;
 
+        public bool IsSysAdmin()
+        {
+            return haccessor.HttpContext.User.HasClaim("SYSADMIN", "");
+        }
+
         public async Task SetTicketState(int ticketId, WorkStatus status)
         {
             var ticket = await context.Tickets

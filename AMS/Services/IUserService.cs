@@ -46,6 +46,7 @@ namespace AMS.Services
         Task<IEnumerable<AmsUser>> GetUsersAsync();
         Task<SelectList> GetUsersSelectAsync(int? id = null);
         int? GetUserTenantId();
+        bool IsSysAdmin();
         Task SetTaskState(int taskId, WorkStatus status);
         Task SetTicketState(int ticketId, WorkStatus status);
     }
