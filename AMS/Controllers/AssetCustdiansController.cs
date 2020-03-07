@@ -28,9 +28,13 @@ namespace AMS.Controllers
         }
 
         // GET: AssetCustdians
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? assetId = null)
         {
-            var amsContext = _context.AssetCustodians.Include(a => a.Asset).Include(a => a.User);
+            var amsContext = _context.AssetCustodians
+                .Include(a => a.Asset)
+                .Include(a => a.User)
+                .Where(a => (!assetId.HasValue || a.AssetId == assetId));
+            ViewData["FilterAssetId"] = assetId;
             return View(await amsContext.ToListAsync());
         }
 
@@ -55,10 +59,11 @@ namespace AMS.Controllers
         }
 
         // GET: AssetCustdians/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? assetId = null)
         {
-            await SetViewData();
-            return View();
+            var model = new AssetCustdian { AssetId = assetId ?? 0};
+            await SetViewData(model);
+            return View(model);
         }
 
         // POST: AssetCustdians/Create
@@ -70,7 +75,7 @@ namespace AMS.Controllers
             {
                 _context.Add(assetCustdian);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { assetId = assetCustdian?.AssetId });
             }
             await SetViewData(assetCustdian);
             return View(assetCustdian);
@@ -80,6 +85,7 @@ namespace AMS.Controllers
         {
             ViewData["AssetId"] = await userService.GetAssetsSelectAsync(assetCustdian?.AssetId);
             ViewData["UserId"] = await userService.GetUsersSelectAsync(assetCustdian?.UserId);
+            ViewData["FilterAssetId"] = assetCustdian?.AssetId;
         }
 
         // GET: AssetCustdians/Edit/5

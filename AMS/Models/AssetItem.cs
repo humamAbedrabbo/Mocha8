@@ -16,8 +16,7 @@ namespace AMS.Models
         public ItemType ItemType { get; set; }
 
         [Display(Name = "Part Number")]
-        [Required]
-        [StringLength(1, MinimumLength = 50)]
+        [StringLength(50)]
         public string PartNumber { get; set; }
     }
 }

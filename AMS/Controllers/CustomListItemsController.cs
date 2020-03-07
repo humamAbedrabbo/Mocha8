@@ -28,9 +28,12 @@ namespace AMS.Controllers
         }
 
         // GET: CustomListItems
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? listId = null)
         {
-            var amsContext = _context.CustomListItems.Include(c => c.CustomList);
+            var amsContext = _context.CustomListItems
+                .Include(c => c.CustomList)
+                .Where(a => (!listId.HasValue || a.CustomListId == listId));
+            ViewData["FilterListId"] = listId;
             return View(await amsContext.ToListAsync());
         }
 
@@ -54,11 +57,12 @@ namespace AMS.Controllers
         }
 
         // GET: CustomListItems/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? listId = null)
         {
-            ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync();
-
-            return View();
+            var model = new CustomListItem { CustomListId = listId ?? 0 };
+            ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync(model.CustomListId);
+            ViewData["FilterListId"] = listId;
+            return View(model);
         }
 
         // POST: CustomListItems/Create
@@ -73,6 +77,7 @@ namespace AMS.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomListId"] = await userService.GetCustomListsSelectAsync(customListItem.CustomListId);
+            ViewData["FilterListId"] = customListItem.CustomListId;
             return View(customListItem);
         }
 

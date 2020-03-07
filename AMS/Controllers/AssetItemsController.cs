@@ -28,9 +28,16 @@ namespace AMS.Controllers
         }
 
         // GET: AssetItems
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? assetId = null, int? itemTypeId = null)
         {
-            var amsContext = _context.AssetItems.Include(a => a.Asset).Include(a => a.ItemType);
+            var amsContext = _context.AssetItems
+                .Include(a => a.Asset)
+                .Include(a => a.ItemType)
+                .Where(a => (!assetId.HasValue || a.AssetId == assetId)
+                    && (!itemTypeId.HasValue || a.ItemTypeId == itemTypeId)
+                );
+            ViewData["FilterAssetId"] = assetId;
+            ViewData["FilterItemTypeId"] = itemTypeId;
             return View(await amsContext.ToListAsync());
         }
 
@@ -55,10 +62,11 @@ namespace AMS.Controllers
         }
 
         // GET: AssetItems/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? assetId = null, int? itemTypeId = null)
         {
-            await SetViewData();
-            return View();
+            var model = new AssetItem { AssetId = assetId ?? 0, ItemTypeId = itemTypeId };
+            await SetViewData(model);
+            return View(model);
         }
 
         // POST: AssetItems/Create
@@ -70,16 +78,19 @@ namespace AMS.Controllers
             {
                 _context.Add(assetItem);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { assetId = assetItem.AssetId });
             }
             await SetViewData(assetItem);
+            
             return View(assetItem);
         }
 
         private async Task SetViewData(AssetItem assetItem = null)
         {
-            ViewData["AssetId"] = await userService.GetAssetsSelectAsync(assetItem?.Id);
-            ViewData["ItemTypeId"] = await userService.GetItemTypesSelectAsync(assetItem?.Id);
+            ViewData["AssetId"] = await userService.GetAssetsSelectAsync(assetItem?.AssetId);
+            ViewData["ItemTypeId"] = await userService.GetItemTypesSelectAsync(assetItem?.ItemTypeId);
+            ViewData["FilterAssetId"] = assetItem?.AssetId;
+            ViewData["FilterItemTypeId"] = assetItem?.ItemTypeId;
         }
 
         // GET: AssetItems/Edit/5
