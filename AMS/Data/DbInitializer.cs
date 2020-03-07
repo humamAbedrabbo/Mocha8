@@ -337,6 +337,9 @@ namespace AMS.Data
                 user.PasswordHash = hasher.HashPassword(user, "123456");
                 context.Users.Add(user);
                 dic[i] = user;
+                context.SaveChanges();
+                context.UserClaims.Add(new IdentityUserClaim<int> { UserId = user.Id, ClaimType = "TenantId", ClaimValue = $"{user.TenantId}"  });
+                context.SaveChanges();
             }
             context.SaveChanges();
             
