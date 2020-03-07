@@ -1,0 +1,79 @@
+﻿@model AMS.Models.AmsUser
+
+@{
+    ViewData["Title"] = Model.DisplayName;
+    ViewData["Action"] = "Details";
+
+}
+
+@inject AMS.Services.IUserService userService
+
+<div class="row">
+    <div class="col-12">
+        <div class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-avatar" src="@Model.PictureUrl" alt="@Model.DisplayName"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#general" role="tab" aria-controls="general">General</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="general" role="tabpanel">
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.UserName)</strong></label>
+                                        <div class="col-10">@Model.UserName </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.DisplayName)</strong></label>
+                                        <div class="col-10">@Model.DisplayName </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.Email)</strong></label>
+                                        <div class="col-10">@Model.Email </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.PhoneNumber)</strong></label>
+                                        <div class="col-10">@Model.PhoneNumber </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.Company)</strong></label>
+                                        <div class="col-10">@Model.Company </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-2"><strong>@Html.DisplayNameFor(m => m.JobTitle)</strong></label>
+                                        <div class="col-10">@Model.JobTitle </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        $(function () {
+            $(".table").bootstrapTable();
+        });
+    </script>
+}

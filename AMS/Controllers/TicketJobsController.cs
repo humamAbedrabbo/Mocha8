@@ -10,9 +10,11 @@ using AMS.Models;
 using Microsoft.Extensions.Logging;
 using AMS.Services;
 using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AMS.Controllers
 {
+    [Authorize]
     public class TicketJobsController : Controller
     {
         private readonly ILogger<TicketJobsController> logger;

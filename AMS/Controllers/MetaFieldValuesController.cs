@@ -9,9 +9,11 @@ using AMS.Data;
 using AMS.Models;
 using Microsoft.Extensions.Logging;
 using AMS.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AMS.Controllers
 {
+    [Authorize]
     public class MetaFieldValuesController : Controller
     {
         private readonly ILogger<MetaFieldValuesController> logger;

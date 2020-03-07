@@ -1,0 +1,125 @@
+﻿@model AMS.Models.AmsUser
+
+@{
+    ViewData["Title"] = "User";
+    ViewData["Action"] = "Create";
+}
+
+<div class="row">
+    <div class="offset-2 col-md-8">
+        <form asp-action="@ViewBag.Action" enctype="multipart/form-data" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                    Form
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <!-- TenantId Hidden -->
+                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    <!-- UserName Input -->
+                    <div class="form-group row">
+                        <label asp-for="UserName" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="UserName" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- DisplayName Input -->
+                    <div class="form-group row">
+                        <label asp-for="DisplayName" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="DisplayName" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="DisplayName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Email" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- PhoneNumber Input -->
+                    <div class="form-group row">
+                        <label asp-for="PhoneNumber" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Company Input -->
+                    <div class="form-group row">
+                        <label asp-for="Company" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Company" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Company" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- JobTitle Input -->
+                    <div class="form-group row">
+                        <label asp-for="JobTitle" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="JobTitle" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="JobTitle" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="form-group row">
+                        <label for="password" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input type="password" id="password" name="password" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                        </div>
+                    </div>
+
+                    <!-- ConfirmPassword Input -->
+                    <div class="form-group row">
+                        <label for="confirmPassword" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                        </div>
+                    </div>
+
+                    <!-- Picture Input -->
+                    <div class="form-group row">
+                        <label for="file" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input type="file" id="file" name="file" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
