@@ -1,0 +1,37 @@
+﻿@model ItemType
+@{ 
+    ViewData["DialogTitle"] = "Add Item Type";
+}
+
+<!-- Modal -->
+<div class="modal fade" id="add-item-type" tabindex="-1" role="dialog" aria-labelledby="add-item-type-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-item-type-label">@ViewBag.DialogTitle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Add">
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <!-- TenantId Hidden -->
+                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a class="btn btn-primary" data-save="modal">Save</a>
+            </div>
+        </div>
+    </div>
+</div>

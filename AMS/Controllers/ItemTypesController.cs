@@ -34,6 +34,26 @@ namespace AMS.Controllers
             return View(await userService.GetItemTypesAsync());
         }
 
+        public IActionResult Add()
+        {
+            var model = new ItemType();
+            ViewData["TenantId"] = userService.GetUserTenantId();
+            return PartialView("_Add", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(ItemType model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            ViewData["TenantId"] = userService.GetUserTenantId();
+            return PartialView("_Add", model);
+        }
+
         // GET: ItemTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
