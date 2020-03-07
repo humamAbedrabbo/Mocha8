@@ -151,13 +151,43 @@ namespace AMS.Services
         public async Task<SelectList> GetUsersSelectAsync(int? id = null)
             => new SelectList(await GetUsersAsync(), "Id", "Title", id);
 
-        public async Task<IEnumerable<TodoTask>> GetTodoTasksAsync()
-            => await context.TodoTasks
-            .Include(x => x.Ticket)
-            .Include(x => x.TodoTaskType)
-            .Where(x => x.TenantId == GetUserTenantId())
-            .OrderBy(x => x.Summary)
-            .ToListAsync();
+        public async Task<IEnumerable<TodoTask>> GetTodoTasksAsync(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = true)
+        {
+            IEnumerable<TodoTask> tasks;
+            if(userGroupId.HasValue || userGroupId.HasValue)
+            {
+                tasks = await context.Assignment
+                    .Include(x => x.UserGroup)
+                    .Include(x => x.User)
+                    .Include(x => x.TodoTask).ThenInclude(x => x.TodoTaskType)
+                    .Include(x => x.TodoTask).ThenInclude(x => x.Ticket)
+                    .Where(x => (x.TodoTask.TenantId == GetUserTenantId())
+                        && (!userGroupId.HasValue || x.UserGroupId == userGroupId)
+                        && (!userId.HasValue || x.UserId == userId)
+                        && (!todoTaskTypeId.HasValue || x.TodoTask.TodoTaskTypeId == todoTaskTypeId)
+                        && (!ticketId.HasValue || x.TodoTask.TicketId == ticketId)
+                        && (!isActive || x.TodoTask.Status == WorkStatus.Open || x.TodoTask.Status == WorkStatus.Pending)
+                    )
+                    .Select(x => x.TodoTask)
+                    .OrderBy(x => x.Summary)
+                    .ToListAsync();
+            }
+            else
+            {
+                tasks = await context.TodoTasks
+                    .Include(x => x.Ticket)
+                    .Include(x => x.TodoTaskType)
+                    .Where(x => (x.TenantId == GetUserTenantId())
+                        && (!todoTaskTypeId.HasValue || x.TodoTaskTypeId == todoTaskTypeId)
+                        && (!ticketId.HasValue || x.TicketId == ticketId)
+                        && (!isActive || x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending)
+                    )
+                    .OrderBy(x => x.Summary)
+                    .ToListAsync();
+            }
+
+            return tasks;
+        }
 
         public async Task<SelectList> GetTodoTasksSelectAsync(int? id = null)
             => new SelectList(await GetTodoTasksAsync(), "Id", "Title", id, "GroupTitle");

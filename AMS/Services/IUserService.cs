@@ -37,7 +37,7 @@ namespace AMS.Services
         Task<IEnumerable<TicketType>> GetTicketTypesAsync();
         Task<SelectList> GetTicketTypesSelectAsync(int? id = null);
         Task<int> GetTodoTaskDefaultDuration(int todoTaskTypeId);
-        Task<IEnumerable<TodoTask>> GetTodoTasksAsync();
+        Task<IEnumerable<TodoTask>> GetTodoTasksAsync(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = true);
         Task<SelectList> GetTodoTasksSelectAsync(int? id = null);
         Task<IEnumerable<TodoTaskType>> GetTodoTaskTypesAsync();
         Task<MultiSelectList> GetTodoTaskTypesMultiSelectAsync(IEnumerable<int> ids = null);
