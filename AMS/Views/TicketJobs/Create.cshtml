@@ -122,7 +122,18 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row">
+                        <!-- Job CRON Schedule -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label asp-for="CronSchedule" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-6">
+                                <div class="schedule mb-1"></div>
+                                <input readonly asp-for="CronSchedule" class="form-control" />
+                                <span class="help-block"></span>
+                                <span asp-validation-for="CronSchedule" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                     <hr />
                     <div class="row">
                         <!-- Job Task Types Select -->
@@ -159,7 +170,18 @@
     <script>
         $(function () {
             $("#TaskTypes").bsMultiSelect();
-
+            $('.schedule').jqCron({
+                multiple_dom:true,
+                bind_to: $('#CronSchedule'),
+                enabled_minute: true,
+                multiple_month: true,
+                multiple_dow: true,
+                bind_method: {
+                    set: function ($element, value) {
+                        $element.val(value);
+                    }
+                }
+            });
         });
     </script>
 }

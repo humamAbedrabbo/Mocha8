@@ -84,7 +84,7 @@ namespace AMS.Controllers
         // POST: TicketJobs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TaskTypes,IsOn")] TicketJob ticketJob)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TaskTypes,IsOn,CronSchedule")] TicketJob ticketJob)
         {
             if (ModelState.IsValid)
             {
@@ -100,10 +100,10 @@ namespace AMS.Controllers
                 }
                 _context.Add(ticketJob);
                 await _context.SaveChangesAsync();
-
+                
                 if(ticketJob.IsOn)
                 {
-                    RecurringJob.AddOrUpdate(ticketJob.JobId, () => ticketGenerator.RunTicketJob(ticketJob.Id), Cron.Minutely);
+                    RecurringJob.AddOrUpdate(ticketJob.JobId, () => ticketGenerator.RunTicketJob(ticketJob.Id), ticketJob.CronSchedule);
                 }
                 else
                 {
@@ -138,7 +138,7 @@ namespace AMS.Controllers
         // POST: TicketJobs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TaskTypes,IsOn")] TicketJob ticketJob)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TaskTypes,IsOn,CronSchedule")] TicketJob ticketJob)
         {
             if (id != ticketJob.Id)
             {
@@ -167,7 +167,7 @@ namespace AMS.Controllers
                     await _context.SaveChangesAsync();
                     if (ticketJob.IsOn)
                     {
-                        RecurringJob.AddOrUpdate(ticketJob.JobId, () => ticketGenerator.RunTicketJob(ticketJob.Id), Cron.Minutely);
+                        RecurringJob.AddOrUpdate(ticketJob.JobId, () => ticketGenerator.RunTicketJob(ticketJob.Id), ticketJob.CronSchedule);
                     }
                     else
                     {

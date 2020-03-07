@@ -50,6 +50,9 @@ namespace AMS.Models
 
         public bool IsOn { get; set; }
 
+        [Display(Name = "Schedule")]
+        public string CronSchedule { get; set; }
+
         public List<TicketJobTaskType> TicketJobTaskTypes { get; set; }
 
         [Display(Name = "Task Types")]
