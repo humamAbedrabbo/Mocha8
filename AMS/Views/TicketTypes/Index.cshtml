@@ -85,6 +85,7 @@
 
 @* view-scripts *@
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         $(function () {
             var $table = $("#table").bootstrapTable();

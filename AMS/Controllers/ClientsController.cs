@@ -27,6 +27,32 @@ namespace AMS.Controllers
             this.userService = userService;
         }
 
+        public async Task SetViewData(Client client = null)
+        {
+            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync(client?.ClientTypeId);
+            ViewData["TenantId"] = userService.GetUserTenantId();
+        }
+
+        public async Task<IActionResult> Add()
+        {
+            var model = new Client();
+            await SetViewData();
+            return PartialView("_Add", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(Client model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            await SetViewData(model);
+            return PartialView("_Add", model);
+        }
+
         // GET: Clients
         public async Task<IActionResult> Index()
         {
@@ -58,8 +84,7 @@ namespace AMS.Controllers
         // GET: Clients/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync();
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            await SetViewData();
             return View();
         }
 
@@ -74,8 +99,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync(client.ClientTypeId);
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            await SetViewData(client);
             return View(client);
         }
 
@@ -92,8 +116,7 @@ namespace AMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync(client.ClientTypeId);
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            await SetViewData(client);
             return View(client);
         }
 
@@ -127,8 +150,7 @@ namespace AMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientTypeId"] = await userService.GetClientTypesSelectAsync(client.ClientTypeId);
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            await SetViewData(client);
             return View(client);
         }
 
