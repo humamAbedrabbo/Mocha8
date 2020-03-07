@@ -27,6 +27,31 @@ namespace AMS.Controllers
             this.userService = userService;
         }
 
+        public async Task<IActionResult> Add()
+        {
+            var model = new TodoTaskType();
+            SetViewData();
+            return PartialView("_Add", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(TodoTaskType model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            SetViewData();
+            return PartialView("_Add", model);
+        }
+
+        private void SetViewData()
+        {
+            ViewData["TenantId"] = userService.GetUserTenantId();
+        }
+
         // GET: TodoTaskTypes
         public async Task<IActionResult> Index()
         {

@@ -21,7 +21,13 @@
                 <i class="fa fa-align-justify"></i> User Groups
             </div>
             <div class="card-body">
-
+                <div class="mb-1">
+                    <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#add-modal" data-url="@Url.Action("Add")">
+                        Add User Group
+                    </button>
+                    <!-- Modal placeholder -->
+                    <div id="modal-placeholder"></div>
+                </div>
                 <table id="table"
                        data-search="true"
                        data-pagination="true"
@@ -53,7 +59,7 @@
                         }
                     </tbody>
                 </table>
-                
+
             </div>
         </div>
     </div>
