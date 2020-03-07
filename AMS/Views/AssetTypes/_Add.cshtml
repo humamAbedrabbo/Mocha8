@@ -1,0 +1,83 @@
+﻿@model AssetType
+@{
+    ViewData["AddModalTitle"] = "Add Asset Type";
+}
+
+<!-- Modal -->
+<div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="add-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-modal-label">@ViewBag.AddModalTitle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Add">
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <!-- TenantId Hidden -->
+                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    <!-- Name Input -->
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Name" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Code Input -->
+                    <div class="form-group row">
+                        <label asp-for="Code" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Code" class="form-control" />
+                            <span class="help-block"><small><i class="fa fa-exclamation-triangle mr-1"></i>Changing code will not affect previously created assets</small></span>
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Meta Fields -->
+                    <div class="repeater">
+                        <!--
+                        The value given to the data-repeater-list attribute will be used as the
+                        base of rewritten name attributes.  In this example, the first
+                        data-repeater-item's name attribute would become group-a[0][text-input],
+                        and the second data-repeater-item would become group-a[1][text-input]
+                        -->
+                        <div data-repeater-list="Values">
+                            <div data-repeater-item class="form-group row">
+                                <div class="offset-3 col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <select type="text" name="FieldId" asp-items="ViewBag.FieldId" class="form-control">
+                                                <option disabled value="">--- SELECT FIELD ---</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a data-repeater-delete href="#" class="btn btn-sm btn-danger">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <input data-repeater-create class="btn btn-sm btn-success" type="button" value="Add Field" />
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a class="btn btn-primary" data-save="modal">Save</a>
+            </div>
+        </div>
+    </div>
+</div>

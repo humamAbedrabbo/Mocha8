@@ -21,7 +21,13 @@
                 <i class="fa fa-align-justify"></i> Asset Types
             </div>
             <div class="card-body">
-
+                <div class="mb-1">
+                    <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#add-modal" data-url="@Url.Action("Add")">
+                        Add Asset Type
+                    </button>
+                    <!-- Modal placeholder -->
+                    <div id="modal-placeholder"></div>
+                </div>
                 <table id="table"
                        data-search="true"
                        data-pagination="true"
@@ -52,7 +58,7 @@
                                 </td>
                                 <td>
                                     <a class="btn-sm btn-secondary mx-1" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil mx-1"></i>Edit</a>
-                                    <a class="btn-sm btn-info mx-1" asp-controller="MetaFieldValues" asp-action="Index" asp-route-assetId="@item.Id">Meta</a> 
+                                    <a class="btn-sm btn-info mx-1" asp-controller="MetaFieldValues" asp-action="Index" asp-route-assetId="@item.Id">Meta</a>
                                     <a class="btn-sm btn-secondary mx-1" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-list mx-1"></i>Details</a>
                                     <a class="btn-sm btn-danger mx-1" asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-remove mx-1"></i>Delete</a>
                                 </td>
@@ -60,7 +66,7 @@
                         }
                     </tbody>
                 </table>
-                
+
             </div>
         </div>
     </div>
@@ -73,11 +79,15 @@
 
 @* view-scripts *@
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    
     <script>
         $(function () {
             var $table = $("#table").bootstrapTable();
         });
     </script>
+    
 }
 
 

@@ -5,6 +5,7 @@
         var url = $(this).data('url');
         $.get(url).done(function (data) {
             $placeholderElement.html(data);
+            initRepeater();
             $placeholderElement.find('.modal').modal('show');
         });
     });

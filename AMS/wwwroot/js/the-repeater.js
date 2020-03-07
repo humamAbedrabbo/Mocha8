@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿function initRepeater() {
     $('.repeater').repeater({
         // (Optional)
         // start with an empty list of repeaters. Set your first (and only)
@@ -44,4 +44,8 @@
         // defaults to false.
         isFirstItemUndeletable: true
     });
+}
+
+$(document).ready(function () {
+    initRepeater();
 });

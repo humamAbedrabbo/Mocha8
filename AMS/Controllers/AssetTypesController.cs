@@ -27,6 +27,26 @@ namespace AMS.Controllers
             this.userService = userService;
         }
 
+        public async Task<IActionResult> Add()
+        {
+            var model = new AssetType();
+            await SetViewData();
+            return PartialView("_Add", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(AssetType model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            await SetViewData();
+            return PartialView("_Add", model);
+        }
+
         // GET: AssetTypes
         public async Task<IActionResult> Index()
         {
