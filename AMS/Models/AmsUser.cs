@@ -10,6 +10,7 @@ namespace AMS.Models
     {
         public AmsUser()
         {
+            PictureUrl = "/images/avatars/user.jpg";
             AssetCustodians = new List<AssetCustdian>();
             Members = new List<Member>();
             Assignments = new List<Assignment>();

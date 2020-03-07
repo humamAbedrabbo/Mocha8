@@ -329,7 +329,7 @@ namespace AMS.Data
 
             for (int i = 1; i <= 10; i++)
             {
-                var user = new AmsUser { UserName = $"user{i}", DisplayName = $"User{i}", Email = $"user{i}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User" };
+                var user = new AmsUser { UserName = $"user{i}", DisplayName = $"User{i}", Email = $"user{i}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User", PictureUrl = $"/images/avatars/{i}.jpg" };
                 user.NormalizedEmail = user.Email.ToUpper();
                 user.NormalizedUserName = user.UserName.ToUpper();
                 user.ConcurrencyStamp = Guid.NewGuid().ToString("D");

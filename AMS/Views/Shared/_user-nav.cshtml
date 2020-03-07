@@ -2,11 +2,15 @@
 
 @inject SignInManager<AmsUser> SignInManager
 @inject UserManager<AmsUser> UserManager
+@inject AMS.Services.IUserService userService
 
+@{ 
+    AmsUser user = await userService.GetCurrentUserAsync();
+}
 
 <li class="nav-item dropdown">
   <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-    <img class="img-avatar" src="~/images/avatars/6.jpg" alt="admin@bootstrapmaster.com">
+    <img class="img-avatar" src="@user?.PictureUrl" alt="@user?.Email">
   </a>
   <div class="dropdown-menu dropdown-menu-right">
     <div class="dropdown-header text-center">
