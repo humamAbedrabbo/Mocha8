@@ -10,7 +10,7 @@ namespace AMS.Models
     {
         public TicketJob()
         {
-            TodoTaskTypes = new List<TodoTaskType>();
+            TicketJobTaskTypes = new List<TicketJobTaskType>();
         }
         public int Id { get; set; }
         public int TenantId { get; set; }
@@ -50,7 +50,18 @@ namespace AMS.Models
 
         public bool IsOn { get; set; }
 
-        public List<TodoTaskType> TodoTaskTypes { get; set; }
+        public List<TicketJobTaskType> TicketJobTaskTypes { get; set; }
 
+        [Display(Name = "Task Types")]
+        public IEnumerable<int> TaskTypes { get; set; }
+
+    }
+
+    public class TicketJobTaskType
+    {
+        public int TicketJobId { get; set; }
+        public TicketJob TicketJob { get; set; }
+        public int TodoTaskTypeId { get; set; }
+        public TodoTaskType TodoTaskType { get; set; }
     }
 }

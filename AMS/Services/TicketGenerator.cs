@@ -27,7 +27,7 @@ namespace AMS.Services
                 .Include(x => x.Location)
                 .Include(x => x.Owner)
                 .Include(x => x.UserGroup)
-                .Include(x => x.TodoTaskTypes)
+                .Include(x => x.TicketJobTaskTypes).ThenInclude(x => x.TodoTaskType)
                 .FirstOrDefault(x => x.Id == id);
             var ticket = new Ticket
             {
@@ -65,6 +65,24 @@ namespace AMS.Services
             foreach (var a in assets)
             {
                 ticket.TicketAssets.Add(new TicketAsset { AssetId = a });
+            }
+
+            foreach (var taskId in ticketJob.TicketJobTaskTypes)
+            {
+                var task = new TodoTask
+                {
+                    TodoTaskTypeId = taskId.TodoTaskTypeId,
+                    Summary = $"{ticket.Code} {taskId.TodoTaskType.Name}",
+                    StartDate = ticket.StartDate,
+                    EstDuration = taskId.TodoTaskType.DefaultDuration,
+                    TenantId = ticket.TenantId,
+                    DueDate = ticket.StartDate.AddDays(taskId.TodoTaskType.DefaultDuration)
+                };
+                if(task.DueDate > ticket.DueDate)
+                {
+                    task.DueDate = ticket.DueDate;
+                }
+                ticket.TodoTasks.Add(task);
             }
 
             _context.Tickets.Add(ticket);

@@ -182,7 +182,7 @@ namespace AMS.Services
             .Include(x => x.Location)
             .Include(x => x.Owner)
             .Include(x => x.UserGroup)
-            .Include(x => x.TodoTaskTypes)
+            .Include(x => x.TicketJobTaskTypes)
             .Where(x => x.TenantId == GetUserTenantId())
             .OrderBy(x => x.Summary)
             .ToListAsync();
@@ -332,5 +332,8 @@ namespace AMS.Services
 
         public async Task<SelectList> GetTodoTaskTypesSelectAsync(int? id = null)
             => new SelectList(await GetTodoTaskTypesAsync(), "Id", "Name", id);
+
+        public async Task<MultiSelectList> GetTodoTaskTypesMultiSelectAsync(IEnumerable<int> ids = null)
+            => new MultiSelectList(await GetTodoTaskTypesAsync(), "Id", "Name", ids);
     }
 }

@@ -137,6 +137,21 @@
                         </div>
                     </div>
 
+                    <hr />
+                    <div class="row">
+                        <!-- Job Task Types Select -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label asp-for="TaskTypes" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-12">
+                                <select multiple="multiple" style="display: none;" asp-for="TaskTypes" class="form-control" asp-items="ViewBag.TodoTaskTypes">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"></span>
+                                <span asp-validation-for="TaskTypes" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-sm btn-primary">
@@ -145,12 +160,6 @@
                     <button type="reset" class="btn btn-sm btn-danger">
                         <i class="fa fa-ban"></i> Reset
                     </button>
-                    <a class="btn btn-sm btn-success" href="#">
-                        <i class="fa fa-hourglass-start"></i> Start
-                    </a>
-                    <a class="btn btn-sm btn-secondary" href="#">
-                        <i class="fa fa-stop"></i> Stop
-                    </a>
                 </div>
             </div>
         </form>
@@ -160,4 +169,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(function () {
+            $("#TaskTypes").bsMultiSelect();
+
+        });
+    </script>
 }

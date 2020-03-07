@@ -191,6 +191,16 @@ namespace AMS.Data
 
             // TicketJob
             builder.Entity<TicketJob>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
+            builder.Entity<TicketJob>().Ignore(p => p.TaskTypes);
+            builder.Entity<TicketJobTaskType>().HasKey(p => new { p.TicketJobId, p.TodoTaskTypeId });
+            builder.Entity<TicketJobTaskType>().HasOne(x => x.TicketJob)
+                .WithMany(x => x.TicketJobTaskTypes)
+                .HasForeignKey(x => x.TicketJobId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJobTaskType>().HasOne(x => x.TodoTaskType)
+                .WithMany()
+                .HasForeignKey(x => x.TodoTaskTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Assignment
             builder.Entity<Assignment>().Property(p => p.RoleName).HasMaxLength(100);

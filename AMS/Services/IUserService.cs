@@ -40,6 +40,7 @@ namespace AMS.Services
         Task<IEnumerable<TodoTask>> GetTodoTasksAsync();
         Task<SelectList> GetTodoTasksSelectAsync(int? id = null);
         Task<IEnumerable<TodoTaskType>> GetTodoTaskTypesAsync();
+        Task<MultiSelectList> GetTodoTaskTypesMultiSelectAsync(IEnumerable<int> ids = null);
         Task<SelectList> GetTodoTaskTypesSelectAsync(int? id = null);
         Task<IEnumerable<UserGroup>> GetUserGroupsAsync();
         Task<SelectList> GetUserGroupsSelectAsync(int? id = null);

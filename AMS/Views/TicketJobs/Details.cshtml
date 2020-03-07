@@ -53,9 +53,9 @@
                                     <hr />
                                     <div class="form-group row">
                                         <ul>
-                                            @foreach (var tt in Model.TodoTaskTypes)
+                                            @foreach (var tt in Model.TicketJobTaskTypes)
                                             {
-                                                <li>@tt.Name </li>
+                                                <li>@tt.TodoTaskType?.Name </li>
                                             }
                                         </ul>
                                     </div>

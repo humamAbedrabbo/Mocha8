@@ -50,7 +50,7 @@ namespace AMS.Controllers
                 .Include(t => t.Tenant)
                 .Include(t => t.TicketType)
                 .Include(t => t.UserGroup)
-                .Include(t => t.TodoTaskTypes)
+                .Include(t => t.TicketJobTaskTypes).ThenInclude(x => x.TodoTaskType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticketJob == null)
             {
@@ -63,6 +63,8 @@ namespace AMS.Controllers
         // GET: TicketJobs/Create
         public async Task<IActionResult> Create()
         {
+            var model = new TicketJob();
+            model.TaskTypes = new List<int>();
             await SetViewData();
             return View();
         }
@@ -76,15 +78,22 @@ namespace AMS.Controllers
             ViewData["TenantId"] = userService.GetUserTenantId();
             ViewData["TicketTypeId"] = await userService.GetTicketTypesSelectAsync(ticketJob?.TicketTypeId);
             ViewData["UserGroupId"] = await userService.GetUserGroupsSelectAsync(ticketJob?.UserGroupId);
+            ViewData["TodoTaskTypes"] = await userService.GetTodoTaskTypesMultiSelectAsync(ticketJob?.TaskTypes);
         }
 
         // POST: TicketJobs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TodoTaskTypes,IsOn")] TicketJob ticketJob)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TaskTypes,IsOn")] TicketJob ticketJob)
         {
             if (ModelState.IsValid)
             {
+                // Add Task Types
+                var taskTypes = await _context.TodoTaskTypes.Where(x => ticketJob.TaskTypes.Contains(x.Id))
+                    .ToListAsync();
+                ticketJob.TicketJobTaskTypes.AddRange(ticketJob.TaskTypes.Select(x => new TicketJobTaskType { TodoTaskTypeId = x }));
+
+                // Generate Job ID
                 if(string.IsNullOrEmpty(ticketJob.JobId))
                 {
                     ticketJob.JobId = Guid.NewGuid().ToString("D");
@@ -114,11 +123,14 @@ namespace AMS.Controllers
                 return NotFound();
             }
 
-            var ticketJob = await _context.TicketJobs.FindAsync(id);
+            var ticketJob = await _context.TicketJobs
+                .Include(x => x.TicketJobTaskTypes)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (ticketJob == null)
             {
                 return NotFound();
             }
+            ticketJob.TaskTypes = ticketJob.TicketJobTaskTypes.Select(x => x.TodoTaskTypeId).ToList();
             await SetViewData(ticketJob);
             return View(ticketJob);
         }
@@ -126,7 +138,7 @@ namespace AMS.Controllers
         // POST: TicketJobs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TodoTaskTypes,IsOn")] TicketJob ticketJob)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,TicketTypeId,AssetTypeId,ClientId,LocationId,OwnerId,UserGroupId,Summary,JobId,TaskTypes,IsOn")] TicketJob ticketJob)
         {
             if (id != ticketJob.Id)
             {
@@ -137,6 +149,20 @@ namespace AMS.Controllers
             {
                 try
                 {
+                    _context.Entry(ticketJob).State = EntityState.Modified;
+                    await _context.Entry(ticketJob)
+                        .Collection(x => x.TicketJobTaskTypes)
+                        .LoadAsync();
+                    
+                    ticketJob.TicketJobTaskTypes.RemoveAll(x => !ticketJob.TaskTypes.Contains(x.TodoTaskTypeId));
+                    foreach (var item in ticketJob.TaskTypes)
+                    {
+                        if(!ticketJob.TicketJobTaskTypes.Any(x => x.TodoTaskTypeId == item))
+                        {
+                            ticketJob.TicketJobTaskTypes.Add(new TicketJobTaskType { TodoTaskTypeId = item });
+                        }
+                    }
+
                     _context.Update(ticketJob);
                     await _context.SaveChangesAsync();
                     if (ticketJob.IsOn)
@@ -181,7 +207,7 @@ namespace AMS.Controllers
                 .Include(t => t.Tenant)
                 .Include(t => t.TicketType)
                 .Include(t => t.UserGroup)
-                .Include(t => t.TodoTaskTypes)
+                .Include(t => t.TicketJobTaskTypes).ThenInclude(x => x.TodoTaskType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticketJob == null)
             {
