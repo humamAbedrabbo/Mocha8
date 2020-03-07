@@ -27,6 +27,26 @@ namespace AMS.Controllers
             this.userService = userService;
         }
 
+        public async Task<IActionResult> AddCustodian(int assetId)
+        {
+            var model = new AssetCustdian { AssetId = assetId };
+            await SetViewData(model);
+            return PartialView("_AddCustodian", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCustodian(AssetCustdian model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            await SetViewData(model);
+            return PartialView("_AddCustodian", model);
+        }
+
         // GET: AssetCustdians
         public async Task<IActionResult> Index(int? assetId = null)
         {

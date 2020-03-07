@@ -1,0 +1,64 @@
+﻿@model AssetCustdian
+@{
+    ViewData["AddModalTitle"] = "Add Asset Custodian";
+}
+
+<!-- Modal -->
+<div class="modal fade" id="add-custodian-modal" tabindex="-1" role="dialog" aria-labelledby="add-custodian-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-custodian-modal-label">@ViewBag.AddModalTitle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="AddCustodian">
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Asset Hidden -->
+                    <input asp-for="AssetId" type="hidden" />
+
+                    <!-- User Select -->
+                    <div class="form-group row">
+                        <label asp-for="UserId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Name Input -->
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Name" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Custodian Role Name Input -->
+                    <div class="form-group row">
+                        <label asp-for="RoleName" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="RoleName" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="RoleName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a class="btn btn-primary" data-save="modal">Save</a>
+            </div>
+        </div>
+    </div>
+</div>

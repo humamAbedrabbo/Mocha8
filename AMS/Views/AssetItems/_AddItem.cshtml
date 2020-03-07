@@ -1,0 +1,54 @@
+﻿@model AssetItem
+@{
+    ViewData["AddModalTitle"] = "Add Asset Item";
+}
+
+<!-- Modal -->
+<div class="modal fade" id="add-item-modal" tabindex="-1" role="dialog" aria-labelledby="add-item-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-item-modal-label">@ViewBag.AddModalTitle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="AddItem">
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Asset Hidden -->
+                    <input asp-for="AssetId" type="hidden" />
+                    
+                    <!-- ItemTypeId Select -->
+                    <div class="form-group row">
+                        <label asp-for="ItemTypeId" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="ItemTypeId" class="form-control" asp-items="ViewBag.ItemTypeId">
+                                <option value="">--- SELECT ---</option>
+                            </select>
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="ItemTypeId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- PartNumber Input -->
+                    <div class="form-group row">
+                        <label asp-for="PartNumber" class="col-md-3 col-form-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="PartNumber" class="form-control" />
+                            <span class="help-block"><small></small></span>
+                            <span asp-validation-for="PartNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a class="btn btn-primary" data-save="modal">Save</a>
+            </div>
+        </div>
+    </div>
+</div>

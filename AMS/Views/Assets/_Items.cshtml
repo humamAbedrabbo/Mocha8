@@ -1,42 +1,52 @@
 ﻿@model IEnumerable<AssetItem>
 
-    <div class="card">
-        <div class="card-header">
-            <i class="fa fa-align-justify"></i> Items
-        </div>
-        <div class="card-body">
-
-            <table id="table"
-                   data-search="true"
-                   data-pagination="true"
-                   data-show-export="true"
-                   data-filter-control="true"
-                   data-show-search-clear-button="true"
-                   class="table">
-                <thead>
-                    <tr>
-                        <th data-field="itemType" data-sortable="true" data-filter-control="select">
-                            @Html.DisplayNameFor(model => model.ItemType)
-                        </th>
-                        <th data-field="partNumber" data-sortable="true" data-filter-control="input">
-                            @Html.DisplayNameFor(model => model.PartNumber)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ItemType.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PartNumber)
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-        </div>
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-align-justify"></i> Items
     </div>
+    <div class="card-body">
+        <div class="mb-1">
+            <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#add-item-modal" data-url="@Url.Action("AddItem", "AssetItems", new { assetId = ViewBag.FilterAssetId })">
+                Add Asset Item
+            </button>
+            
+        </div>
+        <table id="table"
+               data-search="true"
+               data-pagination="true"
+               data-show-export="true"
+               data-filter-control="true"
+               data-show-search-clear-button="true"
+               class="table">
+            <thead>
+                <tr>
+                    <th data-field="itemType" data-sortable="true" data-filter-control="select">
+                        @Html.DisplayNameFor(model => model.ItemType)
+                    </th>
+                    <th data-field="partNumber" data-sortable="true" data-filter-control="input">
+                        @Html.DisplayNameFor(model => model.PartNumber)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ItemType.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PartNumber)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section Scripts
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

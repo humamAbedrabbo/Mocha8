@@ -159,7 +159,7 @@ namespace AMS.Data
                 .HasForeignKey(p => p.ParentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<AssetItem>().Property(p => p.PartNumber).HasMaxLength(50);
+            builder.Entity<AssetItem>().Property(p => p.PartNumber).IsRequired().HasMaxLength(50);
             builder.Entity<AssetCustdian>().Property(p => p.Name).HasMaxLength(50);
             builder.Entity<AssetCustdian>().Property(p => p.RoleName).HasMaxLength(50);
 

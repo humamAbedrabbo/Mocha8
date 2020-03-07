@@ -17,6 +17,7 @@ namespace AMS.Models
 
         [Display(Name = "Part Number")]
         [StringLength(50)]
+        [Required]
         public string PartNumber { get; set; }
     }
 }
