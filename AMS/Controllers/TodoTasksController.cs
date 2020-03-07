@@ -27,6 +27,26 @@ namespace AMS.Controllers
             this.userService = userService;
         }
 
+        public async Task<IActionResult> Add()
+        {
+            var model = new TodoTask();
+            await SetViewData();
+            return PartialView("_Add", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(TodoTask model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            await SetViewData(model);
+            return PartialView("_Add", model);
+        }
+
         public async Task<IActionResult> ChangeState(int id, WorkStatus status)
         {
             await userService.SetTaskState(id, status);
