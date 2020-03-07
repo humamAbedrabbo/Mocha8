@@ -1,14 +1,14 @@
 ﻿@model ItemType
 @{ 
-    ViewData["DialogTitle"] = "Add Item Type";
+    ViewData["AddModalTitle"] = "Add Item Type";
 }
 
 <!-- Modal -->
-<div class="modal fade" id="add-item-type" tabindex="-1" role="dialog" aria-labelledby="add-item-type-label" aria-hidden="true">
+<div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="add-modal-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add-item-type-label">@ViewBag.DialogTitle</h5>
+                <h5 class="modal-title" id="add-modal-label">@ViewBag.AddModalTitle</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
