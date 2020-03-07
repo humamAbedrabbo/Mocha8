@@ -30,6 +30,26 @@ namespace AMS.Controllers
             this.ticketGenerator = ticketGenerator;
         }
 
+        public async Task<IActionResult> Add()
+        {
+            var model = new TicketType();
+            await SetViewData();
+            return PartialView("_Add", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(TicketType model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            await SetViewData();
+            return PartialView("_Add", model);
+        }
+
         // GET: TicketTypes
         public async Task<IActionResult> Index()
         {
