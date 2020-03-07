@@ -36,9 +36,9 @@ namespace AMS.Controllers
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? ticketTypeId = null, int? clientId = null, int? locationId = null, int? userGroupId = null, int? userId = null, bool isActive = true)
         {
-            return View(await userService.GetTicketsAsync());
+            return View(await userService.GetTicketsAsync(ticketTypeId,clientId,locationId,userGroupId,userId,isActive));
         }
 
         // GET: Tickets/Details/5

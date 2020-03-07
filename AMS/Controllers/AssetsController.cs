@@ -30,9 +30,9 @@ namespace AMS.Controllers
         }
 
         // GET: Assets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? assetTypeId = null, int? clientId = null, int? locationId = null)
         {
-            return View(await userService.GetAssetsAsync());
+            return View(await userService.GetAssetsAsync(assetTypeId, clientId, locationId));
         }
 
         // GET: Assets/Details/5

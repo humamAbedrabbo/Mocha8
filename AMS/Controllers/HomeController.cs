@@ -33,7 +33,7 @@ namespace AMS.Controllers
             }
 
             var assets = await userService.GetAssetsAsync();
-            var tickets = await userService.GetTicketsAsync();
+            var tickets = await userService.GetTicketsAsync(isActive: false);
             ViewData["OpenTickets"] = tickets.Where(x => x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending).Count();
             ViewData["ClosedTickets"] = tickets.Where(x => x.Status == WorkStatus.Completed).Count();
             ViewData["PendingTickets"] = tickets.Where(x => x.Status == WorkStatus.Pending).Count();
@@ -61,7 +61,7 @@ namespace AMS.Controllers
             var openTicketsDS = new ChartModel.DataSetLabel() { Label = "Open or Pending" };
             var completedTicketsDS = new ChartModel.DataSetLabel() { Label = "Closed" };
 
-            var tickets = await userService.GetTicketsAsync();
+            var tickets = await userService.GetTicketsAsync(isActive: false);
 
             for (int i = 1; i <= 12; i++)
             {
@@ -93,7 +93,7 @@ namespace AMS.Controllers
             int currentYear = DateTime.Today.Year;
             var ticketStatusDS = new ChartModel.DataSetLabel();
 
-            var tickets = await userService.GetTicketsAsync();
+            var tickets = await userService.GetTicketsAsync(isActive: false);
             model.Labels.Add("Open");
             model.Labels.Add("Closed");
             model.Labels.Add("Pending");
@@ -156,7 +156,7 @@ namespace AMS.Controllers
             var openTicketsDS = new ChartModel.DataSetLabel() { Label = "Open or Pending" };
             var completedTicketsDS = new ChartModel.DataSetLabel() { Label = "Closed" };
 
-            var tickets = await userService.GetTicketsAsync();
+            var tickets = await userService.GetTicketsAsync(isActive: false);
             var locs = tickets
                 .Where(x => x.LocationId.HasValue)
                 .Select(x => x.Location).Distinct().ToList().OrderBy(x => x.Id);

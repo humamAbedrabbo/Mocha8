@@ -57,6 +57,7 @@
                                     @Html.DisplayFor(modelItem => item.Code)
                                 </td>
                                 <td>
+                                    <a class="btn-sm text-white btn-info mx-1" asp-controller="Assets" asp-action="Index" asp-route-assetTypeId="@item.Id"><i class="fa fa-cubes mx-1"></i>Assets</a>
                                     <a class="btn-sm btn-secondary mx-1" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil mx-1"></i>Edit</a>
                                     <a class="btn-sm btn-info mx-1" asp-controller="MetaFieldValues" asp-action="Index" asp-route-assetId="@item.Id">Meta</a>
                                     <a class="btn-sm btn-secondary mx-1" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-list mx-1"></i>Details</a>

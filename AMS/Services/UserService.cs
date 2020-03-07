@@ -162,14 +162,52 @@ namespace AMS.Services
         public async Task<SelectList> GetTodoTasksSelectAsync(int? id = null)
             => new SelectList(await GetTodoTasksAsync(), "Id", "Title", id, "GroupTitle");
 
-        public async Task<IEnumerable<Ticket>> GetTicketsAsync()
-            => await context.Tickets
-            .Include(x => x.TicketType)
-            .Include(x => x.Client)
-            .Include(x => x.Location)
-            .Where(x => x.TenantId == GetUserTenantId())
-            .OrderBy(x => x.Summary)
-            .ToListAsync();
+        public async Task<IEnumerable<Ticket>> GetTicketsAsync(int? ticketTypeId = null, int? clientId = null, int? locationId = null, int? userGroupId = null, int? userId = null, bool isActive = true)
+        {
+            IEnumerable<Ticket> tickets = null;
+            var tenantId = GetUserTenantId() ?? 0;
+
+            if (userGroupId.HasValue || userId.HasValue)
+            {
+                tickets = await context.Assignment
+                    .Include(x => x.UserGroup)
+                    .Include(x => x.User)
+                    .Include(x => x.Ticket).ThenInclude(x => x.TicketType)
+                    .Include(x => x.Ticket).ThenInclude(x => x.Client)
+                    .Include(x => x.Ticket).ThenInclude(x => x.Location)
+                    .Where(x => (x.Ticket.TenantId == tenantId)
+                        && (!userGroupId.HasValue || x.UserGroupId == userGroupId)
+                        && (!userId.HasValue || x.UserId == userId)
+                        && (!ticketTypeId.HasValue || x.Ticket.TicketTypeId == ticketTypeId)
+                        && (!clientId.HasValue || x.Ticket.ClientId == clientId)
+                        && (!locationId.HasValue || x.Ticket.LocationId == locationId)
+                        && (!isActive || x.Ticket.Status == WorkStatus.Open || x.Ticket.Status == WorkStatus.Pending)
+                    )
+                    .Select(x => x.Ticket)
+                    .OrderBy(x => x.Summary)
+                    .ToListAsync();
+            }
+            else
+            {
+                var q =  context.Tickets
+                .Include(x => x.TicketType)
+                .Include(x => x.Client)
+                .Include(x => x.Location)
+                .Include(x => x.Assignments).ThenInclude(x => x.UserGroup)
+                .Include(x => x.Assignments).ThenInclude(x => x.User)
+                .Where(x => (x.TenantId == tenantId)
+                    && (!ticketTypeId.HasValue || x.TicketTypeId == ticketTypeId)
+                    && (!clientId.HasValue || x.ClientId == clientId)
+                    && (!locationId.HasValue || x.LocationId == locationId)
+                    && (!isActive || x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending)
+                )
+                .OrderBy(x => x.Summary);
+                
+                tickets = await q.ToListAsync();
+            }
+
+            return tickets;
+        }
 
         public async Task<SelectList> GetTicketsSelectAsync(int? id = null)
             => new SelectList(await GetTicketsAsync(), "Id", "Title", id, "GroupTitle");
@@ -187,13 +225,17 @@ namespace AMS.Services
             .OrderBy(x => x.Summary)
             .ToListAsync();
 
-        public async Task<IEnumerable<Asset>> GetAssetsAsync()
+        public async Task<IEnumerable<Asset>> GetAssetsAsync(int? assetTypeId = null, int? clientId = null, int? locationId = null)
             => await context.Assets
             .Include(x => x.AssetType)
             .Include(x => x.Client)
             .Include(x => x.Location)
             .Include(x => x.Parent)
-            .Where(x => x.TenantId == GetUserTenantId())
+            .Where(x => (x.TenantId == GetUserTenantId())
+                && (!assetTypeId.HasValue || x.AssetTypeId == assetTypeId)
+                && (!clientId.HasValue || x.ClientId == clientId)
+                && (!locationId.HasValue || x.LocationId == locationId)
+            )
             .OrderBy(x => x.Name)
             .ToListAsync();
 

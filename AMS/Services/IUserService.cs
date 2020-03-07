@@ -7,7 +7,7 @@ namespace AMS.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<Asset>> GetAssetsAsync();
+        Task<IEnumerable<Asset>> GetAssetsAsync(int? assetTypeId = null, int? clientId = null, int? locationId = null);
         Task<SelectList> GetAssetsSelectAsync(int? id = null);
         Task<IEnumerable<AssetType>> GetAssetTypesAsync();
         Task<SelectList> GetAssetTypesSelectAsync(int? id = null);
@@ -32,7 +32,7 @@ namespace AMS.Services
         Task<SelectList> GetMetaFieldsSelectAsync(int? id = null);
         Task<int> GetTicketDefaultDuration(int ticketTypeId);
         Task<IEnumerable<TicketJob>> GetTicketJobsAsync();
-        Task<IEnumerable<Ticket>> GetTicketsAsync();
+        Task<IEnumerable<Ticket>> GetTicketsAsync(int? ticketTypeId = null, int? clientId = null, int? locationId = null, int? userGroupId = null, int? userId = null, bool isActive = true);
         Task<SelectList> GetTicketsSelectAsync(int? id = null);
         Task<IEnumerable<TicketType>> GetTicketTypesAsync();
         Task<SelectList> GetTicketTypesSelectAsync(int? id = null);
