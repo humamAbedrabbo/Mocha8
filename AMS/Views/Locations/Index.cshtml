@@ -21,7 +21,13 @@
                 <i class="fa fa-align-justify"></i> Locations
             </div>
             <div class="card-body">
-
+                <div class="mb-1">
+                    <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#add-modal" data-url="@Url.Action("Add")">
+                        Add Location
+                    </button>
+                    <!-- Modal placeholder -->
+                    <div id="modal-placeholder"></div>
+                </div>
                 <table id="table"
                        data-search="true"
                        data-pagination="true"
@@ -40,7 +46,7 @@
                             <th data-field="parentLocation" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.Parent)
                             </th>
-                            <th data-field="actions" ></th>
+                            <th data-field="actions"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,7 +71,7 @@
                         }
                     </tbody>
                 </table>
-                
+
             </div>
         </div>
     </div>
@@ -78,6 +84,7 @@
 
 @* view-scripts *@
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         $(function () {
             var $table = $("#table").bootstrapTable();
