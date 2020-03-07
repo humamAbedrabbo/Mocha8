@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace AMS.Models
 {
@@ -28,5 +29,7 @@ namespace AMS.Models
         public int DefaultDuration { get; set; } = 1;
         public List<Ticket> Tickets { get; set; }
         public List<MetaFieldValue> Values { get; set; }
+        public IDictionary<string, MetaFieldValue> FieldValues => Values?.ToDictionary(x => x.Field?.Name, y => y);
+
     }
 }

@@ -99,6 +99,7 @@ namespace AMS.Models
         public string GroupTitle => $"{TicketType?.Name}";
 
         public IEnumerable<Asset> RelatedAssets => TicketAssets.Select(x => x.Asset);
+        public IDictionary<string, MetaFieldValue> FieldValues => Values?.ToDictionary(x => x.Field?.Name, y => y);
 
     }
 }

@@ -63,10 +63,12 @@ namespace AMS.Data
             // AssetType
             builder.Entity<AssetType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Entity<AssetType>().Property(p => p.Code).IsRequired().HasMaxLength(5);
+            builder.Entity<AssetType>().Ignore(p => p.FieldValues);
 
             // TicketType
             builder.Entity<TicketType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Entity<TicketType>().Property(p => p.Code).IsRequired().HasMaxLength(5);
+            builder.Entity<TicketType>().Ignore(p => p.FieldValues);
 
             // TodoTaskType
             builder.Entity<TodoTaskType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
@@ -146,6 +148,7 @@ namespace AMS.Data
             // Asset
             builder.Entity<Asset>().Property(p => p.Name).IsRequired().HasMaxLength(100);
             builder.Entity<Asset>().Ignore(p => p.ActiveTickets);
+            builder.Entity<Asset>().Ignore(p => p.FieldValues);
             builder.Entity<Asset>().HasOne(p => p.AssetType)
                 .WithMany(p => p.Assets)
                 .HasForeignKey(p => p.AssetTypeId)
@@ -167,6 +170,7 @@ namespace AMS.Data
             builder.Entity<Ticket>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
             builder.Entity<Ticket>().Property(p => p.Description).HasMaxLength(500);
             builder.Entity<Ticket>().Ignore(p => p.RelatedAssets);
+            builder.Entity<Ticket>().Ignore(p => p.FieldValues);
             builder.Entity<Ticket>().HasOne(p => p.TicketType)
                 .WithMany(p => p.Tickets)
                 .HasForeignKey(p => p.TicketTypeId)

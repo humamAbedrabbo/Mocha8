@@ -32,6 +32,10 @@ namespace AMS.Controllers
         // GET: Assets
         public async Task<IActionResult> Index(int? assetTypeId = null, int? clientId = null, int? locationId = null)
         {
+            ViewData["FilterAssetTypeId"] = assetTypeId;
+            ViewData["FilterAssetType"] = await _context.AssetTypes
+                .Include(x => x.Values).ThenInclude(x => x.Field)
+                .FirstOrDefaultAsync(x => x.Id == assetTypeId);
             return View(await userService.GetAssetsAsync(assetTypeId, clientId, locationId));
         }
 
