@@ -13,59 +13,54 @@
     <img class="img-avatar" src="@user?.PictureUrl" alt="@user?.Email">
   </a>
   <div class="dropdown-menu dropdown-menu-right">
-    <div class="dropdown-header text-center">
-      <strong>Account</strong>
-    </div>
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-bell-o"></i> Updates
-      <span class="badge badge-info">42</span>
-    </a>
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-envelope-o"></i> Messages
-      <span class="badge badge-success">42</span>
-    </a>
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-tasks"></i> Tasks
-      <span class="badge badge-danger">42</span>
-    </a>
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-comments"></i> Comments
-      <span class="badge badge-warning">42</span>
-    </a>
-    <div class="dropdown-header text-center">
-      <strong>Settings</strong>
-    </div>
+      <div class="dropdown-header text-center">
+          <strong>Account</strong>
+      </div>
 
-    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-      <i class="fa fa-user"></i> Profile
-    </a>
-
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-wrench"></i> Settings
-    </a>
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-usd"></i> Payments
-      <span class="badge badge-secondary">42</span>
-    </a>
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-file"></i> Projects
-      <span class="badge badge-primary">42</span>
-    </a>
-    <div class="divider"></div>
-    <a class="dropdown-item" href="#">
-      <i class="fa fa-shield"></i> Lock Account
-    </a>
-
-    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new {area = ""})" method="post" id="logoutForm">
-      <script>
-        function logout() {
-          $('#logoutForm').submit();
-        }
-      </script>
-      <a class="dropdown-item" href="javascript: void(0)" onclick="logout()">
-        <i class="fa fa-lock"></i> Logout
+      <a class="dropdown-item" asp-controller="TodoTasks" asp-action="Index" asp-route-userId="@(user?.Id)">
+          <i class="fa fa-tasks"></i> Tasks
+          <span class="badge badge-danger">@((await userService.GetTodoTasksAsync(userId: user?.Id)).Count())</span>
       </a>
-    </form>
+
+      <div class="dropdown-header text-center">
+          <strong>Settings</strong>
+      </div>
+
+      <a class="dropdown-item" asp-area="Identity" asp-controller="Users" asp-action="Details" title="User Profile">
+          <i class="fa fa-user"></i> Profile
+      </a>
+
+      <a class="dropdown-item" href="#">
+          <i class="fa fa-wrench"></i> Settings
+      </a>
+      <a class="dropdown-item" href="#">
+          <i class="fa fa-usd"></i> User Groups
+          <span class="badge badge-secondary">0</span>
+      </a>
+      <a class="dropdown-item" href="#">
+          <i class="fa fa-file"></i> Assets
+          <span class="badge badge-primary">0</span>
+      </a>
+      <div class="divider"></div>
+      <a class="dropdown-item" href="#">
+          <i class="fa fa-shield"></i> Lock Account
+      </a>
+
+      <a class="dropdown-item" href="/Identity/Account/Manage/ChangePassword">
+          <i class="fa fa-lock"></i> Change Password
+          <span class="badge badge-primary"></span>
+      </a>
+
+      <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new {area = ""})" method="post" id="logoutForm">
+          <script>
+              function logout() {
+                  $('#logoutForm').submit();
+              }
+          </script>
+          <a class="dropdown-item" href="javascript: void(0)" onclick="logout()">
+              <i class="fa fa-lock"></i> Logout
+          </a>
+      </form>
 
   </div>
 </li>

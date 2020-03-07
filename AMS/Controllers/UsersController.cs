@@ -44,7 +44,11 @@ namespace AMS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                id = (await userService.GetCurrentUserAsync())?.Id;
+                if(id == null)
+                {
+                    return NotFound();
+                }
             }
 
             var amsUser = await _context.Users
