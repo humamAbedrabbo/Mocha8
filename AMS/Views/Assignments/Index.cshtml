@@ -22,7 +22,7 @@
             </div>
             <div class="card-body">
                 <div class="mb-1">
-                    <a asp-action="Create" class="btn btn-primary">
+                    <a asp-action="Create" asp-route-ticketId="@ViewBag.FilterTicketId" asp-route-todoTaskId="@ViewBag.FilterTodoTaskId" class="btn btn-primary">
                         Add Assignment
                     </a>
                 </div>
@@ -36,19 +36,19 @@
                     <thead>
                         <tr>
                             <th data-field="userGroup" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.UserGroup)
+                                @Html.DisplayNameFor(model => model.UserGroupId)
                             </th>
                             <th data-field="user" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.User)
+                                @Html.DisplayNameFor(model => model.UserId)
                             </th>
                             <th data-field="role" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.RoleName)
                             </th>
                             <th data-field="ticket" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.Ticket)
+                                @Html.DisplayNameFor(model => model.TicketId)
                             </th>
                             <th data-field="todoTask" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.TodoTask)
+                                @Html.DisplayNameFor(model => model.TodoTaskId)
                             </th>
                             <th data-field="actions"></th>
                         </tr>
@@ -61,7 +61,7 @@
                                     @Html.DisplayFor(modelItem => item.UserGroup.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.User.Id)
+                                    @Html.DisplayFor(modelItem => item.User.DisplayName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.RoleName)
@@ -74,7 +74,6 @@
                                 </td>
                                 <td>
                                     <a class="btn-sm btn-secondary mx-1" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil mx-1"></i>Edit</a>
-                                    <a class="btn-sm btn-info mx-1" asp-controller="MetaFieldValues" asp-action="Index" asp-route-assetId="@item.Id">Meta</a> |
                                     <a class="btn-sm btn-secondary mx-1" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-list mx-1"></i>Details</a>
                                     <a class="btn-sm btn-danger mx-1" asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-remove mx-1"></i>Delete</a>
                                 </td>

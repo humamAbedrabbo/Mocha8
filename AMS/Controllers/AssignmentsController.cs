@@ -28,10 +28,21 @@ namespace AMS.Controllers
         }
 
         // GET: Assignments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? ticketId = null, int? todoTaskId = null)
         {
-            var amsContext = _context.Assignment.Include(a => a.Ticket).Include(a => a.TodoTask).Include(a => a.User).Include(a => a.UserGroup);
-            return View(await amsContext.ToListAsync());
+            var amsContext = _context.Assignment
+                .Include(a => a.Ticket)
+                .Include(a => a.TodoTask)
+                .Include(a => a.User)
+                .Include(a => a.UserGroup)
+                .Where(x => 
+                    (!ticketId.HasValue || x.TicketId == ticketId)
+                    && (!todoTaskId.HasValue || x.TodoTaskId == todoTaskId)
+                );
+            ViewData["FilterTicketId"] = ticketId;
+            ViewData["FilterTodoTaskId"] = todoTaskId;
+            var list = await amsContext.ToListAsync();
+            return View(list);
         }
 
         // GET: Assignments/Details/5
@@ -57,10 +68,11 @@ namespace AMS.Controllers
         }
 
         // GET: Assignments/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? ticketId = null, int? todoTaskId = null)
         {
-            await SetViewData();
-            return View();
+            var model = new Assignment { TicketId = ticketId, TodoTaskId = todoTaskId };
+            await SetViewData(model);
+            return View(model);
         }
 
         // POST: Assignments/Create
@@ -70,9 +82,15 @@ namespace AMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(string.IsNullOrEmpty(assignment.RoleName))
+                {
+                    assignment.RoleName = "Assigned To";
+                }
+
                 _context.Add(assignment);
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { ticketId = assignment?.TicketId, todoTaskId = assignment?.TodoTaskId });
             }
             await SetViewData(assignment);
             return View(assignment);
@@ -117,6 +135,10 @@ namespace AMS.Controllers
             {
                 try
                 {
+                    if (string.IsNullOrEmpty(assignment.RoleName))
+                    {
+                        assignment.RoleName = "Assigned To";
+                    }
                     _context.Update(assignment);
                     await _context.SaveChangesAsync();
                 }

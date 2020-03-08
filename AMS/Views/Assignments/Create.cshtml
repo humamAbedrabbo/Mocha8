@@ -16,18 +16,23 @@
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <!-- Ticket Select -->
-                    <div class="form-group row">
-                        <label asp-for="TicketId" class="col-md-3 col-form-label"></label>
-                        <div class="col-md-9">
-                            <select asp-for="TicketId" class="form-control" asp-items="ViewBag.TicketId">
-                                <option value="">--- SELECT ---</option>
-                            </select>
-                            <span class="help-block"><small></small></span>
-                            <span asp-validation-for="TicketId" class="text-danger"></span>
+                    @if (!Model.TodoTaskId.HasValue)
+                    {
+                        <!-- Ticket Select -->
+                        <div class="form-group row">
+                            <label asp-for="TicketId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="TicketId" class="form-control" asp-items="ViewBag.TicketId">
+                                    <option value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="TicketId" class="text-danger"></span>
+                            </div>
                         </div>
-                    </div>
+                    }
 
+                    @if (!Model.TicketId.HasValue)
+                    {
                     <!-- Task Select -->
                     <div class="form-group row">
                         <label asp-for="TodoTaskId" class="col-md-3 col-form-label"></label>
@@ -39,6 +44,7 @@
                             <span asp-validation-for="TodoTaskId" class="text-danger"></span>
                         </div>
                     </div>
+                    }
 
                     <!-- UserGroup Select -->
                     <div class="form-group row">
