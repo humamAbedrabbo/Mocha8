@@ -28,9 +28,10 @@ namespace AMS.Controllers
         }
 
         // GET: Members
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? userGroupId = null)
         {
-            return View(await userService.GetMembersAsync());
+            ViewData["FilterUserGroupId"] = userGroupId;
+            return View(await userService.GetMembersAsync(userGroupId));
         }
 
         // GET: Members/Details/5
@@ -54,10 +55,12 @@ namespace AMS.Controllers
         }
 
         // GET: Members/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? userGroupId = null)
         {
-            await SetViewData();
-            return View();
+            var model = new Member { UserGroupId = userGroupId ?? 0 };
+            ViewData["FilterUserGroupId"] = userGroupId;
+            await SetViewData(model);
+            return View(model);
         }
 
         // POST: Members/Create
@@ -71,6 +74,7 @@ namespace AMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FilterUserGroupId"] = member.UserGroupId;
             await SetViewData(member);
             return View(member);
         }
@@ -96,6 +100,7 @@ namespace AMS.Controllers
         {
             ViewData["UserId"] = await userService.GetUsersSelectAsync(member?.UserId);
             ViewData["UserGroupId"] = await userService.GetUserGroupsSelectAsync(member?.UserGroupId);
+            
         }
 
         // POST: Members/Edit/5

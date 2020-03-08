@@ -407,7 +407,7 @@ namespace AMS.Data
 
             for (int year = 2020; year <= 2020; year++)
             {
-                for (int month = 1; month <= 12; month++)
+                for (int month = 1; month <= 2; month++)
                 {
                     for (int counter = 1; counter <= rnd.Next(3, 8); counter++)
                     {

@@ -41,6 +41,34 @@ namespace AMS.Services
             return haccessor.HttpContext.User.HasClaim("SYSADMIN", "");
         }
 
+        public async Task<int> GetUserTasksCount(int userId)
+        {
+            return await context.Assignment
+                .Include(x => x.TodoTask)
+                .Where(x => x.TodoTaskId.HasValue && x.UserId == userId && (x.TodoTask.Status == WorkStatus.Open || x.TodoTask.Status == WorkStatus.Pending))
+                .Select(x => x.TodoTaskId)
+                .Distinct()
+                .CountAsync();
+        }
+
+        public async Task<int> GetUserUserGroupsCount(int userId)
+        {
+            return await context.Members
+                .Where(x => x.UserId == userId)
+                .Select(x => x.UserGroupId)
+                .Distinct()
+                .CountAsync();
+        }
+
+        public async Task<int> GetUserAssetsCount(int userId)
+        {
+            return await context.AssetCustodians
+                .Where(x => x.UserId == userId)
+                .Select(x => x.AssetId)
+                .Distinct()
+                .CountAsync();
+        }
+
         public async Task SetTicketState(int ticketId, WorkStatus status)
         {
             var ticket = await context.Tickets
@@ -322,11 +350,13 @@ namespace AMS.Services
         public async Task<SelectList> GetClientsSelectAsync(int? id = null)
             => new SelectList(await GetClientsAsync(), "Id", "Name", id, "GroupTitle");
 
-        public async Task<IEnumerable<Member>> GetMembersAsync()
+        public async Task<IEnumerable<Member>> GetMembersAsync(int? userGroupId = null)
             => await context.Members
             .Include(x => x.UserGroup)
             .Include(x => x.User)
-            .Where(x => x.UserGroup.TenantId == GetUserTenantId())
+            .Where(x => (x.UserGroup.TenantId == GetUserTenantId())
+                && (!userGroupId.HasValue || x.UserGroupId == userGroupId)
+            )
             .OrderBy(x => x.Name)
             .ToListAsync();
 

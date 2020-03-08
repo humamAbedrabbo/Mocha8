@@ -26,7 +26,7 @@ namespace AMS.Services
         Task<SelectList> GetLocationsSelectAsync(int? id = null);
         Task<IEnumerable<LocationType>> GetLocationTypesAsync();
         Task<SelectList> GetLocationTypesSelectAsync(int? id = null);
-        Task<IEnumerable<Member>> GetMembersAsync();
+        Task<IEnumerable<Member>> GetMembersAsync(int? userGroupId = null);
         Task<SelectList> GetMembersSelectAsync(int? id = null);
         Task<IEnumerable<MetaField>> GetMetaFieldsAsync();
         Task<SelectList> GetMetaFieldsSelectAsync(int? id = null);
@@ -42,11 +42,14 @@ namespace AMS.Services
         Task<IEnumerable<TodoTaskType>> GetTodoTaskTypesAsync();
         Task<MultiSelectList> GetTodoTaskTypesMultiSelectAsync(IEnumerable<int> ids = null);
         Task<SelectList> GetTodoTaskTypesSelectAsync(int? id = null);
+        Task<int> GetUserAssetsCount(int userId);
         Task<IEnumerable<UserGroup>> GetUserGroupsAsync();
         Task<SelectList> GetUserGroupsSelectAsync(int? id = null);
         Task<IEnumerable<AmsUser>> GetUsersAsync();
         Task<SelectList> GetUsersSelectAsync(int? id = null);
+        Task<int> GetUserTasksCount(int userId);
         int? GetUserTenantId();
+        Task<int> GetUserUserGroupsCount(int userId);
         bool IsSysAdmin();
         Task SetTaskState(int taskId, WorkStatus status);
         Task SetTicketState(int ticketId, WorkStatus status);
