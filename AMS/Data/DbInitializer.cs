@@ -156,7 +156,10 @@ namespace AMS.Data
                 }
             }
 
-            BuildTenant(context, defaultTenant.Name);
+            if (isInMemory)
+            {
+                BuildTenant(context, defaultTenant.Name);
+            }
         }
 
         private void BuildTenant(AmsContext context, string tenantName)
