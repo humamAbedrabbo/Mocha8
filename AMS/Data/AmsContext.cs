@@ -50,31 +50,47 @@ namespace AMS.Data
             builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
             builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
 
+            builder.Entity<AmsUser>().HasIndex(p => p.TenantId);
+
             // Tenants
             builder.Entity<Tenant>().Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Entity<Tenant>().HasIndex(p => p.Name).IsUnique();
 
             // ClientType
             builder.Entity<ClientType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<ClientType>().HasIndex(p => p.TenantId);
+            builder.Entity<ClientType>().HasIndex(p => p.Name);
 
             // LocationType
             builder.Entity<LocationType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<LocationType>().HasIndex(p => p.TenantId);
+            builder.Entity<LocationType>().HasIndex(p => p.Name);
 
             // AssetType
             builder.Entity<AssetType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Entity<AssetType>().Property(p => p.Code).IsRequired().HasMaxLength(5);
             builder.Entity<AssetType>().Ignore(p => p.FieldValues);
+            builder.Entity<AssetType>().HasIndex(p => p.TenantId);
+            builder.Entity<AssetType>().HasIndex(p => p.Name);
+            builder.Entity<AssetType>().HasIndex(p => p.Code);
 
             // TicketType
             builder.Entity<TicketType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Entity<TicketType>().Property(p => p.Code).IsRequired().HasMaxLength(5);
             builder.Entity<TicketType>().Ignore(p => p.FieldValues);
+            builder.Entity<TicketType>().HasIndex(p => p.TenantId);
+            builder.Entity<TicketType>().HasIndex(p => p.Name);
+            builder.Entity<TicketType>().HasIndex(p => p.Code);
 
             // TodoTaskType
             builder.Entity<TodoTaskType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<TodoTaskType>().HasIndex(p => p.TenantId);
+            builder.Entity<TodoTaskType>().HasIndex(p => p.Name);
 
             // ItemType
             builder.Entity<ItemType>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<ItemType>().HasIndex(p => p.TenantId);
+            builder.Entity<ItemType>().HasIndex(p => p.Name);
 
             // Client
             builder.Entity<Client>().Property(p => p.Name).IsRequired().HasMaxLength(50);
@@ -82,10 +98,17 @@ namespace AMS.Data
                 .WithMany(p => p.Clients)
                 .HasForeignKey(p => p.ClientTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Client>().HasIndex(p => p.TenantId);
+            builder.Entity<Client>().HasIndex(p => p.ClientTypeId);
+            builder.Entity<Client>().HasIndex(p => p.Name);
 
             // UserGroup
             builder.Entity<UserGroup>().Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Entity<Member>().Property(p => p.Name).HasMaxLength(50);
+            builder.Entity<UserGroup>().HasIndex(p => p.TenantId);
+            builder.Entity<UserGroup>().HasIndex(p => p.Name);
+            builder.Entity<Member>().HasIndex(p => p.UserId);
+            builder.Entity<Member>().HasIndex(p => p.UserGroupId);
 
             // MetaField
             builder.Entity<MetaField>().Property(p => p.Name).IsRequired().HasMaxLength(50);
@@ -93,6 +116,8 @@ namespace AMS.Data
                 .WithMany(p => p.MetaFields)
                 .HasForeignKey(p => p.CustomListId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+            builder.Entity<MetaField>().HasIndex(p => p.TenantId);
+            builder.Entity<MetaField>().HasIndex(p => p.Name);
 
             // MetaFieldValue
             builder.Entity<MetaFieldValue>().Property(p => p.Value).HasMaxLength(250);
@@ -123,6 +148,12 @@ namespace AMS.Data
                 .WithMany(p => p.Values)
                 .HasForeignKey(p => p.TicketId)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<MetaFieldValue>().HasIndex(p => p.AssetId);
+            builder.Entity<MetaFieldValue>().HasIndex(p => p.AssetTypeId);
+            builder.Entity<MetaFieldValue>().HasIndex(p => p.TicketId);
+            builder.Entity<MetaFieldValue>().HasIndex(p => p.TicketTypeId);
+            builder.Entity<MetaFieldValue>().HasIndex(p => p.FieldId);
+            builder.Entity<MetaFieldValue>().HasIndex(p => p.Value);
 
 
             // CustomList
@@ -133,6 +164,10 @@ namespace AMS.Data
                 .WithMany(p => p.Items)
                 .HasForeignKey(p => p.CustomListId)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<CustomList>().HasIndex(p => p.TenantId);
+            builder.Entity<CustomList>().HasIndex(p => p.Name);
+            builder.Entity<CustomListItem>().HasIndex(p => p.Key);
+            builder.Entity<CustomListItem>().HasIndex(p => p.CustomListId);
 
             // Location
             builder.Entity<Location>().Property(p => p.Name).IsRequired().HasMaxLength(50);
@@ -144,6 +179,10 @@ namespace AMS.Data
                 .WithMany(p => p.Childs)
                 .HasForeignKey(p => p.ParentId)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Location>().HasIndex(p => p.TenantId);
+            builder.Entity<Location>().HasIndex(p => p.LocationTypeId);
+            builder.Entity<Location>().HasIndex(p => p.ParentId);
+            builder.Entity<Location>().HasIndex(p => p.Name);
 
             // Asset
             builder.Entity<Asset>().Property(p => p.Name).IsRequired().HasMaxLength(100);
@@ -162,9 +201,25 @@ namespace AMS.Data
                 .HasForeignKey(p => p.ParentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Asset>().HasIndex(p => p.TenantId);
+            builder.Entity<Asset>().HasIndex(p => p.AssetTypeId);
+            builder.Entity<Asset>().HasIndex(p => p.ClientId);
+            builder.Entity<Asset>().HasIndex(p => p.LocationId);
+            builder.Entity<Asset>().HasIndex(p => p.Name);
+            builder.Entity<Asset>().HasIndex(p => p.IsOn);
+            builder.Entity<Asset>().HasIndex(p => p.Code);
+            builder.Entity<Asset>().HasIndex(p => p.CodeNumber);
+
             builder.Entity<AssetItem>().Property(p => p.PartNumber).IsRequired().HasMaxLength(50);
+            builder.Entity<AssetItem>().HasIndex(p => p.AssetId);
+            builder.Entity<AssetItem>().HasIndex(p => p.ItemTypeId);
+            builder.Entity<AssetItem>().HasIndex(p => p.PartNumber);
+
             builder.Entity<AssetCustdian>().Property(p => p.Name).HasMaxLength(50);
             builder.Entity<AssetCustdian>().Property(p => p.RoleName).HasMaxLength(50);
+            builder.Entity<AssetCustdian>().HasIndex(p => p.AssetId);
+            builder.Entity<AssetCustdian>().HasIndex(p => p.UserId);
+            builder.Entity<AssetCustdian>().HasIndex(p => p.RoleName);
 
             // Ticket
             builder.Entity<Ticket>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
@@ -180,10 +235,23 @@ namespace AMS.Data
                 .HasForeignKey(p => p.LocationId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
+            builder.Entity<Ticket>().HasIndex(p => p.TenantId);
+            builder.Entity<Ticket>().HasIndex(p => p.TicketTypeId);
+            builder.Entity<Ticket>().HasIndex(p => p.Summary);
+            builder.Entity<Ticket>().HasIndex(p => p.ClientId);
+            builder.Entity<Ticket>().HasIndex(p => p.LocationId);
+            builder.Entity<Ticket>().HasIndex(p => p.StartDate);
+            builder.Entity<Ticket>().HasIndex(p => p.DueDate);
+            builder.Entity<Ticket>().HasIndex(p => p.Status);
+            builder.Entity<Ticket>().HasIndex(p => p.CompletionDate);
+            builder.Entity<Ticket>().HasIndex(p => p.Code);
+            builder.Entity<Ticket>().HasIndex(p => p.CodeNumber);
+
             builder.Entity<TicketAsset>().HasOne(p => p.Ticket)
                 .WithMany(p => p.TicketAssets)
                 .HasForeignKey(p => p.TicketId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<TicketAsset>().HasOne(p => p.Asset)
                 .WithMany(p => p.TicketAssets)
                 .HasForeignKey(p => p.AssetId)
@@ -192,6 +260,13 @@ namespace AMS.Data
             // TodoTask
             builder.Entity<TodoTask>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
             builder.Entity<TodoTask>().Property(p => p.Description).HasMaxLength(500);
+            builder.Entity<TodoTask>().HasIndex(p => p.TenantId);
+            builder.Entity<TodoTask>().HasIndex(p => p.TicketId);
+            builder.Entity<TodoTask>().HasIndex(p => p.TodoTaskTypeId);
+            builder.Entity<TodoTask>().HasIndex(p => p.Summary);
+            builder.Entity<TodoTask>().HasIndex(p => p.Status);
+            builder.Entity<TodoTask>().HasIndex(p => p.StartDate);
+            builder.Entity<TodoTask>().HasIndex(p => p.DueDate);
 
             // TicketJob
             builder.Entity<TicketJob>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
@@ -205,10 +280,19 @@ namespace AMS.Data
                 .WithMany()
                 .HasForeignKey(x => x.TodoTaskTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJob>().HasIndex(p => p.TenantId);
+            builder.Entity<TicketJob>().HasIndex(p => p.TicketTypeId);
+            builder.Entity<TicketJob>().HasIndex(p => p.UserGroupId);
 
             // Assignment
             builder.Entity<Assignment>().Property(p => p.RoleName).HasMaxLength(100);
             builder.Entity<Assignment>().Ignore(p => p.Name);
+            builder.Entity<Assignment>().HasIndex(p => p.TicketId);
+            builder.Entity<Assignment>().HasIndex(p => p.TodoTaskId);
+            builder.Entity<Assignment>().HasIndex(p => p.UserId);
+            builder.Entity<Assignment>().HasIndex(p => p.UserGroupId);
+            builder.Entity<Assignment>().HasIndex(p => p.RoleName);
+
         }
 
         public DbSet<AMS.Models.Assignment> Assignment { get; set; }
