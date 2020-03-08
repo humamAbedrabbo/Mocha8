@@ -17,6 +17,8 @@ namespace AMS.Models
             Assignments = new List<Assignment>();
             
         }
+
+        [Display(Name = "Tenant")]
         public int? TenantId { get; set; }
         public Tenant Tenant { get; set; }
 

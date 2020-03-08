@@ -271,6 +271,36 @@ namespace AMS.Data
             // TicketJob
             builder.Entity<TicketJob>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
             builder.Entity<TicketJob>().Ignore(p => p.TaskTypes);
+            
+            builder.Entity<TicketJob>().HasOne(x => x.TicketType)
+                .WithMany()
+                .HasForeignKey(x => x.TicketTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJob>().HasOne(x => x.Client)
+                .WithMany()
+                .HasForeignKey(x => x.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJob>().HasOne(x => x.Location)
+                .WithMany()
+                .HasForeignKey(x => x.LocationId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJob>().HasOne(x => x.UserGroup)
+                .WithMany()
+                .HasForeignKey(x => x.UserGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJob>().HasOne(x => x.Tenant)
+                .WithMany()
+                .HasForeignKey(x => x.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJob>().HasOne(x => x.Owner)
+                .WithMany()
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TicketJob>().HasOne(x => x.AssetType)
+                .WithMany()
+                .HasForeignKey(x => x.AssetTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<TicketJobTaskType>().HasKey(p => new { p.TicketJobId, p.TodoTaskTypeId });
             builder.Entity<TicketJobTaskType>().HasOne(x => x.TicketJob)
                 .WithMany(x => x.TicketJobTaskTypes)

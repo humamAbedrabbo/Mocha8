@@ -14,13 +14,13 @@ namespace AMS.Data
 {
     public class DbInitializer
     {
-        public static void Initialize(AmsContext context, IConfiguration config, IServiceProvider serviceProvider)
+        public static async Task Initialize(AmsContext context, IConfiguration config, IServiceProvider serviceProvider)
         {
             var initializer = new DbInitializer();
-            initializer.Seed(context, config, serviceProvider);
+            await initializer.Seed(context, config, serviceProvider);
         }
 
-        private void Seed(AmsContext context, IConfiguration config, IServiceProvider serviceProvider)
+        private async Task Seed(AmsContext context, IConfiguration config, IServiceProvider serviceProvider)
         {
             var dbConnectionType = config?["Database"];
             var isInMemory = ("Memory" == dbConnectionType);
@@ -41,7 +41,7 @@ namespace AMS.Data
                     Name = "Admin", 
                 };
 
-                rm.CreateAsync(adminRole);
+                await rm.CreateAsync(adminRole);
             }
 
 
@@ -77,9 +77,9 @@ namespace AMS.Data
                         PhoneNumber = defaultAdmin.Phone
                     };
 
-                    um.CreateAsync(user, defaultAdmin.Password);
-                    um.AddToRoleAsync(user, "Admin");
-                    um.AddClaimAsync(user, new System.Security.Claims.Claim("SYSADMIN", ""));
+                    await um.CreateAsync(user, defaultAdmin.Password);
+                    await um.AddToRoleAsync(user, "Admin");
+                    await um.AddClaimAsync(user, new System.Security.Claims.Claim("SYSADMIN", ""));
                 }
             }
 
@@ -115,7 +115,7 @@ namespace AMS.Data
                             Name = defaultTenant.Name
                         };
                         context.Tenants.Add(tenant);
-                        context.SaveChanges();
+                        await context.SaveChangesAsync();
 
                         // Add default tenant administration role
                         var tenantRoleName = $"{defaultTenant.Name}$Admin";
@@ -129,11 +129,11 @@ namespace AMS.Data
                                 TenantId = tenant.Id
                             };
                             context.Roles.Add(role);
-                            context.SaveChanges();
+                            await context.SaveChangesAsync();
                         }
 
                         // Add default tenant administrator
-                        AmsUser tenantAdmin = um.FindByNameAsync(defaultTenant.Username).Result;
+                        AmsUser tenantAdmin = await um.FindByNameAsync(defaultTenant.Username);
                         if (tenantAdmin == null)
                         {
                             tenantAdmin = new AmsUser
@@ -147,12 +147,12 @@ namespace AMS.Data
                                 TenantId = tenant.Id
                             };
 
-                            um.CreateAsync(tenantAdmin, defaultTenant.Password);
-                            um.AddToRoleAsync(tenantAdmin, tenantRoleName);
-                            um.AddClaimAsync(tenantAdmin, new System.Security.Claims.Claim("TenantId", tenant.Id.ToString()));
+                            await um.CreateAsync(tenantAdmin, defaultTenant.Password);
+                            await um.AddToRoleAsync(tenantAdmin, tenantRoleName);
+                            await um.AddClaimAsync(tenantAdmin, new System.Security.Claims.Claim("TenantId", tenant.Id.ToString()));
                         }
                     }
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                 }
             }
 

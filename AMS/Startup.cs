@@ -66,7 +66,14 @@ namespace AMS
             services.AddScoped<ITicketGenerator, TicketGenerator>();
 
             services.AddHangfire(cfg => {
-                cfg.UseMemoryStorage();
+                if(IsInMemory)
+                {
+                    cfg.UseMemoryStorage();
+                }
+                else
+                {
+                    cfg.UseSqlServerStorage(Configuration.GetConnectionString("HFSqlServer"));
+                }
             });
             services.AddHangfireServer();
         }

@@ -30,6 +30,7 @@ namespace AMS.Models
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Tenant Name")]
         public string Name { get; set; }
         public List<AmsUser> Users { get; set; }
         public List<AmsRole> Roles { get; set; }

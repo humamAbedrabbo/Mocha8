@@ -102,10 +102,15 @@ namespace AMS.Controllers
             var me = await userService.GetCurrentUserAsync();
             var ticket = await context.Tickets
                 .Include(x => x.Assignments)
+                .Include(x => x.TodoTasks).ThenInclude(x => x.Assignments)
                 .FirstOrDefaultAsync(x => x.Id == ticketId);
             if(ticket != null)
             {
                 ticket.Assignments.Add(new Models.Assignment { UserId = me.Id, RoleName = "Assigned To"  });
+                foreach (var tt in ticket.TodoTasks)
+                {
+                    tt.Assignments.Add(new Models.Assignment { UserId = me.Id, RoleName = "Assigned To" });
+                }
                 await context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Tickets));

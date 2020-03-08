@@ -38,6 +38,13 @@
                             <th data-field="name" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.PictureUrl)
                             </th>
+                            @if (User.HasClaim("SYSADMIN", ""))
+                            {
+                                <th data-field="tenant" data-sortable="true" data-filter-control="select">
+                                    @Html.DisplayNameFor(model => model.TenantId)
+                                </th>
+
+                            }
                             <th data-field="userName" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.UserName)
                             </th>
@@ -66,6 +73,13 @@
                             <td>
                                 <img src="@item.PictureUrl" class="img-avatar" width="50" height="50" />
                             </td>
+                            @if (User.HasClaim("SYSADMIN", ""))
+                            {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Tenant.Name)
+                        </td>
+
+                            }
                             <td>
                                 @Html.DisplayFor(modelItem => item.UserName)
                             </td>

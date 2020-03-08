@@ -1,8 +1,10 @@
 ﻿@model AMS.Models.AmsUser
-
+@using Microsoft.EntityFrameworkCore
+@inject AMS.Data.AmsContext context
 @{
     ViewData["Title"] = "User";
     ViewData["Action"] = "Edit";
+    var Tenants = new SelectList(await context.Tenants.ToListAsync(), "Id", "Name");
 }
 
 <div class="row">
@@ -21,8 +23,26 @@
                     <!-- PictureUrl Hidden -->
                     <input type="hidden" asp-for="PictureUrl" />
 
-                    <!-- TenantId Hidden -->
-                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+                    @if (User.HasClaim("SYSADMIN", ""))
+                    {
+                        <!-- Tenant Select -->
+                        <div class="form-group row">
+                            <label asp-for="TenantId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="TenantId" asp-items="@Tenants" class="form-control">
+                                    <option value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="TenantId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- TenantId Hidden -->
+                        <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    }
 
                     <!-- UserName Input -->
                     <div class="form-group row">
@@ -86,7 +106,7 @@
 
                     <!-- Picture Input -->
                     <div class="form-group row">
-                        <label for="file" class="col-md-3 col-form-label"></label>
+                        <label for="file" class="col-md-3 col-form-label">Picture</label>
                         <div class="col-md-9">
                             <input type="file" id="file" name="file" class="form-control" />
                             <span class="help-block"><small></small></span>

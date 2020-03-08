@@ -13,7 +13,7 @@ namespace AMS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
@@ -23,7 +23,7 @@ namespace AMS
                 var context = scope.ServiceProvider.GetService<AmsContext>();
                 var config = scope.ServiceProvider.GetService<IConfiguration>();
 
-                DbInitializer.Initialize(context, config, scope.ServiceProvider);
+                await DbInitializer.Initialize(context, config, scope.ServiceProvider);
             }
 
             host.Run();

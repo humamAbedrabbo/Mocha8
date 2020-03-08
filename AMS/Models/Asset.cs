@@ -59,6 +59,6 @@ namespace AMS.Models
         public string GroupTitle => $"{AssetType?.Name}";
 
         public IEnumerable<Ticket> ActiveTickets => TicketAssets.Select(x => x.Ticket).Where(x => x.IsActive);
-        public IDictionary<string, MetaFieldValue> FieldValues => Values?.ToDictionary(x => x.Field?.Name, y => y);
+        public IDictionary<string, MetaFieldValue> FieldValues => Values?.Where(x => x.Field != null).ToDictionary(x => x.Field?.Name, y => y);
     }
 }

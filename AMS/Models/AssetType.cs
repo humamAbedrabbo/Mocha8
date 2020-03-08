@@ -29,7 +29,7 @@ namespace AMS.Models
 
         public List<Asset> Assets { get; set; }
         public List<MetaFieldValue> Values { get; set; }
-        public IDictionary<string, MetaFieldValue> FieldValues => Values?.ToDictionary(x => x.Field?.Name, y => y);
+        public IDictionary<string, MetaFieldValue> FieldValues => Values?.Where(x => x.Field != null).ToDictionary(x => x.Field?.Name, y => y);
 
     }
 }

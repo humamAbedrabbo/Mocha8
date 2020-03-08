@@ -36,7 +36,15 @@ namespace AMS.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await userService.GetUsersAsync());
+            if (userService.IsSysAdmin())
+            {
+                return View(await _context.Users.Include(x => x.Tenant).ToListAsync());
+
+            }
+            else
+            {
+                return View(await userService.GetUsersAsync());
+            }
         }
 
         // GET: Users/Details/5
@@ -70,7 +78,10 @@ namespace AMS.Controllers
 
         public void SetViewData(AmsUser amsUser = null)
         {
-            ViewData["TenantId"] = userService.GetUserTenantId();
+            if (!userService.IsSysAdmin())
+            {
+                ViewData["TenantId"] = userService.GetUserTenantId();
+            }
         }
 
         // POST: Users/Create
@@ -101,8 +112,11 @@ namespace AMS.Controllers
                 amsUser.ConcurrencyStamp = Guid.NewGuid().ToString("D");
                 amsUser.SecurityStamp = Guid.NewGuid().ToString("D");
                 amsUser.PasswordHash = hasher.HashPassword(amsUser, password);
-                amsUser.TenantId = userService.GetUserTenantId();
 
+                if (!userService.IsSysAdmin())
+                {
+                    amsUser.TenantId = userService.GetUserTenantId();
+                }
                 _context.Add(amsUser);
                 await _context.SaveChangesAsync();
                 
