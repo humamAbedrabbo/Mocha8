@@ -24,7 +24,6 @@ namespace AMS.Models
         public string Summary { get; set; }
 
         [Display(Name = "Description")]
-        [StringLength(500)]
         public string Description { get; set; }
 
         [Display(Name = "Ticket")]

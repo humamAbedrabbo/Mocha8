@@ -223,7 +223,7 @@ namespace AMS.Data
 
             // Ticket
             builder.Entity<Ticket>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
-            builder.Entity<Ticket>().Property(p => p.Description).HasMaxLength(500);
+            builder.Entity<Ticket>().Property(p => p.Description);
             builder.Entity<Ticket>().Ignore(p => p.RelatedAssets);
             builder.Entity<Ticket>().Ignore(p => p.FieldValues);
             builder.Entity<Ticket>().HasOne(p => p.TicketType)
@@ -259,7 +259,7 @@ namespace AMS.Data
 
             // TodoTask
             builder.Entity<TodoTask>().Property(p => p.Summary).IsRequired().HasMaxLength(150);
-            builder.Entity<TodoTask>().Property(p => p.Description).HasMaxLength(500);
+            builder.Entity<TodoTask>().Property(p => p.Description);
             builder.Entity<TodoTask>().HasIndex(p => p.TenantId);
             builder.Entity<TodoTask>().HasIndex(p => p.TicketId);
             builder.Entity<TodoTask>().HasIndex(p => p.TodoTaskTypeId);

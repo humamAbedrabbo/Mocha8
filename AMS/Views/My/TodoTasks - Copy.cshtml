@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<AMS.Models.TodoTask>
-@using Humanizer
+
 @{
-    ViewData["Title"] = "Todo Tasks";
+    ViewData["Title"] = "My Tasks";
+    AmsUser user = ViewData["Me"] as AmsUser;
 }
 
 @* view-styles *@
@@ -17,16 +18,9 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <i class="fa fa-align-justify"></i> Todo Tasks
+                <i class="fa fa-align-justify"></i> My Todo Tasks (@Model.Count())
             </div>
             <div class="card-body">
-                <div class="mb-1">
-                    <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#add-modal" data-url="@Url.Action("Add")">
-                        Add Todo Task
-                    </button>
-                    <!-- Modal placeholder -->
-                    <div id="modal-placeholder"></div>
-                </div>
                 <table id="table"
                        data-search="true"
                        data-pagination="true"
@@ -36,11 +30,9 @@
                        class="table">
                     <thead>
                         <tr>
-                            <th data-field="id" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.Id)
-                            </th>
+
                             <th data-field="ticket" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.Ticket)
+                                @Html.DisplayNameFor(model => model.TicketId)
                             </th>
                             <th data-field="summary" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Summary)
@@ -52,7 +44,7 @@
                                 @Html.DisplayNameFor(model => model.Status)
                             </th>
                             <th data-field="todoTaskType" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.TodoTaskType)
+                                @Html.DisplayNameFor(model => model.TodoTaskTypeId)
                             </th>
 
 
@@ -64,13 +56,10 @@
                         {
                             <tr>
                                 <td>
-                                    <a asp-action="Details" asp-route-id="@item.Id">@item.Id</a>
+                                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Ticket?.Id">@Html.DisplayFor(modelItem => item.Ticket.Code)</a>
                                 </td>
                                 <td>
-                                    @item.Ticket?.Code
-                                </td>
-                                <td>
-                                    @item.Summary.Truncate(30)
+                                    @Html.DisplayFor(modelItem => item.Ticket.Summary)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.DueDate)
@@ -83,10 +72,8 @@
                                 </td>
 
                                 <td>
-                                    <a class="btn-sm text-white btn-info mx-1" asp-controller="Assignments" asp-action="Index" asp-route-todoTaskId="@item.Id"><i class="fa fa-list mx-1"></i>Assignments</a>
-                                    <a class="btn-sm btn-secondary mx-1" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil mx-1"></i>Edit</a>
-                                    <a class="btn-sm btn-secondary mx-1" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-list mx-1"></i>Details</a>
-                                    <a class="btn-sm btn-danger mx-1" asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-remove mx-1"></i>Delete</a>
+                                    <a class="btn-sm btn-secondary mx-1" asp-controller="TodoTasks" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil mx-1"></i>Edit</a>
+                                    <a class="btn-sm btn-secondary mx-1" asp-controller="TodoTasks" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-list mx-1"></i>Details</a>
                                 </td>
                             </tr>
                         }

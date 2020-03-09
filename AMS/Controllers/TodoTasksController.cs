@@ -53,6 +53,11 @@ namespace AMS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<bool> CompleteTask(int id)
+        {
+            return await userService.SetTaskState(id, WorkStatus.Completed);
+        }
+
         // GET: TodoTasks
         public async Task<IActionResult> Index(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = true)
         {

@@ -51,7 +51,7 @@ namespace AMS.Services
         int? GetUserTenantId();
         Task<int> GetUserUserGroupsCount(int userId);
         bool IsSysAdmin();
-        Task SetTaskState(int taskId, WorkStatus status);
+        Task<bool> SetTaskState(int taskId, WorkStatus status);
         Task SetTicketState(int ticketId, WorkStatus status);
     }
 }

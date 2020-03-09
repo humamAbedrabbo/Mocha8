@@ -433,7 +433,8 @@ namespace AMS.Data
                             DueDate = date.AddDays(rnd.Next(2, 10)), EstDuration = 2, 
                             StartDate = date, Status = 
                             WorkStatus.Open,
-                            Summary = "PC Maintenance", Description = "Check list todo", 
+                            Summary = LoremNET.Lorem.Words(10), 
+                            Description = LoremNET.Lorem.Paragraph(8, 9, 4, 5), 
                             TicketTypeId = ttPCMaintenance.Id, TenantId  = tenant.Id };
                         ticket.CodeNumber = codeGenerator.GetTicketCode(tenant.Id).Result;
                         ticket.Code = $"{ttPCMaintenance.Code}{ticket.CodeNumber.ToString("D5")}";
@@ -450,11 +451,12 @@ namespace AMS.Data
                         foreach (var ttt in context.TodoTaskTypes)
                         {
                             var task = new TodoTask { TenantId = tenant.Id,
-                                Summary = $"{ttt.Name} - {ticket.Location?.Name}"
+                                Summary = $"{ttt.Name} - {LoremNET.Lorem.Words(6)}"
                                 ,DueDate = ticket.DueDate,
                                 StartDate = date,
-                                TodoTaskTypeId = ttt.Id
-                            };
+                                TodoTaskTypeId = ttt.Id,
+                                Description = LoremNET.Lorem.Paragraph(8, 9, 4, 5)
+                        };
                             var ug = ticket.Assignments.Select(x => x.UserGroupId).FirstOrDefault();
                             if(ug.HasValue)
                             {

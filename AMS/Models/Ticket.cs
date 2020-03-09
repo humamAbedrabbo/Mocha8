@@ -33,7 +33,6 @@ namespace AMS.Models
         public string Code { get; set; }
 
         [Display(Name = "Description")]
-        [StringLength(500)]
         public string Description { get; set; }
 
         [Display(Name = "Client")]

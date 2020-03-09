@@ -67,6 +67,7 @@ namespace AMS.Controllers
                 ))
                 .Select(x => x.Ticket)
                 .Distinct()
+                .OrderByDescending(x => x.StartDate)
                 .ToListAsync();
 
             ViewData["Me"] = me;
@@ -91,6 +92,7 @@ namespace AMS.Controllers
                 )
                 .Select(x => x.TodoTask)
                 .Distinct()
+                .OrderByDescending(x => x.StartDate)
                 .ToListAsync();
 
             ViewData["Me"] = me;

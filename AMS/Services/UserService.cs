@@ -120,7 +120,7 @@ namespace AMS.Services
 
         }
         
-        public async Task SetTaskState(int taskId, WorkStatus status)
+        public async Task<bool> SetTaskState(int taskId, WorkStatus status)
         {
             var task = await context.TodoTasks
                 .Include(x => x.Assignments)
@@ -137,6 +137,7 @@ namespace AMS.Services
                             task.Status = WorkStatus.Cancelled;
                             task.CancellationDate = DateTime.Now;
                             task.PendingDate = null;
+                            return true;
                         }
                     }
                     else if (status == WorkStatus.Completed)
@@ -146,6 +147,7 @@ namespace AMS.Services
                             task.Status = WorkStatus.Completed;
                             task.CompletionDate = DateTime.Now;
                             task.PendingDate = null;
+                            return true;
                         }
                     }
                     else if (status == WorkStatus.Open)
@@ -154,6 +156,7 @@ namespace AMS.Services
                         {
                             task.Status = WorkStatus.Open;
                             task.PendingDate = null;
+                            return true;
                         }
                     }
                     else if (status == WorkStatus.Pending)
@@ -162,6 +165,7 @@ namespace AMS.Services
                         {
                             task.Status = WorkStatus.Pending;
                             task.PendingDate = DateTime.Now;
+                            return true;
                         }
                     }
 
@@ -169,6 +173,7 @@ namespace AMS.Services
                 }
             }
 
+            return false;
         }
         public async Task<IEnumerable<AmsUser>> GetUsersAsync()
             => await context.Users

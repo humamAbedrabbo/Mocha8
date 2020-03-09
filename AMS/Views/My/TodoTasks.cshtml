@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<AMS.Models.TodoTask>
+@using Humanizer
 
 @{
     ViewData["Title"] = "My Tasks";
@@ -21,64 +22,33 @@
                 <i class="fa fa-align-justify"></i> My Todo Tasks (@Model.Count())
             </div>
             <div class="card-body">
-                <table id="table"
-                       data-search="true"
-                       data-pagination="true"
-                       data-show-export="true"
-                       data-filter-control="true"
-                       data-show-search-clear-button="true"
-                       class="table">
-                    <thead>
-                        <tr>
+                <div class="list-group">
+                    @{int i = 1; }
+                    @foreach (var task in Model)
+                    {
+                        <div data-item="@task.Id" class="list-group-item list-group-item-action flex-column align-items-start @(i == 1 ? "active" : "")">
 
-                            <th data-field="ticket" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.TicketId)
-                            </th>
-                            <th data-field="summary" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.Summary)
-                            </th>
-                            <th data-field="dueDate" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.DueDate)
-                            </th>
-                            <th data-field="status" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.Status)
-                            </th>
-                            <th data-field="todoTaskType" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.TodoTaskTypeId)
-                            </th>
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="form-check checkbox">
+                                    <input class="form-check-input " type="checkbox" value="" id="check-@task.Id">
+                                    <a asp-controller="TodoTasks" asp-action="Details" asp-route-id="@task.Id" class="btn-link @(i++ == 1 ? "text-light" : "")"><h5 class="form-check-label mb-1" for="check-@task.Id">
+                                        @task.Summary.Humanize(LetterCasing.Title).Truncate(50)
+                                    </h5></a>
+                                </div>
 
+                                <small>@((DateTime.Now - task.StartDate).Humanize())</small>
+                            </div>
+                            <p class="mb-1">@task.Description?.Humanize(LetterCasing.LowerCase).Truncate(150)</p>
+                            <small><a asp-controller="Tickets" asp-action="Details" asp-route-id="@task.TicketId">@task.Ticket.Code</a></small>
+                            <div class="d-flex w-100 justify-content-end">
+                                <button type="button" class="btn btn-sm btn-success" onclick="complete_task(@task.Id)">COMPLETE</button>
+                            </div>
+                        </div>
 
-                            <th data-field="actions"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Ticket?.Id">@Html.DisplayFor(modelItem => item.Ticket.Code)</a>
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Ticket.Summary)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DueDate)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Status)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TodoTaskType.Name)
-                                </td>
-
-                                <td>
-                                    <a class="btn-sm btn-secondary mx-1" asp-controller="TodoTasks" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil mx-1"></i>Edit</a>
-                                    <a class="btn-sm btn-secondary mx-1" asp-controller="TodoTasks" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-list mx-1"></i>Details</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                        
+                    }
+                    
+                </div>
 
             </div>
         </div>
@@ -94,6 +64,18 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        function complete_task(taskId) {
+            $.getJSON('@Url.Action("CompleteTask", "TodoTasks")' + '?id=' + taskId).done(function (data) {
+                if (data === true) {
+                    var $target = $(".list-group-item[data-item='" + taskId + "'");
+                    var $next = $target.next();
+                    $target.fadeOut();
+                    $next.toggleClass('active');
+                    $next.find(".btn-link").addClass("text-light");
+                }
+            });
+        }
+
         $(function () {
             var $table = $("#table").bootstrapTable();
         });

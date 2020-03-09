@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<AMS.Models.Ticket>
-
+@using Humanizer
 @{
     ViewData["Title"] = "Tickets";
 
@@ -78,7 +78,7 @@
                                     </td>
 
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Summary)
+                                        @item.Summary.Truncate(30)
                                     </td>
 
                                     <td>
