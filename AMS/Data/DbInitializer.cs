@@ -156,13 +156,20 @@ namespace AMS.Data
                 }
             }
 
-            if (isInMemory)
+            switch (config["BuildCase"])
             {
-                BuildTenant(context, defaultTenant.Name);
+                case "Syriatel":
+                    BuildTenantSyriatel(context, defaultTenant.Name);
+                    break;
+                case "TicketDemo":
+                    BuildTenantTicketDemo(context, defaultTenant.Name);
+                    break;
+                default:
+                    break;
             }
         }
 
-        private void BuildTenant(AmsContext context, string tenantName)
+        private void BuildTenantSyriatel(AmsContext context, string tenantName)
         {
             var tenant = context.Tenants.FirstOrDefault(x => x.Name == tenantName);
             if (tenant == null)
@@ -519,6 +526,101 @@ namespace AMS.Data
 
                 }
             }
+        }
+
+        private void BuildTenantTicketDemo(AmsContext context, string tenantName)
+        {
+            var tenant = context.Tenants.FirstOrDefault(x => x.Name == tenantName);
+            if (tenant == null)
+                return;
+
+            var codeGenerator = new CodeGenerator(context);
+
+            var ctCompany = new ClientType { Name = "Company" };
+            tenant.ClientTypes.Add(ctCompany);
+
+            var ltCountry = new LocationType { Name = "Country" };
+            var ltGov = new LocationType { Name = "Governorate" };
+            tenant.LocationTypes.Add(ltCountry);
+            tenant.LocationTypes.Add(ltGov);
+
+            var ttGeneral = new TicketType { Name = "Post", TenantId = tenant.Id };
+            context.TicketTypes.Add(ttGeneral);
+
+
+            var t1 = new TodoTaskType { Name = "Prepare Response", TenantId = tenant.Id };
+            var t2 = new TodoTaskType { Name = "Review Response", TenantId = tenant.Id };
+            var t3 = new TodoTaskType { Name = "Request for Approval", TenantId = tenant.Id };
+            var t4 = new TodoTaskType { Name = "Send Response", TenantId = tenant.Id };
+            var t5 = new TodoTaskType { Name = "General", TenantId = tenant.Id };
+            context.TodoTaskTypes.Add(t1);
+            context.TodoTaskTypes.Add(t2);
+            context.TodoTaskTypes.Add(t3);
+            context.TodoTaskTypes.Add(t4);
+            context.TodoTaskTypes.Add(t5);
+            context.SaveChanges();
+
+            for (int cid = 1; cid < 10; cid++)
+            {
+                Client client = new Client
+                {
+                    Name = $"Client {cid}",
+                    ClientTypeId = ctCompany.Id
+                };
+                tenant.Clients.Add(client);
+            }
+            context.SaveChanges();
+
+            var locCountry = new Location { Name = "Syria", LocationTypeId = ltCountry.Id, TenantId = tenant.Id };
+            context.Locations.Add(locCountry);
+            context.SaveChanges();
+            var govs = new[] { "Damascus", "Aleppo" };
+            foreach (var g in govs)
+            {
+                var locGov = new Location { Name = $"{g}", LocationTypeId = ltGov.Id, TenantId = tenant.Id, ParentId = locCountry.Id };
+                context.Locations.Add(locGov);
+            }
+
+            context.SaveChanges();
+
+            var hasher = new PasswordHasher<AmsUser>();
+            var dic = new Dictionary<int, AmsUser>();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                var user = new AmsUser { UserName = $"user{i}", DisplayName = $"User{i}", Email = $"user{i}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User", PictureUrl = $"/images/avatars/{i}.jpg" };
+                user.NormalizedEmail = user.Email.ToUpper();
+                user.NormalizedUserName = user.UserName.ToUpper();
+                user.ConcurrencyStamp = Guid.NewGuid().ToString("D");
+                user.SecurityStamp = Guid.NewGuid().ToString("D");
+                user.PasswordHash = hasher.HashPassword(user, "123456");
+                context.Users.Add(user);
+                dic[i] = user;
+                context.SaveChanges();
+                context.UserClaims.Add(new IdentityUserClaim<int> { UserId = user.Id, ClaimType = "TenantId", ClaimValue = $"{user.TenantId}" });
+                context.SaveChanges();
+            }
+            context.SaveChanges();
+
+            var grpGM = new UserGroup { Name = "General Manager", TenantId = tenant.Id };
+            grpGM.Members.Add(new Member { UserId = dic[1].Id, Name = dic[1].DisplayName });
+            context.UserGroups.Add(grpGM);
+
+            var grpAssistant = new UserGroup { Name = "Assistant", TenantId = tenant.Id };
+            grpAssistant.Members.Add(new Member { UserId = dic[2].Id, Name = dic[2].DisplayName });
+            context.UserGroups.Add(grpAssistant);
+
+            var grpM1 = new UserGroup { Name = "Manager 1", TenantId = tenant.Id };
+            grpM1.Members.Add(new Member { UserId = dic[3].Id, Name = dic[3].DisplayName });
+            context.UserGroups.Add(grpM1);
+
+            var grpM2 = new UserGroup { Name = "Manager 2", TenantId = tenant.Id };
+            grpM1.Members.Add(new Member { UserId = dic[4].Id, Name = dic[4].DisplayName });
+            context.UserGroups.Add(grpM2);
+
+            context.SaveChanges();
+
+            
         }
     }
 }
