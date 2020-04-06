@@ -36,6 +36,7 @@ namespace AMS.Data
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<TicketJob> TicketJobs { get; set; }
+        public DbSet<Attachement> Attachements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -323,6 +324,15 @@ namespace AMS.Data
             builder.Entity<Assignment>().HasIndex(p => p.UserGroupId);
             builder.Entity<Assignment>().HasIndex(p => p.RoleName);
 
+            // Attachements
+            builder.Entity<Attachement>().Property(p => p.Title).HasMaxLength(100).IsRequired();
+            builder.Entity<Attachement>().Property(p => p.FileName).HasMaxLength(200).IsRequired();
+            builder.Entity<Attachement>().Property(p => p.ContentType).HasMaxLength(100);
+            builder.Entity<Attachement>().HasOne(p => p.Ticket)
+                .WithMany(p => p.Attachements)
+                .HasForeignKey(p => p.TicketId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
         }
 
         public DbSet<AMS.Models.Assignment> Assignment { get; set; }

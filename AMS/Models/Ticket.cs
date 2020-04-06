@@ -17,6 +17,7 @@ namespace AMS.Models
             TicketAssets = new List<TicketAsset>();
             Assignments = new List<Assignment>();
             Values = new List<MetaFieldValue>();
+            Attachements = new List<Attachement>();
         }
         public int Id { get; set; }
         public int TenantId { get; set; }
@@ -99,6 +100,6 @@ namespace AMS.Models
 
         public IEnumerable<Asset> RelatedAssets => TicketAssets.Select(x => x.Asset);
         public IDictionary<string, MetaFieldValue> FieldValues => Values?.Where(x => x.Field != null).ToDictionary(x => x.Field?.Name, y => y);
-
+        public List<Attachement> Attachements { get; set; }
     }
 }
