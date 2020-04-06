@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Attachement>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-align-justify"></i> Attachments
+    </div>
+    <div class="card-body">
+
+        <table id="table"
+               data-search="true"
+               data-pagination="true"
+               data-show-export="true"
+               data-filter-control="true"
+               data-show-search-clear-button="true"
+               class="table">
+            <thead>
+                <tr>
+                    <th data-field="summary" data-sortable="true" data-filter-control="input">
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+
+                    <th data-field="actions">
+                        
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <a href="~/files/@item.TicketId/@item.FileName">@Html.DisplayFor(modelItem => item.Title)</a>
+                        </td>
+
+                        <td>
+                            
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

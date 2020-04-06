@@ -61,6 +61,9 @@
                                     <a class="nav-link" data-toggle="tab" href="#assignments" role="tab" aria-controls="assignments">Assignments</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachements">Attachments</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#assets" role="tab" aria-controls="assets">Related Assets</a>
                                 </li>
                                 <li class="nav-item">
@@ -125,6 +128,9 @@
                                 </div>
                                 <div class="tab-pane" id="assignments" role="tabpanel">
                                     <partial name="_Assignments" for="@Model.Assignments" />
+                                </div>
+                                <div class="tab-pane" id="attachments" role="tabpanel">
+                                    <partial name="_Attachments" for="@Model.Attachements" />
                                 </div>
                                 <div class="tab-pane" id="assets" role="tabpanel">
                                     <partial name="_Assets" for="@Model.RelatedAssets" />

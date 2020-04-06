@@ -10,6 +10,9 @@ using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace AMS.Controllers
 {
@@ -20,13 +23,15 @@ namespace AMS.Controllers
         private readonly AmsContext _context;
         private readonly IUserService userService;
         private readonly ICodeGenerator codeGenerator;
+        private readonly IWebHostEnvironment env;
 
-        public TicketsController(ILogger<TicketsController> logger, AmsContext context, IUserService userService, ICodeGenerator codeGenerator)
+        public TicketsController(ILogger<TicketsController> logger, AmsContext context, IUserService userService, ICodeGenerator codeGenerator, IWebHostEnvironment env)
         {
             this.logger = logger;
             _context = context;
             this.userService = userService;
             this.codeGenerator = codeGenerator;
+            this.env = env;
         }
 
         public async Task<IActionResult> ChangeState(int id, WorkStatus status)
@@ -66,6 +71,7 @@ namespace AMS.Controllers
                 .Include(t => t.Assignments).ThenInclude(x => x.User)
                 .Include(t => t.Assignments).ThenInclude(x => x.UserGroup)
                 .Include(t => t.Values).ThenInclude(v => v.Field)
+                .Include(t => t.Attachements)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
@@ -86,7 +92,7 @@ namespace AMS.Controllers
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket, List<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
@@ -110,6 +116,37 @@ namespace AMS.Controllers
                 }
 
                 _context.Add(ticket);
+                await _context.SaveChangesAsync();
+
+                // Upload files
+                long size = files.Sum(f => f.Length);
+                var filesPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
+                if(!Directory.Exists(filesPath))
+                {
+                    Directory.CreateDirectory(filesPath);
+                }
+
+                foreach (var formFile in files)
+                {
+                    if (formFile.Length > 0)
+                    {
+                        var filePath = Path.Combine(filesPath, formFile.FileName);
+
+                        using (var stream = System.IO.File.Create(filePath))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
+
+                        Attachement att = new Attachement();
+                        att.FileName = formFile.FileName;
+                        att.Title = formFile.FileName;
+                        att.ContentType = formFile.ContentType;
+                        att.TicketId = ticket.Id;
+                        att.Length = formFile.Length;
+                        _context.Attachements.Add(att);
+
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Edit), new { id = ticket.Id });
             }

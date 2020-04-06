@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="offset-2 col-md-8">
-        <form asp-action="@ViewBag.Action" class="form-horizontal">
+        <form asp-action="@ViewBag.Action" enctype="multipart/form-data" class="form-horizontal">
             <div class="card">
                 <div class="card-header">
                     <strong>@ViewBag.Title</strong>
@@ -115,6 +115,16 @@
                                 <select class="form-control" disabled asp-for="Status" asp-items="Html.GetEnumSelectList<WorkStatus>()"></select>
                                 <span class="help-block"><small></small></span>
                                 <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Ticket Attachements Input -->
+                        <div class="form-group col-md-12">
+                            <label for="files" class="col-md-3 col-form-label">Attachments</label>
+                            <div class="col-md-9">
+                                <input name="files" id="files" type="file" multiple class="form-control" />
                             </div>
                         </div>
                     </div>
