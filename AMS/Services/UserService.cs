@@ -188,7 +188,7 @@ namespace AMS.Services
         public async Task<SelectList> GetUsersSelectAsync(int? id = null)
             => new SelectList(await GetUsersAsync(), "Id", "Title", id);
 
-        public async Task<IEnumerable<TodoTask>> GetTodoTasksAsync(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = true)
+        public async Task<IEnumerable<TodoTask>> GetTodoTasksAsync(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = false)
         {
             IEnumerable<TodoTask> tasks;
             if(userGroupId.HasValue || userGroupId.HasValue)
@@ -229,7 +229,7 @@ namespace AMS.Services
         public async Task<SelectList> GetTodoTasksSelectAsync(int? id = null)
             => new SelectList(await GetTodoTasksAsync(), "Id", "Title", id, "GroupTitle");
 
-        public async Task<IEnumerable<Ticket>> GetTicketsAsync(int? ticketTypeId = null, int? clientId = null, int? locationId = null, int? userGroupId = null, int? userId = null, bool isActive = true)
+        public async Task<IEnumerable<Ticket>> GetTicketsAsync(int? ticketTypeId = null, int? clientId = null, int? locationId = null, int? userGroupId = null, int? userId = null, bool isActive = false)
         {
             IEnumerable<Ticket> tickets = null;
             var tenantId = GetUserTenantId() ?? 0;

@@ -32,12 +32,12 @@ namespace AMS.Services
         Task<SelectList> GetMetaFieldsSelectAsync(int? id = null);
         Task<int> GetTicketDefaultDuration(int ticketTypeId);
         Task<IEnumerable<TicketJob>> GetTicketJobsAsync();
-        Task<IEnumerable<Ticket>> GetTicketsAsync(int? ticketTypeId = null, int? clientId = null, int? locationId = null, int? userGroupId = null, int? userId = null, bool isActive = true);
+        Task<IEnumerable<Ticket>> GetTicketsAsync(int? ticketTypeId = null, int? clientId = null, int? locationId = null, int? userGroupId = null, int? userId = null, bool isActive = false);
         Task<SelectList> GetTicketsSelectAsync(int? id = null);
         Task<IEnumerable<TicketType>> GetTicketTypesAsync();
         Task<SelectList> GetTicketTypesSelectAsync(int? id = null);
         Task<int> GetTodoTaskDefaultDuration(int todoTaskTypeId);
-        Task<IEnumerable<TodoTask>> GetTodoTasksAsync(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = true);
+        Task<IEnumerable<TodoTask>> GetTodoTasksAsync(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = false);
         Task<SelectList> GetTodoTasksSelectAsync(int? id = null);
         Task<IEnumerable<TodoTaskType>> GetTodoTaskTypesAsync();
         Task<MultiSelectList> GetTodoTaskTypesMultiSelectAsync(IEnumerable<int> ids = null);

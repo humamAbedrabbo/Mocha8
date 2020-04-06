@@ -59,7 +59,7 @@ namespace AMS.Controllers
         }
 
         // GET: TodoTasks
-        public async Task<IActionResult> Index(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = true)
+        public async Task<IActionResult> Index(int? todoTaskTypeId = null, int? ticketId = null, int? userGroupId = null, int? userId = null, bool isActive = false)
         {
             return View(await userService.GetTodoTasksAsync(todoTaskTypeId, ticketId, userGroupId, userId, isActive));
         }

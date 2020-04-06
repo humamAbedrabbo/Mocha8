@@ -17,9 +17,12 @@
                 </div>
                 <div class="card-body">
                     <div class="row mb-1">
-                        <a asp-controller="Assignments" asp-action="Index" asp-route-ticketId="@Model.Id" class="btn btn-success">
-                            Assignments
-                        </a>
+                        <div class="form-group col-md-12">
+                            <a asp-controller="Assignments" asp-action="Index" asp-route-ticketId="@Model.Id" class="btn btn-success">
+                                Assignments
+                            </a>
+
+                        </div>
                     </div>
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
