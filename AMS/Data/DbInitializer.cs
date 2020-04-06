@@ -536,51 +536,30 @@ namespace AMS.Data
 
             var codeGenerator = new CodeGenerator(context);
 
-            var ctCompany = new ClientType { Name = "Company" };
+            var ctCompany = new ClientType { Name = "Legal Entity" };
             tenant.ClientTypes.Add(ctCompany);
 
-            var ltCountry = new LocationType { Name = "Country" };
-            var ltGov = new LocationType { Name = "Governorate" };
-            tenant.LocationTypes.Add(ltCountry);
-            tenant.LocationTypes.Add(ltGov);
+            var ltGeneral = new LocationType { Name = "Default" };
+            tenant.LocationTypes.Add(ltGeneral);
 
-            var ttGeneral = new TicketType { Name = "Post", TenantId = tenant.Id };
+            var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id };
             context.TicketTypes.Add(ttGeneral);
 
 
-            var t1 = new TodoTaskType { Name = "Prepare Response", TenantId = tenant.Id };
-            var t2 = new TodoTaskType { Name = "Review Response", TenantId = tenant.Id };
-            var t3 = new TodoTaskType { Name = "Request for Approval", TenantId = tenant.Id };
-            var t4 = new TodoTaskType { Name = "Send Response", TenantId = tenant.Id };
-            var t5 = new TodoTaskType { Name = "General", TenantId = tenant.Id };
+            var t1 = new TodoTaskType { Name = "General", TenantId = tenant.Id };
             context.TodoTaskTypes.Add(t1);
-            context.TodoTaskTypes.Add(t2);
-            context.TodoTaskTypes.Add(t3);
-            context.TodoTaskTypes.Add(t4);
-            context.TodoTaskTypes.Add(t5);
             context.SaveChanges();
 
-            for (int cid = 1; cid < 10; cid++)
+            Client client = new Client
             {
-                Client client = new Client
-                {
-                    Name = $"Client {cid}",
-                    ClientTypeId = ctCompany.Id
-                };
-                tenant.Clients.Add(client);
-            }
+                Name = $"Central Bank",
+                ClientTypeId = ctCompany.Id
+            };
+            tenant.Clients.Add(client);
             context.SaveChanges();
 
-            var locCountry = new Location { Name = "Syria", LocationTypeId = ltCountry.Id, TenantId = tenant.Id };
-            context.Locations.Add(locCountry);
-            context.SaveChanges();
-            var govs = new[] { "Damascus", "Aleppo" };
-            foreach (var g in govs)
-            {
-                var locGov = new Location { Name = $"{g}", LocationTypeId = ltGov.Id, TenantId = tenant.Id, ParentId = locCountry.Id };
-                context.Locations.Add(locGov);
-            }
-
+            var locHO = new Location { Name = "Head Office", LocationTypeId = ltGeneral.Id, TenantId = tenant.Id };
+            context.Locations.Add(locHO);
             context.SaveChanges();
 
             var hasher = new PasswordHasher<AmsUser>();
