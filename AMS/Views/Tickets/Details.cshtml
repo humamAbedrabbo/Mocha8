@@ -66,6 +66,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#tasks" role="tab" aria-controls="tasks">Tasks</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#timeline" role="tab" aria-controls="timeline">Timeline</a>
+                                </li>
                             </ul>
 
                             <div class="tab-content">
@@ -128,6 +131,9 @@
                                 </div>
                                 <div class="tab-pane" id="tasks" role="tabpanel">
                                     <partial name="_Tasks" for="@Model.TodoTasks" />
+                                </div>
+                                <div class="tab-pane" id="timeline" role="tabpanel">
+                                    <partial name="_Timeline" for="@Model.TodoTasks" />
                                 </div>
                             </div>
                         </div>

@@ -75,6 +75,36 @@ namespace AMS.Controllers
             return View(ticket);
         }
 
+        // GET: Tickets/Timeline/5
+        public async Task<IActionResult> Timeline(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var ticket = await _context.Tickets
+                .Include(t => t.Client)
+                .Include(t => t.Location)
+                .Include(t => t.Tenant)
+                .Include(t => t.TicketType)
+                .Include(t => t.TicketAssets).ThenInclude(a => a.Asset).ThenInclude(a => a.AssetType)
+                .Include(t => t.TicketAssets).ThenInclude(a => a.Asset).ThenInclude(a => a.Location)
+                .Include(t => t.TodoTasks).ThenInclude(t => t.Assignments).ThenInclude(x => x.User)
+                .Include(t => t.TodoTasks).ThenInclude(t => t.Assignments).ThenInclude(x => x.UserGroup)
+                .Include(t => t.TodoTasks).ThenInclude(t => t.TodoTaskType)
+                .Include(t => t.Assignments).ThenInclude(x => x.User)
+                .Include(t => t.Assignments).ThenInclude(x => x.UserGroup)
+                .Include(t => t.Values).ThenInclude(v => v.Field)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return View(ticket);
+        }
+
         // GET: Tickets/Create
         public async Task<IActionResult> Create()
         {
