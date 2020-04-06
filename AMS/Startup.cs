@@ -61,9 +61,11 @@ namespace AMS
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddHttpContextAccessor();
+            services.AddHttpClient();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICodeGenerator, CodeGenerator>();
             services.AddScoped<ITicketGenerator, TicketGenerator>();
+            services.AddScoped<IArchiveAdapter, ArchiveAdapter>();
 
             services.AddHangfire(cfg => {
                 if(IsInMemory)

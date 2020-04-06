@@ -4,14 +4,16 @@ using AMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AMS.Migrations
 {
     [DbContext(typeof(AmsContext))]
-    partial class AmsContextModelSnapshot : ModelSnapshot
+    [Migration("20200406222024_Add_Attachment2")]
+    partial class Add_Attachment2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,9 +383,6 @@ namespace AMS.Migrations
 
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Version")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

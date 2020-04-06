@@ -14,5 +14,11 @@ namespace AMS.Models
         public string FileName { get; set; }
         public string ContentType { get; set; }
         public long Length { get; set; }
+        public bool IsArchived { get; set; } = false;
+        public int? RepositoryId { get; set; }
+        public string RepositoryName { get; set; }
+        public int? DocumentId { get; set; }
+        public int? Version { get; set; }
+        public string Url { get; set; }
     }
 }

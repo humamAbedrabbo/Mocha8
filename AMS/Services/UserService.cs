@@ -137,6 +137,7 @@ namespace AMS.Services
                             task.Status = WorkStatus.Cancelled;
                             task.CancellationDate = DateTime.Now;
                             task.PendingDate = null;
+                            await context.SaveChangesAsync();
                             return true;
                         }
                     }
@@ -147,6 +148,7 @@ namespace AMS.Services
                             task.Status = WorkStatus.Completed;
                             task.CompletionDate = DateTime.Now;
                             task.PendingDate = null;
+                            await context.SaveChangesAsync();
                             return true;
                         }
                     }
@@ -156,6 +158,7 @@ namespace AMS.Services
                         {
                             task.Status = WorkStatus.Open;
                             task.PendingDate = null;
+                            await context.SaveChangesAsync();
                             return true;
                         }
                     }
@@ -165,6 +168,7 @@ namespace AMS.Services
                         {
                             task.Status = WorkStatus.Pending;
                             task.PendingDate = DateTime.Now;
+                            await context.SaveChangesAsync();
                             return true;
                         }
                     }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using AMS.ViewModels.Archive;
 
 namespace AMS.Controllers
 {
@@ -24,14 +25,21 @@ namespace AMS.Controllers
         private readonly IUserService userService;
         private readonly ICodeGenerator codeGenerator;
         private readonly IWebHostEnvironment env;
+        private readonly IArchiveAdapter archiver;
 
-        public TicketsController(ILogger<TicketsController> logger, AmsContext context, IUserService userService, ICodeGenerator codeGenerator, IWebHostEnvironment env)
+        public TicketsController(ILogger<TicketsController> logger, 
+            AmsContext context, 
+            IUserService userService, 
+            ICodeGenerator codeGenerator, 
+            IWebHostEnvironment env,
+            IArchiveAdapter archiver)
         {
             this.logger = logger;
             _context = context;
             this.userService = userService;
             this.codeGenerator = codeGenerator;
             this.env = env;
+            this.archiver = archiver;
         }
 
         public async Task<IActionResult> ChangeState(int id, WorkStatus status)
@@ -137,12 +145,48 @@ namespace AMS.Controllers
                             await formFile.CopyToAsync(stream);
                         }
 
+                        //DocumentAddModel docAddModel = new DocumentAddModel();
+                        //docAddModel.RepositoryId = "1";
+                        //docAddModel.Path = ticket.Code;
+                        //docAddModel.Name = formFile.FileName;
+                        //docAddModel.Title = formFile.FileName;
+                        //docAddModel.Length = formFile.Length;
+                        //docAddModel.Meta = new Dictionary<string, string>();
+                        //docAddModel.Meta["TicketId"] = ticket.Id.ToString();
+                        //docAddModel.Meta["TicketSummary"] = ticket.Summary;
+                        //docAddModel.Meta["TicketCode"] = ticket.Code;
+                        //docAddModel.Meta["TicketUrl"] = $"https://localhost:44388/tickets/details/{ticket.Id}";
+                        //docAddModel.UserName = User.Identity.Name;
+                        //docAddModel.ContentType = formFile.ContentType;
+
+
+                        //var docDetail = await archiver.PostDocument(docAddModel);
+
+                        //var chunk = new ChunkAddModel();
+                        //chunk.File = formFile;
+                        //chunk.CheckInKey = docDetail.CheckInKey;
+                        //chunk.DocumentId = docDetail.Id;
+                        //chunk.OriginalName = formFile.FileName;
+                        //chunk.RepositoryId = docDetail.RepositoryId;
+                        //chunk.SortId = 1;
+                        //chunk.UserName = User.Identity.Name;
+                        //chunk.Version = docDetail.Version;
+
+                        //var chunkBool = await archiver.UploadChunk(chunk);
+
+                        ;
                         Attachment att = new Attachment();
                         att.FileName = formFile.FileName;
                         att.Title = formFile.FileName;
                         att.ContentType = formFile.ContentType;
                         att.TicketId = ticket.Id;
                         att.Length = formFile.Length;
+                        //att.RepositoryId = docDetail.RepositoryId;
+                        //att.RepositoryName = docDetail.Repository;
+                        //att.DocumentId = docDetail.Id;
+                        //att.Version = docDetail.Version;
+                        //att.Url = $"https://localhost:5001/doc/details/{docDetail.Id}";
+                        att.Url = $"/files/{ticket.Id}/{formFile.FileName}";
                         _context.Attachements.Add(att);
 
                     }
