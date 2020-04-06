@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AMS.Models
 {
-    public class Attachement
+    public class Attachment
     {
         public int Id { get; set; }
         public string Title { get; set; }

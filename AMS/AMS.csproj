@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-AMS-79A8C09B-CF4B-47D0-8B92-C670B1972339</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20200406190637_Add_Attachement.cs" />
+    <Compile Remove="Migrations\20200406190637_Add_Attachement.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.9" />

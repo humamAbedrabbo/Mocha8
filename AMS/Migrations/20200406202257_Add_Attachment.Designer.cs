@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMS.Migrations
 {
     [DbContext(typeof(AmsContext))]
-    [Migration("20200406190637_Add_Attachement")]
-    partial class Add_Attachement
+    [Migration("20200406202257_Add_Attachment")]
+    partial class Add_Attachment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -342,7 +342,7 @@ namespace AMS.Migrations
                     b.ToTable("Assignment");
                 });
 
-            modelBuilder.Entity("AMS.Models.Attachement", b =>
+            modelBuilder.Entity("AMS.Models.Attachment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1221,7 +1221,7 @@ namespace AMS.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("AMS.Models.Attachement", b =>
+            modelBuilder.Entity("AMS.Models.Attachment", b =>
                 {
                     b.HasOne("AMS.Models.Ticket", "Ticket")
                         .WithMany("Attachements")

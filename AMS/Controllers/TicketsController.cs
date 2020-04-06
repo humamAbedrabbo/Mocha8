@@ -137,7 +137,7 @@ namespace AMS.Controllers
                             await formFile.CopyToAsync(stream);
                         }
 
-                        Attachement att = new Attachement();
+                        Attachment att = new Attachment();
                         att.FileName = formFile.FileName;
                         att.Title = formFile.FileName;
                         att.ContentType = formFile.ContentType;

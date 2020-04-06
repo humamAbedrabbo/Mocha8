@@ -2,7 +2,7 @@
 
 namespace AMS.Migrations
 {
-    public partial class Add_Attachement : Migration
+    public partial class Add_Attachment : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

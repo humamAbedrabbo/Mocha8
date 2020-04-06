@@ -340,7 +340,7 @@ namespace AMS.Migrations
                     b.ToTable("Assignment");
                 });
 
-            modelBuilder.Entity("AMS.Models.Attachement", b =>
+            modelBuilder.Entity("AMS.Models.Attachment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1219,7 +1219,7 @@ namespace AMS.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("AMS.Models.Attachement", b =>
+            modelBuilder.Entity("AMS.Models.Attachment", b =>
                 {
                     b.HasOne("AMS.Models.Ticket", "Ticket")
                         .WithMany("Attachements")
