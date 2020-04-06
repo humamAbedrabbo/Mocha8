@@ -542,13 +542,21 @@ namespace AMS.Data
             var ltGeneral = new LocationType { Name = "Default" };
             tenant.LocationTypes.Add(ltGeneral);
 
+
+            //var fFolderLink = new MetaField { FieldType = FieldType.Url, Name = "Folder", TenantId = tenant.Id };
+            //context.MetaFields.Add(fFolderLink);
+            //context.SaveChanges();
+
             var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id };
+            //ttGeneral.Values.Add(new MetaFieldValue { FieldId = fFolderLink.Id, Value = "" });
             context.TicketTypes.Add(ttGeneral);
 
 
             var t1 = new TodoTaskType { Name = "General", TenantId = tenant.Id };
             context.TodoTaskTypes.Add(t1);
             context.SaveChanges();
+
+
 
             Client client = new Client
             {
