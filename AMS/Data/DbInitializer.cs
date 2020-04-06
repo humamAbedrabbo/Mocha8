@@ -547,7 +547,7 @@ namespace AMS.Data
             //context.MetaFields.Add(fFolderLink);
             //context.SaveChanges();
 
-            var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id };
+            var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
             //ttGeneral.Values.Add(new MetaFieldValue { FieldId = fFolderLink.Id, Value = "" });
             context.TicketTypes.Add(ttGeneral);
 
