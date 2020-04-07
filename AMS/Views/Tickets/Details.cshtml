@@ -51,6 +51,19 @@
                     @Model.Code
                 </div>
                 <div class="card-body">
+                    <div class="row mb-1">
+                        <div class="form-group col-md-12">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                                Edit
+                            </a>
+                            <a asp-controller="Assignments" asp-action="Index" asp-route-ticketId="@Model.Id" class="btn btn-success ml-1">
+                                Assignments
+                            </a>
+                            <a asp-controller="TodoTasks" asp-action="Index" asp-route-ticketId="@Model.Id" class="btn btn-success ml-1">
+                                Tasks
+                            </a>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-12 mb-4">
                             <ul class="nav nav-tabs" role="tablist">
@@ -139,7 +152,7 @@
                                     <partial name="_Tasks" for="@Model.TodoTasks" />
                                 </div>
                                 <div class="tab-pane" id="timeline" role="tabpanel">
-                                    <partial name="_Timeline" for="@Model.TodoTasks" />
+                                    <partial name="_Timeline" for="@Model" />
                                 </div>
                             </div>
                         </div>

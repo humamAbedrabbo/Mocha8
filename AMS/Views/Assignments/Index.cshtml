@@ -67,7 +67,7 @@
                                     @Html.DisplayFor(modelItem => item.RoleName)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Ticket.Summary)
+                                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.TicketId">@Html.DisplayFor(modelItem => item.Ticket.Summary)</a>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.TodoTask.Summary)

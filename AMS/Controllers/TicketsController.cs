@@ -59,8 +59,13 @@ namespace AMS.Controllers
         }
 
         // GET: Tickets/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string code = null)
         {
+            if(!string.IsNullOrEmpty(code))
+            {
+                id = await _context.Tickets.Where(x => x.Code == code).Select(x => x.Id).FirstOrDefaultAsync();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -229,7 +234,7 @@ namespace AMS.Controllers
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Code,CodeNumber,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration,Values")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Code,CodeNumber,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration,Values")] Ticket ticket, List<IFormFile> files)
         {
             if (id != ticket.Id)
             {
@@ -242,6 +247,36 @@ namespace AMS.Controllers
                 {
                     _context.Update(ticket);
                     await _context.SaveChangesAsync();
+                    // Upload files
+                    long size = files.Sum(f => f.Length);
+                    var filesPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
+                    if (!Directory.Exists(filesPath))
+                    {
+                        Directory.CreateDirectory(filesPath);
+                    }
+
+                    foreach (var formFile in files)
+                    {
+                        if (formFile.Length > 0)
+                        {
+                            var filePath = Path.Combine(filesPath, formFile.FileName);
+
+                            using (var stream = System.IO.File.Create(filePath))
+                            {
+                                await formFile.CopyToAsync(stream);
+                            }
+
+                            Attachment att = new Attachment();
+                            att.FileName = formFile.FileName;
+                            att.Title = formFile.FileName;
+                            att.ContentType = formFile.ContentType;
+                            att.TicketId = ticket.Id;
+                            att.Length = formFile.Length;
+                            att.Url = $"/files/{ticket.Id}/{formFile.FileName}";
+                            _context.Attachements.Add(att);
+
+                        }
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

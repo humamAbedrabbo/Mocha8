@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TodoTask>
+﻿@model Ticket
 
 <div class="card">
     <div class="card-header">
@@ -10,12 +10,28 @@
             <div class="col-md-6 offset-md-3">
                 <h4>History</h4>
                 <ul class="timeline">
-                    @foreach (var task in Model.OrderByDescending(x => x.StartDate))
+                    <li>
+                        <a target="_blank" asp-controller="Tickets" asp-action="Details" asp-route-id="@Model.Id"><img width="40" src="@Model.Assignments.Where(x => x.UserId.HasValue).Select(x => x.User.PictureUrl).FirstOrDefault()" class="img-circle mr-1" />@Model.Summary</a>
+                        <a href="#" class="float-right">@Model.StartDate.ToString("dd MMMM, yyyy")</a>
+                        <p>
+                            @Html.Raw(AMS.Utils.HashTag.ReplaceTicketHashTags(Model.Description))
+                            <ul class="list-unstyled">
+                                @foreach (var a in Model.Attachements)
+                                {
+                                    <li><a href="@a.Url">@a.Title</a></li>
+                                }
+                            </ul>
+                        </p>
+
+                    </li>
+                    @foreach (var task in Model.TodoTasks.OrderByDescending(x => x.StartDate))
                     {
                         <li>
-                            <a target="_blank" asp-controller="TodoTasks" asp-action="Details" asp-route-id="@task.Id"><img width="40" src="~/images/avatars/1.jpg" class="img-circle mr-1" />@task.Summary</a>
+                            <a target="_blank" asp-controller="TodoTasks" asp-action="Details" asp-route-id="@task.Id"><img width="40" src="@task.Assignments.Where(x => x.UserId.HasValue).Select(x => x.User.PictureUrl).FirstOrDefault()" class="img-circle mr-1" />@task.Summary</a>
                             <a href="#" class="float-right">@task.StartDate.ToString("dd MMMM, yyyy")</a>
-                            <p>@task.Description</p>
+                            <p>
+                                @Html.Raw(AMS.Utils.HashTag.ReplaceTicketHashTags(task.Description))
+                            </p>
                         </li>
                     }
 
