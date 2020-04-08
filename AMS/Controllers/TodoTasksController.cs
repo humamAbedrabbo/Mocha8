@@ -50,7 +50,7 @@ namespace AMS.Controllers
         public async Task<IActionResult> ChangeState(int id, WorkStatus status)
         {
             await userService.SetTaskState(id, status);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         public async Task<bool> CompleteTask(int id)
@@ -100,13 +100,18 @@ namespace AMS.Controllers
         // POST: TodoTasks/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,TicketId,TodoTaskTypeId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] TodoTask todoTask)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,TicketId,TodoTaskTypeId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration,Assignments")] TodoTask todoTask)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(todoTask);
+                var currentUser = await userService.GetCurrentUserAsync();
+                if (todoTask.Assignments.Count == 0)
+                {
+                    todoTask.Assignments.Add(new Assignment { UserId = currentUser.Id });
+                }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = todoTask.Id });
             }
             await SetViewData(todoTask);
             return View(todoTask);
@@ -164,7 +169,7 @@ namespace AMS.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = todoTask.Id });
             }
             await SetViewData(todoTask);
             return View(todoTask);

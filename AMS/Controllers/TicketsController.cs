@@ -42,10 +42,38 @@ namespace AMS.Controllers
             this.archiver = archiver;
         }
 
+        public async Task<IActionResult> AddTask(int ticketId)
+        {
+            var model = new TodoTask();
+            ViewData["Users"] = await userService.GetUsersSelectAsync();
+            ViewData["TodoTaskTypeId"] = await userService.GetTodoTaskTypesSelectAsync();
+            ViewData["TicketId"] = ticketId;
+            ViewData["TenantId"] = userService.GetUserTenantId();
+
+            return PartialView("_AddTask", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddTask(TodoTask model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            ViewData["Users"] = await userService.GetUsersSelectAsync();
+            ViewData["TodoTaskTypeId"] = await userService.GetTodoTaskTypesSelectAsync();
+            ViewData["TicketId"] = model.TicketId;
+            ViewData["TenantId"] = userService.GetUserTenantId();
+
+            return PartialView("_AddTask", model);
+        }
+
         public async Task<IActionResult> ChangeState(int id, WorkStatus status)
         {
             await userService.SetTicketState(id, status);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         // GET: Tickets
@@ -99,13 +127,14 @@ namespace AMS.Controllers
         {
             await SetViewData();
             var ticket = new Ticket();
+            
             return View(ticket);
         }
 
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] Ticket ticket, List<IFormFile> files)
+        public async Task<IActionResult> Create([Bind("Id,TenantId,Summary,Description,ClientId,TicketTypeId,LocationId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration,Assignments")] Ticket ticket, List<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
@@ -118,6 +147,7 @@ namespace AMS.Controllers
                         .Include(x => x.Field)
                         .Where(x => x.TicketTypeId == type.Id)
                         .ToListAsync();
+
                     foreach (var value in metaValues)
                     {
                         ticket.Values.Add(new MetaFieldValue { FieldId = value.FieldId, Value = value.Value });
@@ -126,6 +156,12 @@ namespace AMS.Controllers
                 else
                 {
                     ticket.Code = $"{ticket.CodeNumber.ToString("D5")}";
+                }
+
+                var currentUser = await userService.GetCurrentUserAsync();
+                if(!ticket.Assignments.Any(x => x.UserId == currentUser.Id))
+                {
+                    ticket.Assignments.Add(new Assignment { UserId = currentUser.Id });
                 }
 
                 _context.Add(ticket);
@@ -197,7 +233,7 @@ namespace AMS.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Edit), new { id = ticket.Id });
+                return RedirectToAction(nameof(Details), new { id = ticket.Id });
             }
             await SetViewData(ticket);
             return View(ticket);
@@ -209,6 +245,8 @@ namespace AMS.Controllers
             ViewData["LocationId"] = await userService.GetLocationsSelectAsync(ticket?.LocationId);
             ViewData["TenantId"] = userService.GetUserTenantId();
             ViewData["TicketTypeId"] = await userService.GetTicketTypesSelectAsync(ticket?.TicketTypeId);
+            ViewData["Users"] = await userService.GetUsersSelectAsync();
+            ViewData["UserGroups"] = await userService.GetUserGroupsSelectAsync();
         }
 
         // GET: Tickets/Edit/5
@@ -290,7 +328,7 @@ namespace AMS.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = ticket.Id });
             }
             await SetViewData(ticket);
             return View(ticket);

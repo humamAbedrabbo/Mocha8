@@ -117,6 +117,39 @@
                         </div>
                     </div>
 
+                    <!-- Assignments -->
+                    <div class="row">
+                        <div class="col-md-12 mb-1">
+                            <h5>Assignments</h5>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="repeater">
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <input data-repeater-create class="btn btn-sm btn-success" type="button" value="Add User" />
+                                    </div>
+                                </div>
+                                <div data-repeater-list="Assignments">
+                                    <div data-repeater-item class="form-group row">
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <select type="text" name="UserId" asp-items="ViewBag.Users" class="form-control">
+                                                        <option value="">--- SELECT USER ---</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <a data-repeater-delete href="#" class="btn btn-sm btn-danger">Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">

@@ -18,6 +18,41 @@
                     @Model.Id 
                 </div>
                 <div class="card-body">
+                    <div class="row mb-1">
+                        <div class="form-group col-md-12">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                                Edit
+                            </a>
+                            <a asp-controller="Assignments" asp-action="Index" asp-route-ticketId="@Model.Id" class="btn btn-secondary ml-1">
+                                Assignments
+                            </a>
+                            @if (Model.CanBeCompleted)
+                            {
+                                <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Completed" class="btn btn-sm btn-success ml-1">
+                                    <i class="fa fa-check"></i> Complete
+                                </a>
+                            }
+                            @if (Model.CanBeCancelled)
+                            {
+                                <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Cancelled" class="btn btn-sm btn-danger ml-1">
+                                    <i class="fa fa-close"></i> Cancel
+                                </a>
+                            }
+                            @if (Model.IsActive && !Model.IsPending)
+                            {
+                                <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Pending" class="btn btn-sm btn-warning ml-1">
+                                    <i class="fa fa-pause"></i> Pending
+                                </a>
+                            }
+
+                            @if (Model.IsPending)
+                            {
+                                <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Open" class="btn btn-sm btn-primary ml-1">
+                                    <i class="fa fa-play"></i> Re-Open
+                                </a>
+                            }
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-12 mb-4">
                             <ul class="nav nav-tabs" role="tablist">
@@ -86,8 +121,8 @@
                                     </div>
                                     @if (Model.TicketId.HasValue)
                                     {
-                                    <hr />
-                                    <partial name="_Fields" for="@Model.Ticket" />
+                                        <hr />
+                                        <partial name="_Fields" for="@Model.Ticket" />
                                     }
                                 </div>
                                 <div class="tab-pane" id="assignments" role="tabpanel">

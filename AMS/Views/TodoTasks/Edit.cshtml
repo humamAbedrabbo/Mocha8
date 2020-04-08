@@ -137,31 +137,7 @@
                     <button type="reset" class="btn btn-sm btn-danger">
                         <i class="fa fa-ban"></i> Reset
                     </button>
-                    @if (Model.CanBeCompleted)
-                    {
-                        <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Completed" class="btn btn-sm btn-success">
-                            <i class="fa fa-check"></i> Complete
-                        </a>
-                    }
-                    @if (Model.CanBeCancelled)
-                    {
-                        <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Cancelled" class="btn btn-sm btn-secondary">
-                            <i class="fa fa-close"></i> Cancel
-                        </a>
-                    }
-                    @if (Model.IsActive && !Model.IsPending)
-                    {
-                        <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Pending" class="btn btn-sm btn-warning">
-                            <i class="fa fa-pause"></i> Pending
-                        </a>
-                    }
 
-                    @if (Model.IsPending)
-                    {
-                        <a asp-action="ChangeState" asp-route-id="@Model.Id" asp-route-status="@WorkStatus.Open" class="btn btn-sm btn-primary">
-                            <i class="fa fa-play"></i> Re-Open
-                        </a>
-                    }
                 </div>
             </div>
         </form>
