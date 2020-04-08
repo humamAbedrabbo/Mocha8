@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using AMS.ViewModels.Archive;
+using Humanizer;
 
 namespace AMS.Controllers
 {
@@ -60,6 +61,24 @@ namespace AMS.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(model);
+                await _context.SaveChangesAsync();
+
+                // Add Notification
+                if (model.Assignments.Count > 0)
+                {
+                    DateTime now = DateTime.Now;
+                    foreach (var a in model.Assignments.Where(x => x.UserId.HasValue))
+                    {
+                        var n = new Notification();
+                        n.Message = model.Summary.Truncate(10);
+                        n.EntityId = model.Id;
+                        n.NotificationType = NotificationType.Task;
+                        n.UserId = a.UserId.Value;
+                        n.DateCreated = now;
+                        _context.Add(n);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
             }
             ViewData["Users"] = await userService.GetUsersSelectAsync();
@@ -166,6 +185,23 @@ namespace AMS.Controllers
 
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
+
+                // Add Notification
+                if (ticket.Assignments.Count > 0)
+                {
+                    DateTime now = DateTime.Now;
+                    foreach (var a in ticket.Assignments.Where(x => x.UserId.HasValue))
+                    {
+                        var n = new Notification();
+                        n.Message = $"ticket #{ticket.Code} created";
+                        n.EntityId = ticket.Id;
+                        n.NotificationType = NotificationType.Ticket;
+                        n.UserId = a.UserId.Value;
+                        n.DateCreated = now;
+                        _context.Add(n);
+                    }
+                    await _context.SaveChangesAsync();
+                }
 
                 // Upload files
                 long size = files.Sum(f => f.Length);
@@ -284,7 +320,23 @@ namespace AMS.Controllers
                 try
                 {
                     _context.Update(ticket);
-                    
+
+                    // Add Notification
+                    if (ticket.Assignments.Count > 0)
+                    {
+                        DateTime now = DateTime.Now;
+                        foreach (var a in ticket.Assignments.Where(x => x.UserId.HasValue))
+                        {
+                            var n = new Notification();
+                            n.Message = $"ticket #{ticket.Code} updated";
+                            n.EntityId = ticket.Id;
+                            n.NotificationType = NotificationType.Ticket;
+                            n.UserId = a.UserId.Value;
+                            n.DateCreated = now;
+                            _context.Add(n);
+                        }
+                    }
+
                     // Upload files
                     long size = files.Sum(f => f.Length);
                     var filesPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());

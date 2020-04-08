@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200406190637_Add_Attachement.cs" />
     <Compile Remove="Migrations\20200406190637_Add_Attachement.Designer.cs" />
+    <Compile Remove="Migrations\20200408205529_Add_Notifications.cs" />
+    <Compile Remove="Migrations\20200408205529_Add_Notifications.Designer.cs" />
   </ItemGroup>
 
 

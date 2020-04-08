@@ -47,6 +47,7 @@ namespace AMS.Models
         public List<AssetCustdian> AssetCustodians { get; set; }
         public List<Member> Members { get; set; }
         public List<Assignment> Assignments { get; set; }
+        public IEnumerable<Notification> Notifications { get; set; }
         public string Title => DisplayName;
     }
 }

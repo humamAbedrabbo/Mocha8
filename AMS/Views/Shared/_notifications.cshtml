@@ -1,0 +1,28 @@
+﻿@inject AMS.Services.IUserService userService
+@using Humanizer
+
+@{ 
+    var notifications = await userService.GetUserLastNotificationsAsync();
+}
+<li class="nav-item dropdown">
+    <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <i class="icon-bell"></i>
+        @if(notifications.Count() > 0)
+        {
+            <span class="badge badge-pill badge-danger">@notifications.Count()</span>
+        }
+        
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
+        <div class="dropdown-header text-center">
+            <strong>Notifications</strong>
+        </div>
+        @foreach (var n in notifications)
+        {
+            <a class="dropdown-item border-bottom-0" asp-controller="Notifications" asp-action="Goto" asp-route-id="@n.Id"><i class="fa fa-bell btn-ghost-secondary"></i> @n.Message.Truncate(25)</a>
+
+        }
+
+        <a class="dropdown-item text-primary text-center border-top" href="#">more</a>
+    </div>
+</li>

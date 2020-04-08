@@ -1,5 +1,6 @@
 ﻿using AMS.Data;
 using AMS.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +32,17 @@ namespace AMS.Services
         {
             var name = haccessor.HttpContext.User.Identity.Name;
             return await userManager.FindByNameAsync(name);
+        }
+
+        public async Task<IEnumerable<Notification>> GetUserLastNotificationsAsync()
+        {
+            var user = await GetCurrentUserAsync();
+            var notifications = await context.Notifications
+                .Where(x => x.UserId == user.Id && x.IsRead == false)
+                .OrderByDescending(x => x.DateCreated)
+                .Take(10)
+                .ToListAsync();
+            return notifications;
         }
 
         public int? GetUserTenantId()
@@ -73,6 +85,7 @@ namespace AMS.Services
         {
             var ticket = await context.Tickets
                 .Include(x => x.Assignments)
+                .Include(x => x.TodoTasks).ThenInclude(x => x.Assignments)
                 .Where(x => x.TenantId == GetUserTenantId() && x.Id == ticketId)
                 .FirstOrDefaultAsync();
             if(ticket != null && ticket.IsActive)
@@ -86,6 +99,25 @@ namespace AMS.Services
                             ticket.Status = WorkStatus.Cancelled;
                             ticket.CancellationDate = DateTime.Now;
                             ticket.PendingDate = null;
+
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(ticket.Assignments);
+                            assignments.AddRange(ticket.TodoTasks.SelectMany(x => x.Assignments));
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"#{ticket.Code} is cancelled";
+                                    n.EntityId = ticket.Id;
+                                    n.NotificationType = NotificationType.Ticket;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
                         }
                     }
                     else if (status == WorkStatus.Completed)
@@ -95,6 +127,26 @@ namespace AMS.Services
                             ticket.Status = WorkStatus.Completed;
                             ticket.CompletionDate = DateTime.Now;
                             ticket.PendingDate = null;
+
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(ticket.Assignments);
+                            assignments.AddRange(ticket.TodoTasks.SelectMany(x => x.Assignments));
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"#{ticket.Code} is completed";
+                                    n.EntityId = ticket.Id;
+                                    n.NotificationType = NotificationType.Ticket;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
+
                         }
                     }
                     else if (status == WorkStatus.Open)
@@ -103,6 +155,25 @@ namespace AMS.Services
                         {
                             ticket.Status = WorkStatus.Open;
                             ticket.PendingDate = null;
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(ticket.Assignments);
+                            assignments.AddRange(ticket.TodoTasks.SelectMany(x => x.Assignments));
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"#{ticket.Code} is re-openned";
+                                    n.EntityId = ticket.Id;
+                                    n.NotificationType = NotificationType.Ticket;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
+
                         }
                     }
                     else if (status == WorkStatus.Pending)
@@ -111,6 +182,25 @@ namespace AMS.Services
                         {
                             ticket.Status = WorkStatus.Pending;
                             ticket.PendingDate = DateTime.Now;
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(ticket.Assignments);
+                            assignments.AddRange(ticket.TodoTasks.SelectMany(x => x.Assignments));
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"#{ticket.Code} is pending";
+                                    n.EntityId = ticket.Id;
+                                    n.NotificationType = NotificationType.Ticket;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
+
                         }
                     }
 
@@ -124,6 +214,7 @@ namespace AMS.Services
         {
             var task = await context.TodoTasks
                 .Include(x => x.Assignments)
+                .Include(x => x.Ticket).ThenInclude(x => x.Assignments)
                 .Where(x => x.TenantId == GetUserTenantId() && x.Id == taskId)
                 .FirstOrDefaultAsync();
             if (task != null && task.IsActive)
@@ -137,6 +228,25 @@ namespace AMS.Services
                             task.Status = WorkStatus.Cancelled;
                             task.CancellationDate = DateTime.Now;
                             task.PendingDate = null;
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(task.Assignments);
+                            assignments.AddRange(task.Ticket.Assignments);
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"#{task.Ticket.Code} cancelled: {task.Summary}";
+                                    n.EntityId = task.Id;
+                                    n.NotificationType = NotificationType.Task;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
+
                             await context.SaveChangesAsync();
                             return true;
                         }
@@ -148,6 +258,24 @@ namespace AMS.Services
                             task.Status = WorkStatus.Completed;
                             task.CompletionDate = DateTime.Now;
                             task.PendingDate = null;
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(task.Assignments);
+                            assignments.AddRange(task.Ticket.Assignments);
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"{task.Ticket.Code} completed: {task.Summary}";
+                                    n.EntityId = task.Id;
+                                    n.NotificationType = NotificationType.Task;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
                             await context.SaveChangesAsync();
                             return true;
                         }
@@ -158,6 +286,24 @@ namespace AMS.Services
                         {
                             task.Status = WorkStatus.Open;
                             task.PendingDate = null;
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(task.Assignments);
+                            assignments.AddRange(task.Ticket.Assignments);
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"{task.Ticket.Code} re-openned: {task.Summary}";
+                                    n.EntityId = task.Id;
+                                    n.NotificationType = NotificationType.Task;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
                             await context.SaveChangesAsync();
                             return true;
                         }
@@ -168,6 +314,24 @@ namespace AMS.Services
                         {
                             task.Status = WorkStatus.Pending;
                             task.PendingDate = DateTime.Now;
+                            // Add Notification
+                            var assignments = new List<Assignment>();
+                            assignments.AddRange(task.Assignments);
+                            assignments.AddRange(task.Ticket.Assignments);
+                            if (assignments.Count > 0)
+                            {
+                                DateTime now = DateTime.Now;
+                                foreach (var a in assignments.Where(x => x.UserId.HasValue))
+                                {
+                                    var n = new Notification();
+                                    n.Message = $"{task.Ticket.Code} pending: {task.Summary}";
+                                    n.EntityId = task.Id;
+                                    n.NotificationType = NotificationType.Task;
+                                    n.UserId = a.UserId.Value;
+                                    n.DateCreated = now;
+                                    context.Add(n);
+                                }
+                            }
                             await context.SaveChangesAsync();
                             return true;
                         }

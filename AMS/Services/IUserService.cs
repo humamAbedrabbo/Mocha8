@@ -45,6 +45,7 @@ namespace AMS.Services
         Task<int> GetUserAssetsCount(int userId);
         Task<IEnumerable<UserGroup>> GetUserGroupsAsync();
         Task<SelectList> GetUserGroupsSelectAsync(int? id = null);
+        Task<IEnumerable<Notification>> GetUserLastNotificationsAsync();
         Task<IEnumerable<AmsUser>> GetUsersAsync();
         Task<SelectList> GetUsersSelectAsync(int? id = null);
         Task<int> GetUserTasksCount(int userId);

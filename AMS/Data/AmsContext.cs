@@ -37,6 +37,11 @@ namespace AMS.Data
         public DbSet<Member> Members { get; set; }
         public DbSet<TicketJob> TicketJobs { get; set; }
         public DbSet<Attachment> Attachements { get; set; }
+        public DbSet<AMS.Models.Assignment> Assignment { get; set; }
+
+        public DbSet<AMS.Models.TicketAsset> TicketAsset { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -332,11 +337,20 @@ namespace AMS.Data
                 .WithMany(p => p.Attachements)
                 .HasForeignKey(p => p.TicketId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Notifications
+            builder.Entity<Notification>(e =>
+            {
+                e.Property(p => p.Message).HasMaxLength(100).IsRequired();
+                e.Ignore(p => p.Url);
+                e.HasOne(p => p.User)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(p => p.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
             
         }
 
-        public DbSet<AMS.Models.Assignment> Assignment { get; set; }
 
-        public DbSet<AMS.Models.TicketAsset> TicketAsset { get; set; }
     }
 }

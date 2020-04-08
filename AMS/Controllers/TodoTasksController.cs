@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Humanizer;
 
 namespace AMS.Controllers
 {
@@ -52,6 +53,24 @@ namespace AMS.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(model);
+                await _context.SaveChangesAsync();
+
+                // Add Notification
+                if (model.Assignments.Count > 0)
+                {
+                    DateTime now = DateTime.Now;
+                    foreach (var a in model.Assignments.Where(x => x.UserId.HasValue))
+                    {
+                        var n = new Notification();
+                        n.Message = model.Summary.Truncate(10);
+                        n.EntityId = model.Id;
+                        n.NotificationType = NotificationType.Task;
+                        n.UserId = a.UserId.Value;
+                        n.DateCreated = now;
+                        _context.Add(n);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
             }
             await SetViewData(model);
@@ -125,6 +144,25 @@ namespace AMS.Controllers
                 {
                     todoTask.Assignments.Add(new Assignment { UserId = currentUser.Id });
                 }
+                await _context.SaveChangesAsync();
+
+                // Add Notification
+                if (todoTask.Assignments.Count > 0)
+                {
+                    DateTime now = DateTime.Now;
+                    foreach (var a in todoTask.Assignments.Where(x => x.UserId.HasValue))
+                    {
+                        var n = new Notification();
+                        n.Message = todoTask.Summary.Truncate(10);
+                        n.EntityId = todoTask.Id;
+                        n.NotificationType = NotificationType.Task;
+                        n.UserId = a.UserId.Value;
+                        n.DateCreated = now;
+                        _context.Add(n);
+                    }
+                }
+
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Details), new { id = todoTask.Id });
             }
@@ -210,6 +248,23 @@ namespace AMS.Controllers
                             }
                         }
                     }
+                    // Add Notification
+                    if (todoTask.Assignments.Count > 0)
+                    {
+                        DateTime now = DateTime.Now;
+                        foreach (var a in todoTask.Assignments.Where(x => x.UserId.HasValue))
+                        {
+                            var n = new Notification();
+                            n.Message = todoTask.Summary.Truncate(10);
+                            n.EntityId = todoTask.Id;
+                            n.NotificationType = NotificationType.Task;
+                            n.UserId = a.UserId.Value;
+                            n.DateCreated = now;
+                            _context.Add(n);
+                        }
+                    }
+
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
