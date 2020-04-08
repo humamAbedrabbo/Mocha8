@@ -21,7 +21,11 @@
                 <i class="fa fa-align-justify"></i> My Tickets (@Model.Count())
             </div>
             <div class="card-body">
-
+                <div class="mb-1">
+                    <a asp-controller="Tickets" asp-action="Create" class="btn btn-primary">
+                        Add Ticket
+                    </a>
+                </div>
                 <table id="table"
                        data-search="true"
                        data-pagination="true"
@@ -116,16 +120,16 @@
                                     </td>
                                 }
 
-                            <td>
-                                <a class="btn-sm text-white btn-info mx-1" asp-controller="Assignments" asp-action="Index" asp-route-ticketId="@item.Id"><i class="fa fa-list mx-1"></i>Assignments</a>
+                                <td>
+                                    <a class="btn-sm text-white btn-info mx-1" asp-controller="Assignments" asp-action="Index" asp-route-ticketId="@item.Id"><i class="fa fa-list mx-1"></i>Assignments</a>
 
-                                <a class="btn-sm text-white btn-info mx-1" asp-controller="TodoTasks" asp-action="Index" asp-route-ticketId="@item.Id"><i class="fa fa-tasks mx-1"></i>Tasks</a>
+                                    <a class="btn-sm text-white btn-info mx-1" asp-controller="TodoTasks" asp-action="Index" asp-route-ticketId="@item.Id"><i class="fa fa-tasks mx-1"></i>Tasks</a>
 
-                                @if (!item.Assignments.Any(x => x.UserId == user?.Id))
-                                {
-                                    <a class="btn-sm text-white btn-info mx-1" asp-controller="My" asp-action="Pick" asp-route-ticketId="@item.Id"><i class="icon-check mx-1"></i>Pick</a>
-                                }
-                            </td>
+                                    @if (!item.Assignments.Any(x => x.UserId == user?.Id))
+                                    {
+                                        <a class="btn-sm text-white btn-info mx-1" asp-controller="My" asp-action="Pick" asp-route-ticketId="@item.Id"><i class="icon-check mx-1"></i>Pick</a>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>

@@ -34,23 +34,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Floors">
-                    <i class="nav-icon icon-map"></i> Interactive Map
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/hangfire">
-                    <i class="nav-icon icon-map"></i> Scheduled Tickets
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Calendar">
                     <i class="nav-icon icon-calendar"></i> Calendar
                     <span class="badge badge-primary"></span>
                 </a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="My" asp-action="UserGroups">
                     <i class="nav-icon fa fa-users"></i> My User Groups
@@ -69,243 +58,263 @@
                     <span class="badge badge-primary"></span>
                 </a>
             </li>
-            <li class="nav-title">General</li>
 
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Index">
-                    <i class="nav-icon icon-globe"></i> Clients
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Assets" asp-action="Index">
-                    <i class="nav-icon fa fa-cubes"></i> Assets
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Tickets" asp-action="Index">
-                    <i class="nav-icon fa-exclamation-circle fa"></i> Tickets
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="TodoTasks" asp-action="Index">
-                    <i class="nav-icon fa fa-tasks"></i> Tasks
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="UserGroups" asp-action="Index">
-                    <i class="nav-icon fa fa-users"></i> User Groups
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="CustomLists" asp-action="Index">
-                    <i class="nav-icon fa fa-list"></i> Custom Lists
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Locations" asp-action="Index">
-                    <i class="nav-icon icon-location-pin"></i> Locations
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="MetaFieldValues" asp-action="Index">
-                    <i class="nav-icon fa fa-tags"></i> Meta Values
-                </a>
-            </li>
-            <li class="nav-title">Administration</li>
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-sticky-note"></i> Create
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Create">
-                            <i class="nav-icon icon-globe"></i> Client
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Locations" asp-action="Create">
-                            <i class="nav-icon icon-location-pin"></i> Location
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="TicketJobs" asp-action="Create">
-                            <i class="nav-icon icon-clock"></i> Ticket Job
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Assets" asp-action="Create">
-                            <i class="nav-icon fa fa-cubes"></i> Asset
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Tickets" asp-action="Create">
-                            <i class="nav-icon fa fa-exclamation-circle"></i> Ticket
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="TodoTasks" asp-action="Create">
-                            <i class="nav-icon fa fa-tasks"></i> Todo Task
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="MetaFieldValues" asp-action="Create">
-                            <i class="nav-icon fa fa-tags"></i> Attach Meta
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Assignments" asp-action="Create">
-                            <i class="nav-icon fa fa-address-card"></i> Assignment
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="AssetItems" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Asset Item
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="AssetCustodians" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Asset Custodian
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="UserGroups" asp-action="Create">
-                            <i class="nav-icon fa fa-users"></i> User Group
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="CustomLists" asp-action="Create">
-                            <i class="nav-icon fa fa-list"></i> Custom Lists
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="CustomListItems" asp-action="Create">
-                            <i class="nav-icon fa fa-list"></i> Custom List Item
-                        </a>
-                    </li>
+            @if (User.IsInRole("Admin"))
+            {
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="MetaFields" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Meta Field
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="AssetTypes" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Asset Type
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="TicketTypes" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Ticket Type
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="TodoTaskTypes" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Todo Task Type
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="ClientTypes" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Client Type
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="ItemTypes" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Item Type
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="LocationTypes" asp-action="Create">
-                            <i class="nav-icon fa fa-tag"></i> Location Type
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Floors">
+                        <i class="nav-icon icon-map"></i> Interactive Map
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/hangfire">
+                        <i class="nav-icon icon-map"></i> Scheduled Tickets
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
 
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-tags"></i> Masters
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="MetaFields" asp-action="Index">
-                            <i class="nav-icon fa fa-tag"></i> Meta Fields
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="AssetTypes" asp-action="Index">
-                            <i class="nav-icon fa fa-tag"></i> Asset Types
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="TicketTypes" asp-action="Index">
-                            <i class="nav-icon fa fa-tag"></i> Ticket Types
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="TodoTaskTypes" asp-action="Index">
-                            <i class="nav-icon fa fa-tag"></i> Todo Task Types
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="ClientTypes" asp-action="Index">
-                            <i class="nav-icon fa fa-tag"></i> Client Types
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="ItemTypes" asp-action="Index">
-                            <i class="nav-icon fa fa-tag"></i> Item Types
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="LocationTypes" asp-action="Index">
-                            <i class="nav-icon fa fa-tag"></i> Location Types
-                        </a>
-                    </li>
-                </ul>
-            </li>
 
-            <li class="divider"></li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">
-                    <i class="nav-icon fa fa-users"></i> Users
-                </a>
-            </li>
+                <li class="nav-title">General</li>
 
-            <li class="divider"></li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="TicketJobs" asp-action="Index">
-                    <i class="nav-icon icon-clock"></i> Ticket Jobs
-                </a>
-            </li>
-            <li class="divider"></li>
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-gear"></i> Security
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon icon-people"></i> Users
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="nav-icon fa fa-user-secret"></i> Roles &amp; Permissions
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="nav-icon icon-pie-chart"></i> Reports
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Index">
+                        <i class="nav-icon icon-globe"></i> Clients
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Assets" asp-action="Index">
+                        <i class="nav-icon fa fa-cubes"></i> Assets
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Tickets" asp-action="Index">
+                        <i class="nav-icon fa-exclamation-circle fa"></i> Tickets
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="TodoTasks" asp-action="Index">
+                        <i class="nav-icon fa fa-tasks"></i> Tasks
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="UserGroups" asp-action="Index">
+                        <i class="nav-icon fa fa-users"></i> User Groups
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="CustomLists" asp-action="Index">
+                        <i class="nav-icon fa fa-list"></i> Custom Lists
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Locations" asp-action="Index">
+                        <i class="nav-icon icon-location-pin"></i> Locations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="MetaFieldValues" asp-action="Index">
+                        <i class="nav-icon fa fa-tags"></i> Meta Values
+                    </a>
+                </li>
+                <li class="nav-title">Administration</li>
+                <li class="nav-item nav-dropdown">
+                    <a class="nav-link nav-dropdown-toggle" href="#">
+                        <i class="nav-icon fa fa-sticky-note"></i> Create
+                    </a>
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Create">
+                                <i class="nav-icon icon-globe"></i> Client
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Locations" asp-action="Create">
+                                <i class="nav-icon icon-location-pin"></i> Location
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="TicketJobs" asp-action="Create">
+                                <i class="nav-icon icon-clock"></i> Ticket Job
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Assets" asp-action="Create">
+                                <i class="nav-icon fa fa-cubes"></i> Asset
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Tickets" asp-action="Create">
+                                <i class="nav-icon fa fa-exclamation-circle"></i> Ticket
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="TodoTasks" asp-action="Create">
+                                <i class="nav-icon fa fa-tasks"></i> Todo Task
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="MetaFieldValues" asp-action="Create">
+                                <i class="nav-icon fa fa-tags"></i> Attach Meta
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Assignments" asp-action="Create">
+                                <i class="nav-icon fa fa-address-card"></i> Assignment
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="AssetItems" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Asset Item
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="AssetCustodians" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Asset Custodian
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="UserGroups" asp-action="Create">
+                                <i class="nav-icon fa fa-users"></i> User Group
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="CustomLists" asp-action="Create">
+                                <i class="nav-icon fa fa-list"></i> Custom Lists
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="CustomListItems" asp-action="Create">
+                                <i class="nav-icon fa fa-list"></i> Custom List Item
+                            </a>
+                        </li>
 
-            <li class="nav-item mt-auto">
-                <a class="nav-link nav-link-success" href="#" target="_top">
-                    <i class="nav-icon icon-cloud-download"></i> Settings
-                </a>
-            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="MetaFields" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Meta Field
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="AssetTypes" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Asset Type
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="TicketTypes" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Ticket Type
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="TodoTaskTypes" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Todo Task Type
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="ClientTypes" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Client Type
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="ItemTypes" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Item Type
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="LocationTypes" asp-action="Create">
+                                <i class="nav-icon fa fa-tag"></i> Location Type
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item nav-dropdown">
+                    <a class="nav-link nav-dropdown-toggle" href="#">
+                        <i class="nav-icon fa fa-tags"></i> Masters
+                    </a>
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="MetaFields" asp-action="Index">
+                                <i class="nav-icon fa fa-tag"></i> Meta Fields
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="AssetTypes" asp-action="Index">
+                                <i class="nav-icon fa fa-tag"></i> Asset Types
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="TicketTypes" asp-action="Index">
+                                <i class="nav-icon fa fa-tag"></i> Ticket Types
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="TodoTaskTypes" asp-action="Index">
+                                <i class="nav-icon fa fa-tag"></i> Todo Task Types
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="ClientTypes" asp-action="Index">
+                                <i class="nav-icon fa fa-tag"></i> Client Types
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="ItemTypes" asp-action="Index">
+                                <i class="nav-icon fa fa-tag"></i> Item Types
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="LocationTypes" asp-action="Index">
+                                <i class="nav-icon fa fa-tag"></i> Location Types
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="divider"></li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">
+                        <i class="nav-icon fa fa-users"></i> Users
+                    </a>
+                </li>
+
+                <li class="divider"></li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="TicketJobs" asp-action="Index">
+                        <i class="nav-icon icon-clock"></i> Ticket Jobs
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li class="nav-item nav-dropdown">
+                    <a class="nav-link nav-dropdown-toggle" href="#">
+                        <i class="nav-icon fa fa-gear"></i> Security
+                    </a>
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="nav-icon icon-people"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="nav-icon fa fa-user-secret"></i> Roles &amp; Permissions
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon icon-pie-chart"></i> Reports
+                    </a>
+                </li>
+
+                <li class="nav-item mt-auto">
+                    <a class="nav-link nav-link-success" href="#" target="_top">
+                        <i class="nav-icon icon-cloud-download"></i> Settings
+                    </a>
+                </li>
+            }
+
         }
 
     </ul>
