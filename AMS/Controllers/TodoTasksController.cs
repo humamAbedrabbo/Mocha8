@@ -10,6 +10,9 @@ using AMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace AMS.Controllers
 {
@@ -19,12 +22,20 @@ namespace AMS.Controllers
         private readonly ILogger<TodoTasksController> logger;
         private readonly AmsContext _context;
         private readonly IUserService userService;
+        private readonly IWebHostEnvironment env;
+        private readonly IArchiveAdapter archiver;
 
-        public TodoTasksController(ILogger<TodoTasksController> logger, AmsContext context, IUserService userService)
+        public TodoTasksController(ILogger<TodoTasksController> logger, 
+            AmsContext context, 
+            IUserService userService,
+            IWebHostEnvironment env,
+            IArchiveAdapter archiver)
         {
             this.logger = logger;
             _context = context;
             this.userService = userService;
+            this.env = env;
+            this.archiver = archiver;
         }
 
         public async Task<IActionResult> Add()
@@ -148,7 +159,7 @@ namespace AMS.Controllers
         // POST: TodoTasks/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Description,TicketId,TodoTaskTypeId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] TodoTask todoTask)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TenantId,Summary,Description,TicketId,TodoTaskTypeId,Status,DueDate,StartDate,CompletionDate,CancellationDate,PendingDate,MarkCompleted,EstDuration")] TodoTask todoTask, List<IFormFile> files)
         {
             if (id != todoTask.Id)
             {
@@ -159,7 +170,46 @@ namespace AMS.Controllers
             {
                 try
                 {
+                    
                     _context.Update(todoTask);
+                    if(todoTask.TicketId.HasValue)
+                    {
+                        var ticket = await _context.Tickets
+                            .Include(x => x.Attachements)
+                            .Where(x => x.Id == todoTask.TicketId.Value)
+                            .FirstOrDefaultAsync();
+
+                        // Upload files
+                        long size = files.Sum(f => f.Length);
+                        var filesPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
+                        if (!Directory.Exists(filesPath))
+                        {
+                            Directory.CreateDirectory(filesPath);
+                        }
+
+                        foreach (var formFile in files)
+                        {
+                            if (formFile.Length > 0)
+                            {
+                                var filePath = Path.Combine(filesPath, formFile.FileName);
+
+                                using (var stream = System.IO.File.Create(filePath))
+                                {
+                                    await formFile.CopyToAsync(stream);
+                                }
+
+                                Attachment att = new Attachment();
+                                att.FileName = formFile.FileName;
+                                att.Title = formFile.FileName;
+                                att.ContentType = formFile.ContentType;
+                                att.TicketId = ticket.Id;
+                                att.Length = formFile.Length;
+                                att.Url = $"/files/{ticket.Id}/{formFile.FileName}";
+                                _context.Attachements.Add(att);
+
+                            }
+                        }
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
