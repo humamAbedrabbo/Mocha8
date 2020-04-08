@@ -246,7 +246,7 @@ namespace AMS.Controllers
                 try
                 {
                     _context.Update(ticket);
-                    await _context.SaveChangesAsync();
+                    
                     // Upload files
                     long size = files.Sum(f => f.Length);
                     var filesPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
@@ -277,6 +277,7 @@ namespace AMS.Controllers
 
                         }
                     }
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
