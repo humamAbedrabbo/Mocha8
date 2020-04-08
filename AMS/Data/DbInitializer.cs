@@ -572,10 +572,10 @@ namespace AMS.Data
 
             var hasher = new PasswordHasher<AmsUser>();
             var dic = new Dictionary<int, AmsUser>();
-
-            for (int i = 1; i <= 10; i++)
+            var userNames = new[] { "assistant", "gm", "cto", "cio", "cfo" };
+            for (int i = 1; i <= 4; i++)
             {
-                var user = new AmsUser { UserName = $"user{i}", DisplayName = $"User{i}", Email = $"user{i}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User", PictureUrl = $"/images/avatars/{i}.jpg" };
+                var user = new AmsUser { UserName = userNames[i-1], DisplayName = userNames[i-1], Email = $"{userNames[i-1]}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User", PictureUrl = $"/images/avatars/{i}.jpg" };
                 user.NormalizedEmail = user.Email.ToUpper();
                 user.NormalizedUserName = user.UserName.ToUpper();
                 user.ConcurrencyStamp = Guid.NewGuid().ToString("D");
