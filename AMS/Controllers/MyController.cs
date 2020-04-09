@@ -42,7 +42,7 @@ namespace AMS.Controllers
             return View(userGroups);
         }
 
-        public async Task<IActionResult> Tickets(string code = null, StatusFilter? tstatus = null)
+        public async Task<IActionResult> Tickets(string code = null, StatusFilter tstatus = StatusFilter.Active)
         {
             
             var me = await userService.GetCurrentUserAsync();
@@ -55,6 +55,7 @@ namespace AMS.Controllers
                 .Select(x => x.UserGroupId)
                 .Distinct()
                 .ToListAsync();
+
             var tickets = await context.Assignment
                 .Include(x => x.Ticket).ThenInclude(x => x.TicketType)
                 .Include(x => x.Ticket).ThenInclude(x => x.Client)
@@ -65,18 +66,23 @@ namespace AMS.Controllers
                 .Where(x => x.TicketId.HasValue
                     && (x.Ticket.TenantId == userService.GetUserTenantId())
                     && (x.UserId == me.Id || (x.UserGroupId.HasValue && userGroupIDs.Contains(x.UserGroupId.Value))
-                    && (!string.IsNullOrEmpty(code) || x.Ticket.Code == code)
-                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Active && x.Ticket.IsActive))
-                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Open && x.Ticket.Status == WorkStatus.Open))
-                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Pending && x.Ticket.IsPending))
-                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Completed && x.Ticket.Status == WorkStatus.Completed))
-                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Cancelled && x.Ticket.Status == WorkStatus.Cancelled))
-                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Overdue && x.Ticket.IsOverdue))
+                    && (string.IsNullOrEmpty(code) || x.Ticket.Code == code)
                 ))
                 .Select(x => x.Ticket)
                 .Distinct()
                 .OrderByDescending(x => x.StartDate)
                 .ToListAsync();
+            
+            tickets = tickets.Where(x =>
+                (
+                        (tstatus == StatusFilter.Active && x.IsActive)
+                        || (tstatus == StatusFilter.Open && x.Status == WorkStatus.Open)
+                        || (tstatus == StatusFilter.Completed && x.Status == WorkStatus.Completed)
+                        || (tstatus == StatusFilter.Cancelled && x.Status == WorkStatus.Cancelled)
+                        || (tstatus == StatusFilter.Overdue && x.IsOverdue)
+                        || (tstatus == StatusFilter.Pending && x.IsPending)
+                    )
+                ).ToList();
 
             //var tickets = await context.Assignment
             //    .Include(x => x.Ticket).ThenInclude(x => x.TicketType)
@@ -98,7 +104,46 @@ namespace AMS.Controllers
             return View(tickets);
         }
 
-        public async Task<IActionResult> TodoTasks()
+        public async Task<IActionResult> TodoTasksAll(string code = null, StatusFilter tstatus = StatusFilter.Active, bool onlyMe = true)
+        {
+            var me = await userService.GetCurrentUserAsync();
+
+
+            var tasks = await context.Assignment
+                .Include(x => x.TodoTask).ThenInclude(x => x.TodoTaskType)
+                .Include(x => x.TodoTask).ThenInclude(x => x.Ticket)
+                .Include(x => x.TodoTask).ThenInclude(x => x.Ticket).ThenInclude(x => x.Client)
+                .Include(x => x.TodoTask).ThenInclude(x => x.Ticket).ThenInclude(x => x.TicketType)
+                .Include(x => x.TodoTask).ThenInclude(x => x.Ticket).ThenInclude(x => x.Location)
+                .Include(x => x.TodoTask).ThenInclude(x => x.Assignments).ThenInclude(x => x.User)
+                .Include(x => x.TodoTask).ThenInclude(x => x.Assignments).ThenInclude(x => x.UserGroup)
+                .Where(x => x.TodoTaskId.HasValue
+                    && (x.TodoTask.Ticket.TenantId == userService.GetUserTenantId())
+                    && (string.IsNullOrEmpty(code) || x.TodoTask.Ticket.Code == code)
+
+                    && (!onlyMe || x.UserId == me.Id)
+                    //&& (x.TodoTask.Status == Models.WorkStatus.Open || x.TodoTask.Status == Models.WorkStatus.Pending)
+                )
+                .Select(x => x.TodoTask)
+                .Distinct()
+                .OrderByDescending(x => x.StartDate)
+                .ToListAsync();
+            tasks = tasks.Where(x =>
+            (
+                    (tstatus == StatusFilter.Active && x.IsActive)
+                    || (tstatus == StatusFilter.Open && x.Status == WorkStatus.Open)
+                    || (tstatus == StatusFilter.Completed && x.Status == WorkStatus.Completed)
+                    || (tstatus == StatusFilter.Cancelled && x.Status == WorkStatus.Cancelled)
+                    || (tstatus == StatusFilter.Overdue && x.IsOverdue)
+                    || (tstatus == StatusFilter.Pending && x.IsPending)
+                )
+            ).ToList();
+
+            ViewData["Me"] = me;
+            return View(tasks);
+        }
+
+        public async Task<IActionResult> TodoTasks(string code = null, StatusFilter? tstatus = null, bool onlyMe = true)
         {
             var me = await userService.GetCurrentUserAsync();
 
@@ -111,8 +156,16 @@ namespace AMS.Controllers
                 .Include(x => x.TodoTask).ThenInclude(x => x.Assignments).ThenInclude(x => x.UserGroup)
                 .Where(x => x.TodoTaskId.HasValue
                     && (x.TodoTask.Ticket.TenantId == userService.GetUserTenantId())
-                    && (x.UserId == me.Id)
-                    && (x.TodoTask.Status == Models.WorkStatus.Open || x.TodoTask.Status == Models.WorkStatus.Pending)
+                    && (!string.IsNullOrEmpty(code) || x.TodoTask.Ticket.Code == code)
+                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Active && x.TodoTask.IsActive))
+                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Open && x.TodoTask.Status == WorkStatus.Open))
+                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Pending && x.TodoTask.IsPending))
+                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Completed && x.TodoTask.Status == WorkStatus.Completed))
+                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Cancelled && x.TodoTask.Status == WorkStatus.Cancelled))
+                    && ((tstatus != null) || (tstatus == StatusFilter.All) || (tstatus == StatusFilter.Overdue && x.TodoTask.IsOverdue))
+
+                    && (!onlyMe || x.UserId == me.Id)
+                    //&& (x.TodoTask.Status == Models.WorkStatus.Open || x.TodoTask.Status == Models.WorkStatus.Pending)
                 )
                 .Select(x => x.TodoTask)
                 .Distinct()

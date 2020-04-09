@@ -1,7 +1,7 @@
-﻿@model IEnumerable<AMS.Models.Ticket>
+﻿@model IEnumerable<AMS.Models.TodoTask>
 
 @{
-    ViewData["Title"] = "My Tickets";
+    ViewData["Title"] = "My Tasks";
     AmsUser user = ViewData["Me"] as AmsUser;
 }
 
@@ -18,23 +18,27 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <i class="fa fa-align-justify"></i> My Tickets (@Model.Count())
+                <i class="fa fa-align-justify"></i> My Todo Tasks (@Model.Count())
             </div>
             <div class="card-body">
-                <form asp-action="Tickets" class="mb-1">
+                <form asp-action="TodoTasksAll" class="mb-1">
                     <div class="form-inline">
                         <div class="form-group mr-1">
                             <input name="code" placeholder="Ticket Code" class="form-control" />
                         </div>
                         <div class="form-group mr-1">
                             <select name="tstatus" asp-items="@Html.GetEnumSelectList<StatusFilter>()" placeholder="Ticket Status" class="form-control">
-                                <option>Ticket Status</option>
+                                <option>Task Status</option>
+                            </select>
+                        </div>
+                        <div class="form-group mr-1">
+                            <select name="onlyMe" class="form-control">
+                                <option value="True">Assigned To me</option>
+                                <option value="False">All Tasks</option>
                             </select>
                         </div>
                         <button class="btn btn-success mr-1" type="submit">Search</button>
-                        <a asp-controller="Tickets" asp-action="Create" class="btn btn-primary">
-                            Add Ticket
-                        </a>
+
                     </div>
                 </form>
 
@@ -48,8 +52,11 @@
                        class="table">
                     <thead>
                         <tr>
+                            <th data-field="id" data-switchable="false" data-sortable="false" data-filter-control="input">
+                                #
+                            </th>
                             <th data-field="code" data-switchable="false" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.Code)
+                                @Html.DisplayNameFor(model => model.Ticket.Code)
                             </th>
 
                             <th data-field="status" data-switchable="false" data-sortable="true" data-filter-control="select">
@@ -58,43 +65,33 @@
                             <th data-field="delay" data-visible="false" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Delay)
                             </th>
-                            <th data-field="active" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.TotalActiveTasks)
-                            </th>
-                            <th data-field="open" data-visible="false" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.TotalOpenTasks)
-                            </th>
-                            <th data-field="pending" data-visible="false" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.TotalPendingTasks)
-                            </th>
-                            <th data-field="overdue" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.TotalOverdueTasks)
-                            </th>
-                            <th data-field="completed" data-visible="false" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.TotalCompletedTasks)
-                            </th>
-
 
                             <th data-field="dueDate" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.DueDate)
                             </th>
 
                             <th data-field="client" data-visible="false" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.ClientId)
+                                @Html.DisplayNameFor(model => model.Ticket.ClientId)
                             </th>
 
                             <th data-field="ticketType" data-visible="false" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.TicketTypeId)
+                                @Html.DisplayNameFor(model => model.Ticket.TicketTypeId)
+                            </th>
+
+                            <th data-field="taskType" data-visible="false" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.TodoTaskTypeId)
                             </th>
 
                             <th data-field="location" data-visible="false" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.LocationId)
+                                @Html.DisplayNameFor(model => model.Ticket.LocationId)
                             </th>
 
                             <th data-field="summary" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Summary)
                             </th>
-
+                            <th data-field="tsummary" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Ticket Summary
+                            </th>
                             <th data-field="assignment" data-sortable="true" data-filter-control="input">
                                 Assignment
                             </th>
@@ -106,9 +103,13 @@
                         {
                         <tr>
                             <td>
-                                <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Code)</a>
+                                <a asp-controller="TodoTasks" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-pencil"></i></a>
                             </td>
-                            <td class="@item.GetStatusColor()">
+                            <td>
+                                <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Ticket?.Id">@Html.DisplayFor(modelItem => item.Ticket.Code)</a>
+                            </td>
+
+                            <td class="@item.Ticket.GetStatusColor()">
                                 @Html.DisplayFor(modelItem => item.Status)
                             </td>
                             <td>
@@ -116,43 +117,27 @@
                             </td>
 
                             <td>
-                                @Html.DisplayFor(modelItem => item.TotalActiveTasks)
-                            </td>
-
-                            <td class="text-primary">
-                                @Html.DisplayFor(modelItem => item.TotalOpenTasks)
-                            </td>
-
-                            <td class="text-secondary">
-                                @Html.DisplayFor(modelItem => item.TotalPendingTasks)
-                            </td>
-
-                            <td class="text-danger">
-                                @Html.DisplayFor(modelItem => item.TotalOverdueTasks)
-                            </td>
-
-                            <td class="text-success">
-                                @Html.DisplayFor(modelItem => item.TotalCompletedTasks)
-                            </td>
-
-                            <td>
                                 @Html.DisplayFor(modelItem => item.DueDate)
                             </td>
 
                             <td>
-                                @Html.DisplayFor(modelItem => item.Client.Name)
+                                @Html.DisplayFor(modelItem => item.Ticket.Client.Name)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                @Html.DisplayFor(modelItem => item.Ticket.TicketType.Name)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Location.Name)
+                                @Html.DisplayFor(modelItem => item.TodoTaskType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Ticket.Location.Name)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Summary)
                             </td>
-
-
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Ticket.Summary)
+                            </td>
                             <td>
                                 <ul class="list-unstyled list-inline">
                                     @foreach (var a in item.Assignments)
@@ -168,7 +153,6 @@
                                     }
                                 </ul>
                             </td>
-
                         </tr>
                         }
                     </tbody>
@@ -186,13 +170,11 @@
 
 @* view-scripts *@
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         $(function () {
             var $table = $("#table").bootstrapTable();
-
-
         });
-
     </script>
 }
 
