@@ -18,25 +18,42 @@
                     <th data-field="summary" data-sortable="true" data-filter-control="input">
                         @Html.DisplayNameFor(model => model.Title)
                     </th>
+                    <th data-field="version" data-sortable="true" data-filter-control="input">
+                        @Html.DisplayNameFor(model => model.Version)
+                    </th>
+                    <th data-field="createdBy" data-sortable="true" data-filter-control="input">
+                        @Html.DisplayNameFor(model => model.CreatedBy)
+                    </th>
+                    <th data-field="createdOn" data-sortable="true" data-filter-control="input">
+                        @Html.DisplayNameFor(model => model.CreatedOn)
+                    </th>
 
                     <th data-field="actions">
-                        
+
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            <a href="@item.Url">@Html.DisplayFor(modelItem => item.Title)</a>
-                        </td>
+                <tr>
+                    <td>
+                        <a href="@item.Url">@Html.DisplayFor(modelItem => item.Title)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Version)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedOn)
+                    </td>
 
-                        <td>
-                            
-                        </td>
+                    <td>
+                    </td>
 
-                    </tr>
+                </tr>
                 }
             </tbody>
         </table>

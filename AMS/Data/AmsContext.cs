@@ -339,6 +339,7 @@ namespace AMS.Data
             builder.Entity<Attachment>().Property(p => p.Title).HasMaxLength(100).IsRequired();
             builder.Entity<Attachment>().Property(p => p.FileName).HasMaxLength(200).IsRequired();
             builder.Entity<Attachment>().Property(p => p.ContentType).HasMaxLength(100);
+            builder.Entity<Attachment>().Property(p => p.CreatedBy).HasMaxLength(100);
             builder.Entity<Attachment>().HasOne(p => p.Ticket)
                 .WithMany(p => p.Attachements)
                 .HasForeignKey(p => p.TicketId)

@@ -264,6 +264,9 @@ namespace AMS.Controllers
                         //att.Version = docDetail.Version;
                         //att.Url = $"https://localhost:5001/doc/details/{docDetail.Id}";
                         att.Url = $"/files/{ticket.Id}/{formFile.FileName}";
+                        att.CreatedBy = currentUser.DisplayName;
+                        att.CreatedOn = DateTime.Now;
+                        att.Version = 1;
                         _context.Attachements.Add(att);
 
                     }
@@ -337,6 +340,8 @@ namespace AMS.Controllers
                         }
                     }
 
+                    var currentUser = await userService.GetCurrentUserAsync();
+
                     // Upload files
                     long size = files.Sum(f => f.Length);
                     var filesPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
@@ -363,6 +368,10 @@ namespace AMS.Controllers
                             att.TicketId = ticket.Id;
                             att.Length = formFile.Length;
                             att.Url = $"/files/{ticket.Id}/{formFile.FileName}";
+                            att.CreatedBy = currentUser.DisplayName;
+                            att.CreatedOn = DateTime.Now;
+                            att.Version = 1;
+
                             _context.Attachements.Add(att);
 
                         }

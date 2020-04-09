@@ -39,13 +39,6 @@
                     <span class="badge badge-primary"></span>
                 </a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="My" asp-action="UserGroups">
-                    <i class="nav-icon fa fa-users"></i> My User Groups
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="My" asp-action="Tickets">
                     <i class="nav-icon fa fa-exclamation-circle"></i> My Tickets
@@ -58,6 +51,14 @@
                     <span class="badge badge-primary"></span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="My" asp-action="UserGroups">
+                    <i class="nav-icon fa fa-users"></i> My User Groups
+                    <span class="badge badge-primary"></span>
+                </a>
+            </li>
+
+
 
             @if (User.IsInRole("Admin"))
             {
