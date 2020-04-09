@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using AMS.Services;
 using AMS.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using AMS.Data;
+using Humanizer;
 
 namespace AMS.Controllers
 {
@@ -17,12 +19,59 @@ namespace AMS.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AmsContext _context;
         private readonly IUserService userService;
 
-        public HomeController(ILogger<HomeController> logger, IUserService userService)
+        public HomeController(ILogger<HomeController> logger, AmsContext context, IUserService userService)
         {
             _logger = logger;
+            this._context = context;
             this.userService = userService;
+        }
+        public async Task<IActionResult> Add()
+        {
+            var model = new TodoTask();
+            await SetViewData();
+            return PartialView("_Add", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(TodoTask model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+
+                // Add Notification
+                if (model.Assignments.Count > 0)
+                {
+                    DateTime now = DateTime.Now;
+                    foreach (var a in model.Assignments.Where(x => x.UserId.HasValue))
+                    {
+                        var n = new Notification();
+                        n.Message = model.Summary.Truncate(10);
+                        n.EntityId = model.Id;
+                        n.NotificationType = NotificationType.Task;
+                        n.UserId = a.UserId.Value;
+                        n.DateCreated = now;
+                        _context.Add(n);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            await SetViewData(model);
+            return PartialView("_Add", model);
+        }
+
+        private async Task SetViewData(TodoTask todoTask = null)
+        {
+            ViewData["TenantId"] = userService.GetUserTenantId();
+            ViewData["TicketId"] = await userService.GetTicketsSelectAsync(todoTask?.TicketId);
+            ViewData["TodoTaskTypeId"] = await userService.GetTodoTaskTypesSelectAsync(todoTask?.TodoTaskTypeId);
+            ViewData["Users"] = await userService.GetUsersSelectAsync();
         }
 
         public async Task<IActionResult> Index()

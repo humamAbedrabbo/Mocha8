@@ -13,6 +13,14 @@
 }
 
 @* view-content *@
+
+<div class="mb-1">
+    <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#add-modal" data-url="@Url.Action("Add")">
+        Add Task
+    </button>
+    <!-- Modal placeholder -->
+    <div id="modal-placeholder"></div>
+</div>
 <div class="row">
     <div class="col-lg-12">
         <div id='calendar'></div>
@@ -20,46 +28,7 @@
     <!--/.col-->
 </div>
 
-<div class="modal fade" id="dlgAddTodoTask" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form>
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Todo Task</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="idSummary">Summary</label>
-                        <input id="idSummary" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label for="idStart">Start Date</label>
-                        <input id="idStart" type="datetime" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label for="idDue">Due Date</label>
-                        <input id="idDue" type="datetime" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label for="idTicket">Ticket</label>
-                        <select id="idTicket" class="form-control">
-                            <option value=""></option>
-                            <option value="1">Ticket 1</option>
-                            <option value="2">Ticket 2</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+
 
 @* view-modals *@
 @section Modals {
@@ -92,11 +61,13 @@
                     $('#dlgAddTodoTask').modal('show');
                 },
                 events: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => new { title = x.Title, start = x.StartDate, allDay = true, textColor = "white", url = $"/TodoTasks/Details?id={x.Id}" })))
-                
+
 
             });
 
             calendar.render();
         });
     </script>
+
+    <script src="~/js/the-repeater.js"></script>
 }

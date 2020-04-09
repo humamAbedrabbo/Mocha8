@@ -1,0 +1,161 @@
+﻿@model TodoTask
+@{
+    ViewData["AddModalTitle"] = "Add Todo Task";
+}
+
+<!-- Modal -->
+<div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="add-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-modal-label">@ViewBag.AddModalTitle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Add">
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <!-- TenantId Hidden -->
+                    <input type="hidden" asp-for="TenantId" value="@ViewData["TenantId"]" />
+
+                    <div class="row">
+                        <!-- Summary Input -->
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label asp-for="Summary" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-12">
+                                <input asp-for="Summary" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="Summary" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <!-- TodoTaskType Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="TodoTaskTypeId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="TodoTaskTypeId" class="form-control" asp-items="ViewBag.TodoTaskTypeId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Selecting task type will define the properties of ticket</small></span>
+                                <span asp-validation-for="TodoTaskTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="TicketId" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select asp-for="TicketId" class="form-control" asp-items="ViewBag.TicketId">
+                                    <option disabled value="">--- SELECT ---</option>
+                                </select>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Select the ticket attached to this task</small></span>
+                                <span asp-validation-for="TicketId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Task Start Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="StartDate" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="StartDate" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Task DueDate Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="DueDate" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="DueDate" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="DueDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Task EstDuration Input -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="EstDuration" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <input asp-for="EstDuration" class="form-control" />
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Estimated duration in days</small></span>
+                                <span asp-validation-for="EstDuration" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Task Status Select -->
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label asp-for="Status" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <select class="form-control" disabled asp-for="Status" asp-items="Html.GetEnumSelectList<WorkStatus>()"></select>
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row">
+                        <!-- Task Description TextArea -->
+                        <div class="form-group col-md-12">
+                            <label asp-for="Description" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-9">
+                                <textarea asp-for="Description" rows="5" class="form-control"></textarea>
+                                <span class="help-block"><small><i class="fa fa-info-circle mx-1"></i>Describe the problem in 500 characters max</small></span>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assignments -->
+                    <div class="row">
+                        <div class="col-md-12 mb-1">
+                            <h5>Assignments</h5>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="repeater">
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <input data-repeater-create class="btn btn-sm btn-success" type="button" value="Add User" />
+                                    </div>
+                                </div>
+                                <div data-repeater-list="Assignments">
+                                    <div data-repeater-item class="form-group row">
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <select type="text" name="UserId" asp-items="ViewBag.Users" class="form-control">
+                                                        <option value="">--- SELECT USER ---</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <a data-repeater-delete href="#" class="btn btn-sm btn-danger">Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a class="btn btn-primary" data-save="modal">Save</a>
+            </div>
+        </div>
+    </div>
+</div>
