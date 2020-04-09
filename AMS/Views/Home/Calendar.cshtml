@@ -60,7 +60,7 @@
                     $("#idSummary").val('New Task');
                     $('#dlgAddTodoTask').modal('show');
                 },
-                events: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => new { title = x.Title, start = x.StartDate, allDay = true, textColor = "white", url = $"/TodoTasks/Details?id={x.Id}" })))
+                events: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => new { title = x.Title, start = x.StartDate, end = x.DueDate, allDay = true, textColor = "white", url = $"/TodoTasks/Details?id={x.Id}" })))
 
 
             });
