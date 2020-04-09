@@ -543,12 +543,15 @@ namespace AMS.Data
             tenant.LocationTypes.Add(ltGeneral);
 
 
-            //var fFolderLink = new MetaField { FieldType = FieldType.Url, Name = "Folder", TenantId = tenant.Id };
-            //context.MetaFields.Add(fFolderLink);
-            //context.SaveChanges();
+            var fCeoApproval = new MetaField { FieldType = FieldType.Boolean, Name = "CEO Approval", TenantId = tenant.Id };
+            context.MetaFields.Add(fCeoApproval);
+            var fCeoFeedback = new MetaField { FieldType = FieldType.LargeText, Name = "CEO Feedback", TenantId = tenant.Id };
+            context.MetaFields.Add(fCeoFeedback);
+            context.SaveChanges();
 
             var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
-            //ttGeneral.Values.Add(new MetaFieldValue { FieldId = fFolderLink.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoFeedback.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoApproval.Id, Value = "" });
             context.TicketTypes.Add(ttGeneral);
 
 

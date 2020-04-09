@@ -174,9 +174,18 @@
 
                     <!-- Meta Field Values -->
                     <div class="row">
+                        @{ var colsCountCss = "col-md-6"; }
                         @for (int i = 0; i < Model.Values.Count; i++)
                         {
-                            <div class="form-group col-md-6 col-sm-12">
+                            @if(Model.Values[i].Field.FieldType == FieldType.LargeText)
+                            {
+                                colsCountCss = "col-md-12";
+                            }
+                            else
+                            {
+                                colsCountCss = "col-md-6";
+                            }
+                            <div class="form-group @colsCountCss col-sm-12">
                                 <label class="col-md-3 col-form-label">@Model.Values[i].Field.Name</label>
                                 <input type="hidden" asp-for="Values[i].FieldId" />
                                 <input type="hidden" asp-for="Values[i].TicketId" />
@@ -188,7 +197,7 @@
                                     }
                                     @if (Model.Values[i].Field.FieldType == FieldType.LargeText)
                                     {
-                                        <textarea asp-for="Values[i].Value" class="form-control"></textarea>
+                                        <textarea rows="5" asp-for="Values[i].Value" class="form-control"></textarea>
                                     }
                                     @if (Model.Values[i].Field.FieldType == FieldType.Number)
                                     {
