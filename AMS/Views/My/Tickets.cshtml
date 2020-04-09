@@ -21,116 +21,162 @@
                 <i class="fa fa-align-justify"></i> My Tickets (@Model.Count())
             </div>
             <div class="card-body">
-                <div class="mb-1">
-                    <a asp-controller="Tickets" asp-action="Create" class="btn btn-primary">
-                        Add Ticket
-                    </a>
-                </div>
+                <form asp-action="Tickets">
+                    <div class="form-inline">
+                        <div class="form-group mr-1">
+                            <input name="code" placeholder="Ticket Code" class="form-control" />
+                        </div>
+                        <div class="form-group mr-1">
+                            <select name="tstatus" asp-items="@Html.GetEnumSelectList<StatusFilter>()" placeholder="Ticket Status" class="form-control">
+                                <option>Ticket Status</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-success mr-1" type="submit">Search</button>
+                        <a asp-controller="Tickets" asp-action="Create" class="btn btn-primary">
+                            Add Ticket
+                        </a>
+                    </div>
+                </form>
+
                 <table id="table"
                        data-search="true"
                        data-pagination="true"
                        data-show-export="true"
                        data-filter-control="true"
+                       data-show-columns="true"
                        data-show-search-clear-button="true"
                        class="table">
                     <thead>
                         <tr>
-                            <th data-field="code" data-sortable="true" data-filter-control="input">
+                            <th data-field="code" data-switchable="false" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Code)
+                            </th>
+
+                            <th data-field="status" data-switchable="false" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th data-field="delay" data-visible="false" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.Delay)
+                            </th>
+                            <th data-field="active" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.TotalActiveTasks)
+                            </th>
+                            <th data-field="open" data-visible="false" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.TotalOpenTasks)
+                            </th>
+                            <th data-field="pending" data-visible="false" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.TotalPendingTasks)
+                            </th>
+                            <th data-field="overdue" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.TotalOverdueTasks)
+                            </th>
+                            <th data-field="completed" data-visible="false" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.TotalCompletedTasks)
+                            </th>
+
+
+                            <th data-field="dueDate" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.DueDate)
+                            </th>
+
+                            <th data-field="client" data-visible="false" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.ClientId)
+                            </th>
+
+                            <th data-field="ticketType" data-visible="false" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.TicketTypeId)
+                            </th>
+
+                            <th data-field="location" data-visible="false" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.LocationId)
                             </th>
 
                             <th data-field="summary" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Summary)
                             </th>
 
-                            <th data-field="status" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.Status)
-                            </th>
-
-                            <th data-field="dueDate" data-sortable="true" data-filter-control="input">
-                                @Html.DisplayNameFor(model => model.DueDate)
-                            </th>
-
-                            <th data-field="client" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.ClientId)
-                            </th>
-                            <th data-field="ticketType" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.TicketTypeId)
-                            </th>
-
-                            <th data-field="location" data-sortable="true" data-filter-control="select">
-                                @Html.DisplayNameFor(model => model.LocationId)
-                            </th>
                             <th data-field="assignment" data-sortable="true" data-filter-control="input">
                                 Assignment
                             </th>
-                            <th data-field="actions"></th>
+
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>
-                                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Code)</a>
-                                </td>
+                        <tr>
+                            <td>
+                                <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Code)</a>
+                            </td>
+                            <td class="@item.GetStatusColor()">
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Delay)
+                            </td>
 
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Summary)
-                                </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalActiveTasks)
+                            </td>
 
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Status)
-                                </td>
+                            <td class="text-primary">
+                                @Html.DisplayFor(modelItem => item.TotalOpenTasks)
+                            </td>
 
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DueDate)
-                                </td>
+                            <td class="text-secondary">
+                                @Html.DisplayFor(modelItem => item.TotalPendingTasks)
+                            </td>
 
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Client.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Location.Name)
-                                </td>
+                            <td class="text-danger">
+                                @Html.DisplayFor(modelItem => item.TotalOverdueTasks)
+                            </td>
 
-                                @if (item.Assignments.Any(x => x.UserId == user?.Id))
-                                {
-                                    <td>Assigned To Me</td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        <ul class="list-unstyled list-inline">
-                                            @foreach (var a in item.Assignments)
+                            <td class="text-success">
+                                @Html.DisplayFor(modelItem => item.TotalCompletedTasks)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DueDate)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Client.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TicketType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Location.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Summary)
+                            </td>
+
+
+                            @if (item.Assignments.Any(x => x.UserId == user?.Id))
+                            {
+                                <td>Assigned To Me</td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <ul class="list-unstyled list-inline">
+                                        @foreach (var a in item.Assignments)
+                                        {
+                                            @if (a.UserId.HasValue)
                                             {
-                                                @if (a.UserId.HasValue)
-                                                {
-                                                    <li>@a.User?.DisplayName</li>
-                                                }
-                                                else
-                                                {
-                                                    <li>@a.UserGroup?.Name</li>
-                                                }
+                                                <li>@a.User?.DisplayName</li>
                                             }
-                                        </ul>
-                                    </td>
-                                }
-
-                                <td>
-                                    <a class="btn-sm text-white btn-info mx-1" asp-controller="Assignments" asp-action="Index" asp-route-ticketId="@item.Id"><i class="fa fa-list mx-1"></i>Assignments</a>
-
-                                    <a class="btn-sm text-white btn-info mx-1" asp-controller="TodoTasks" asp-action="Index" asp-route-ticketId="@item.Id"><i class="fa fa-tasks mx-1"></i>Tasks</a>
-
-                                    @if (!item.Assignments.Any(x => x.UserId == user?.Id))
-                                    {
-                                        <a class="btn-sm text-white btn-info mx-1" asp-controller="My" asp-action="Pick" asp-route-ticketId="@item.Id"><i class="icon-check mx-1"></i>Pick</a>
-                                    }
+                                            else
+                                            {
+                                                <li>@a.UserGroup?.Name</li>
+                                            }
+                                        }
+                                    </ul>
                                 </td>
-                            </tr>
+                            }
+
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -150,7 +196,10 @@
     <script>
         $(function () {
             var $table = $("#table").bootstrapTable();
+
+
         });
+
     </script>
 }
 

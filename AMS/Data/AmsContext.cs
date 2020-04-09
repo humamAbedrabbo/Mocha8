@@ -232,6 +232,12 @@ namespace AMS.Data
             builder.Entity<Ticket>().Property(p => p.Description);
             builder.Entity<Ticket>().Ignore(p => p.RelatedAssets);
             builder.Entity<Ticket>().Ignore(p => p.FieldValues);
+            builder.Entity<Ticket>().Ignore(p => p.TotalActiveTasks);
+            builder.Entity<Ticket>().Ignore(p => p.TotalCancelledTasks);
+            builder.Entity<Ticket>().Ignore(p => p.TotalCompletedTasks);
+            builder.Entity<Ticket>().Ignore(p => p.TotalOpenTasks);
+            builder.Entity<Ticket>().Ignore(p => p.TotalOverdueTasks);
+            builder.Entity<Ticket>().Ignore(p => p.TotalPendingTasks);
             builder.Entity<Ticket>().HasOne(p => p.TicketType)
                 .WithMany(p => p.Tickets)
                 .HasForeignKey(p => p.TicketTypeId)

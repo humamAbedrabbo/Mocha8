@@ -101,5 +101,48 @@ namespace AMS.Models
         public IEnumerable<Asset> RelatedAssets => TicketAssets.Select(x => x.Asset);
         public IDictionary<string, MetaFieldValue> FieldValues => Values?.Where(x => x.Field != null).ToDictionary(x => x.Field?.Name, y => y);
         public List<Attachment> Attachements { get; set; }
+
+        public string GetStatusColor()
+        {
+            if(IsOverdue)
+            {
+                return "text-danger";
+            }
+
+            if(IsPending)
+            {
+                return "text-secondary";
+            }
+
+            if(IsActive)
+            {
+                return "text-primary";
+            }
+
+            if(Status == WorkStatus.Completed)
+            {
+                return "text-success";
+            }
+
+            return null;
+        }
+
+        [Display(Name = "Active Tasks")]
+        public int TotalActiveTasks => TodoTasks.Count(x => x.IsActive);
+        
+        [Display(Name = "Open Tasks")]
+        public int TotalOpenTasks => TodoTasks.Count(x => x.Status == WorkStatus.Open);
+
+        [Display(Name = "Completed Tasks")]
+        public int TotalCompletedTasks => TodoTasks.Count(x => x.Status == WorkStatus.Completed);
+
+        [Display(Name = "Cancelled Tasks")]
+        public int TotalCancelledTasks => TodoTasks.Count(x => x.Status == WorkStatus.Cancelled);
+
+        [Display(Name = "Overdue Tasks")]
+        public int TotalOverdueTasks => TodoTasks.Count(x => x.IsOverdue);
+
+        [Display(Name = "Pending Tasks")]
+        public int TotalPendingTasks => TodoTasks.Count(x => x.IsPending);
     }
 }
