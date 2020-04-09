@@ -7,41 +7,45 @@
 }
 
 @inject AMS.Services.IUserService userService
-<div class="row">
-    <div class="col-md-3 col-sm-6">
-        <div class="card">
-            <div class="card-body p-0 d-flex align-items-center">
-                <i class="fa fa-cubes bg-info p-4 font-2xl mr-3"></i>
-                <div>
-                    <div class="text-value-sm text-info">@Model.TicketAssets.Count</div>
-                    <div class="text-muted text-uppercase font-weight-bold small">Related Assets</div>
+    <div class="row">
+        @if (Model.RelatedAssets.Any())
+        {
+            <div class="col-md-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-0 d-flex align-items-center">
+                        <i class="fa fa-cubes bg-info p-4 font-2xl mr-3"></i>
+                        <div>
+                            <div class="text-value-sm text-info">@Model.TicketAssets.Count</div>
+                            <div class="text-muted text-uppercase font-weight-bold small">Related Assets</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card">
+                <div class="card-body p-0 d-flex align-items-center">
+                    <i class="fa fa-tasks bg-info p-4 font-2xl mr-3"></i>
+                    <div>
+                        <div class="text-value-sm text-info">@Model.TodoTasks.Count(x => x.IsActive)</div>
+                        <div class="text-muted text-uppercase font-weight-bold small">Active Tasks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card">
+                <div class="card-body p-0 d-flex align-items-center">
+                    <i class="fa fa-tasks bg-warning p-4 font-2xl mr-3"></i>
+                    <div>
+                        <div class="text-value-sm text-info">@Model.TodoTasks.Count(x => x.IsOverdue)</div>
+                        <div class="text-muted text-uppercase font-weight-bold small">Overdue Tasks</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="card">
-            <div class="card-body p-0 d-flex align-items-center">
-                <i class="fa fa-tasks bg-info p-4 font-2xl mr-3"></i>
-                <div>
-                    <div class="text-value-sm text-info">@Model.TodoTasks.Count(x => x.IsActive)</div>
-                    <div class="text-muted text-uppercase font-weight-bold small">Active Tasks</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="card">
-            <div class="card-body p-0 d-flex align-items-center">
-                <i class="fa fa-tasks bg-warning p-4 font-2xl mr-3"></i>
-                <div>
-                    <div class="text-value-sm text-info">@Model.TodoTasks.Count(x => x.IsOverdue)</div>
-                    <div class="text-muted text-uppercase font-weight-bold small">Overdue Tasks</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="row">
     <div class="col-12">
         <div class="form-horizontal">
@@ -101,9 +105,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachements">Attachments</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#assets" role="tab" aria-controls="assets">Related Assets</a>
-                                </li>
+                                @if (Model.RelatedAssets.Any())
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#assets" role="tab" aria-controls="assets">Related Assets</a>
+                                    </li>
+
+                                }
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#tasks" role="tab" aria-controls="tasks">Tasks</a>
                                 </li>
