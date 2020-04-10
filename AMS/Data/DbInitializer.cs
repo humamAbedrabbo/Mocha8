@@ -556,11 +556,11 @@ namespace AMS.Data
             context.SaveChanges();
 
             var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryUrl.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDate.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDone.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoFeedback.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoApproval.Id, Value = "" });
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDone.Id, Value = "" });
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDate.Id, Value = "" });
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryUrl.Id, Value = "" });
             context.TicketTypes.Add(ttGeneral);
 
 
