@@ -570,7 +570,11 @@ namespace AMS.Data
             context.SaveChanges();
 
             var locHO = new Location { Name = "Head Office", LocationTypeId = ltGeneral.Id, TenantId = tenant.Id };
+            var locDams = new Location { Name = "DAMASCUS", LocationTypeId = ltGeneral.Id, TenantId = tenant.Id };
+            var locAlpo = new Location { Name = "ALEPPO", LocationTypeId = ltGeneral.Id, TenantId = tenant.Id };
             context.Locations.Add(locHO);
+            context.Locations.Add(locDams);
+            context.Locations.Add(locAlpo);
             context.SaveChanges();
 
             var hasher = new PasswordHasher<AmsUser>();
