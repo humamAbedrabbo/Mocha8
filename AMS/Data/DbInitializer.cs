@@ -547,11 +547,20 @@ namespace AMS.Data
             context.MetaFields.Add(fCeoApproval);
             var fCeoFeedback = new MetaField { FieldType = FieldType.LargeText, Name = "CEO Feedback", TenantId = tenant.Id };
             context.MetaFields.Add(fCeoFeedback);
+            var fDeliveryDone = new MetaField { FieldType = FieldType.Boolean, Name = "Delivery Done", TenantId = tenant.Id };
+            context.MetaFields.Add(fDeliveryDone);
+            var fDeliveryDate = new MetaField { FieldType = FieldType.Date, Name = "Delivery Date", TenantId = tenant.Id };
+            context.MetaFields.Add(fDeliveryDate);
+            var fDeliveryUrl = new MetaField { FieldType = FieldType.Url, Name = "Delivery Url", TenantId = tenant.Id };
+            context.MetaFields.Add(fDeliveryUrl);
             context.SaveChanges();
 
             var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoFeedback.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoApproval.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDone.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDate.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryUrl.Id, Value = "" });
             context.TicketTypes.Add(ttGeneral);
 
 
