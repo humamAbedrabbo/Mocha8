@@ -1,0 +1,122 @@
+﻿@model IEnumerable<AMS.ViewModels.BankApp.IncomingPost>
+
+<partial name="_Top" />
+
+@* view-content *@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> Incoming Letters
+            </div>
+            <div class="card-body">
+                <div class="mb-1">
+                    <a asp-action="Post" class="btn btn-primary">
+                        New Incoming Letter
+                    </a>
+                </div>
+                <table id="table"
+                       data-search="true"
+                       data-pagination="true"
+                       data-show-export="true"
+                       data-filter-control="true"
+                       data-show-search-clear-button="true"
+                       class="table">
+                    <thead>
+                        <tr>
+                            <th data-field="ref" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.LetterReference)
+                            </th>
+                            <th data-field="outref" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.LetterOutReference)
+                            </th>
+                            <th data-field="from" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.From)
+                            </th>
+
+                            <th data-field="subject" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.Subject)
+                            </th>
+
+                            <th data-field="status" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+
+                            <th data-field="type" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.IncomingPostType)
+                            </th>
+                            <th data-field="deadlineType" data-sortable="true" data-filter-control="select">
+                                @Html.DisplayNameFor(model => model.DeadlineType)
+                            </th>
+
+                            <th data-field="deadline" data-sortable="true" data-filter-control="input">
+                                @Html.DisplayNameFor(model => model.Deadline)
+                            </th>
+                            <th data-field="responsible" data-sortable="true" data-filter-control="input">
+                                Assigned To
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                <a asp-action="Post" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.LetterReference)</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LetterOutReference)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.From)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Subject)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IncomingPostType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DeadlineType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Deadline)
+                            </td>
+
+                            <td>
+                                <ul>
+                                    @foreach (var person in item.ResponsiblePeople)
+                                    {
+                                        <li>@person.Value</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+
+@* view-modals *@
+@section Modals {
+}
+
+@* view-scripts *@
+@section Scripts {
+    <script>
+        $(function () {
+            var $table = $("#table").bootstrapTable();
+        });
+    </script>
+}

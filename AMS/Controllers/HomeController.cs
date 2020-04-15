@@ -81,6 +81,11 @@ namespace AMS.Controllers
                 return RedirectToAction("Index", "Tenants");
             }
 
+            if (User.HasClaim("BankApp", "BankApp"))
+            {
+                return RedirectToAction("Index", "BankApp");
+            }
+
             var assets = await userService.GetAssetsAsync();
             var tickets = await userService.GetTicketsAsync(isActive: false);
             ViewData["OpenTickets"] = tickets.Where(x => x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending).Count();

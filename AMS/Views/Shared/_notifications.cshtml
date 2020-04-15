@@ -19,7 +19,7 @@
         </div>
         @foreach (var n in notifications)
         {
-            <a class="dropdown-item border-bottom-0" asp-controller="Notifications" asp-action="Goto" asp-route-id="@n.Id"><i class="fa fa-bell btn-ghost-secondary"></i> @n.Message.Truncate(25)</a>
+            <a class="dropdown-item border-bottom-0" asp-controller="Notifications" asp-action="Goto" asp-route-id="@n.Id"><i class="fa fa-bell btn-ghost-secondary"></i> @n.Message.Truncate(200)</a>
 
         }
 

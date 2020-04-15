@@ -27,47 +27,84 @@
 
         @if (User.HasClaim(x => x.Type == "TenantId"))
         {
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="nav-icon icon-speedometer"></i> Dashboard
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Calendar">
-                    <i class="nav-icon icon-calendar"></i> Calendar
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="My" asp-action="Tickets">
-                    <i class="nav-icon fa fa-exclamation-circle"></i> My Tickets
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="My" asp-action="TodoTasksAll">
-                    <i class="nav-icon fa fa-tasks"></i> My Tasks
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
-            @*<li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="My" asp-action="TodoTasks">
-                    <i class="nav-icon fa fa-tasks"></i> Task List
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>*@
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="My" asp-action="UserGroups">
-                    <i class="nav-icon fa fa-users"></i> My User Groups
-                    <span class="badge badge-primary"></span>
-                </a>
-            </li>
+            @if (User.HasClaim(x => x.Type == "BankApp"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="nav-icon fa fa-arrow-down"></i> Inbox
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="nav-icon fa fa-arrow-up"></i> Outbox
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> MEMOS
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Internal Circulations
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="nav-icon fa fa-tag"></i> Meetings
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="nav-icon icon-speedometer"></i> Dashboard
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Calendar">
+                        <i class="nav-icon icon-calendar"></i> Calendar
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="My" asp-action="Tickets">
+                        <i class="nav-icon fa fa-exclamation-circle"></i> My Tickets
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="My" asp-action="TodoTasksAll">
+                        <i class="nav-icon fa fa-tasks"></i> My Tasks
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+                @*<li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="My" asp-action="TodoTasks">
+                        <i class="nav-icon fa fa-tasks"></i> Task List
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>*@
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="My" asp-action="UserGroups">
+                        <i class="nav-icon fa fa-users"></i> My User Groups
+                        <span class="badge badge-primary"></span>
+                    </a>
+                </li>
+            }
 
 
 
-            @if (User.IsInRole("Admin") 
-                || User.Claims.Any(x => x.Type == System.Security.Claims.ClaimTypes.Role && x.Value.Contains("$Admin")))
+
+            @if (User.IsInRole("Admin")
+       || User.Claims.Any(x => x.Type == System.Security.Claims.ClaimTypes.Role && x.Value.Contains("$Admin")))
             {
 
                 <li class="nav-item">

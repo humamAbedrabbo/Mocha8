@@ -28,6 +28,8 @@ namespace AMS.Models
                         return "Tickets";
                     case NotificationType.Task:
                         return "TodoTasks";
+                    case NotificationType.IncomingLetter:
+                        return "BankApp";
                     default:
                         return "Home";
                 }
@@ -41,6 +43,7 @@ namespace AMS.Models
         None,
         Asset,
         Ticket,
-        Task
+        Task,
+        IncomingLetter
     }
 }

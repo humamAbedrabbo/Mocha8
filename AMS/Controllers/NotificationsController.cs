@@ -32,8 +32,15 @@ namespace AMS.Controllers
             {
                 notification.IsRead = true;
                 await context.SaveChangesAsync();
-                if(notification.EntityId.HasValue)
-                    return RedirectToAction("Details", notification.Url, new { id = notification.EntityId });
+                if (notification.EntityId.HasValue)
+                {
+                    if(notification.NotificationType == Models.NotificationType.IncomingLetter)
+                    {
+                        return RedirectToAction("Post", notification.Url, new { id = notification.EntityId });
+                    }
+                    else
+                        return RedirectToAction("Details", notification.Url, new { id = notification.EntityId });
+                }
                 else
                     return RedirectToAction("Index", "Home");
             }

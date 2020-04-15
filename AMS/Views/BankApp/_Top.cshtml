@@ -1,0 +1,124 @@
+﻿@inject AMS.Services.IUserService userService
+@inject AMS.Data.AmsContext context
+@{ 
+    var tenantId = userService.GetUserTenantId();
+}
+
+<div class="row">
+    <div class="col-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-arrow-down"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" asp-action="Index">Show</a>
+                        <a class="dropdown-item" asp-action="Post">New Post</a>
+                    </div>
+                </div>
+                <div class="text-value">@context.Tickets.Count(x => x.TicketTypeId == 1)</div>
+                <div>Incoming Letters</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:50px;">
+                <canvas id="card-chart1" class="chart" height="50"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <button type="button" class="btn btn-transparent p-0 float-right">
+                    <i class="fa fa-arrow-up"></i>
+                </button>
+                <div class="text-value">@context.TodoTasks.Count(x => x.Summary == "Outgoing" && x.Status == WorkStatus.Completed)</div>
+                <div>Outgoing Letters</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:50px;">
+                <canvas id="card-chart2" class="chart" height="50"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Show</a>
+                    </div>
+                </div>
+                <div class="text-value">0</div>
+                <div>MEMOS</div>
+            </div>
+            <div class="chart-wrapper mt-3" style="height:50px;">
+                <canvas id="card-chart3" class="chart" height="50"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Show</a>
+                    </div>
+                </div>
+                <div class="text-value">0</div>
+                <div>Internal Circulations</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:50px;">
+                <canvas id="card-chart4" class="chart" height="50"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Show</a>
+                    </div>
+                </div>
+                <div class="text-value">0</div>
+                <div>Board Meetings Minuets</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:50px;">
+                <canvas id="card-chart1" class="chart" height="50"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Go to search</a>
+                    </div>
+                </div>
+                <div class="text-value">&nbsp;</div>
+                <div>Search Tool</div>
+            </div>
+            <div class="chart-wrapper mt-3 mx-3" style="height:50px;">
+                <canvas id="card-chart1" class="chart" height="50"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>

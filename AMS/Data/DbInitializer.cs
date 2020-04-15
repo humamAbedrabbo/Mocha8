@@ -536,33 +536,77 @@ namespace AMS.Data
 
             var codeGenerator = new CodeGenerator(context);
 
-            var ctCompany = new ClientType { Name = "Legal Entity" };
+            var ctCompany = new ClientType { Name = "Central Bank" };
+            var ctCompany1 = new ClientType { Name = "Other" };
             tenant.ClientTypes.Add(ctCompany);
+            tenant.ClientTypes.Add(ctCompany1);
+            context.SaveChanges();
+
+            Client client1 = new Client { Name = $"CBS/Banking Supervisor Dept.", ClientTypeId = ctCompany.Id };
+            Client client2 = new Client { Name = $"CBS/Governor", ClientTypeId = ctCompany.Id };
+            Client client3 = new Client { Name = $"--- Specify ---", ClientTypeId = ctCompany1.Id };
+            tenant.Clients.Add(client1);
+            tenant.Clients.Add(client2);
+            tenant.Clients.Add(client3);
+            context.SaveChanges();
 
             var ltGeneral = new LocationType { Name = "Default" };
             tenant.LocationTypes.Add(ltGeneral);
 
-
-            var fCeoApproval = new MetaField { FieldType = FieldType.Boolean, Name = "CEO Approval", TenantId = tenant.Id };
-            context.MetaFields.Add(fCeoApproval);
-            var fCeoFeedback = new MetaField { FieldType = FieldType.LargeText, Name = "CEO Feedback", TenantId = tenant.Id };
-            context.MetaFields.Add(fCeoFeedback);
-            var fDeliveryDone = new MetaField { FieldType = FieldType.Boolean, Name = "Delivery Done", TenantId = tenant.Id };
-            context.MetaFields.Add(fDeliveryDone);
-            var fDeliveryDate = new MetaField { FieldType = FieldType.Date, Name = "Delivery Date", TenantId = tenant.Id };
-            context.MetaFields.Add(fDeliveryDate);
-            var fDeliveryUrl = new MetaField { FieldType = FieldType.Url, Name = "Delivery Url", TenantId = tenant.Id };
-            context.MetaFields.Add(fDeliveryUrl);
+            var CLAttentions = new CustomList { Name = "Attentions", TenantId = tenant.Id };
+            CLAttentions.Items.Add(new CustomListItem { Key = "A1", Value = "All Banks" });
+            CLAttentions.Items.Add(new CustomListItem { Key = "A2", Value = "All Banks and Financial Institutions" });
+            context.CustomLists.Add(CLAttentions);
             context.SaveChanges();
 
-            var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryUrl.Id, Value = "" });
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDate.Id, Value = "" });
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fDeliveryDone.Id, Value = "" });
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoFeedback.Id, Value = "" });
-            ttGeneral.Values.Add(new MetaFieldValue { FieldId = fCeoApproval.Id, Value = "" });
-            context.TicketTypes.Add(ttGeneral);
+            var metaParentLetter = new MetaField { FieldType = FieldType.Number, Name = "ParentLetter", TenantId = tenant.Id };
+            var metaLetterRef = new MetaField { FieldType = FieldType.Text, Name = "Ref", TenantId = tenant.Id };
+            var metaLetterOutRef = new MetaField { FieldType = FieldType.Text, Name = "OutRef", TenantId = tenant.Id };
+            var metaLetterType = new MetaField { FieldType = FieldType.Text, Name = "LType", TenantId = tenant.Id };
+            var metaDeadlineType = new MetaField { FieldType = FieldType.Number, Name = "DeadlineType", TenantId = tenant.Id };
+            var metaDayNo = new MetaField { FieldType = FieldType.Number, Name = "DayNo", TenantId = tenant.Id };
+            var metaMonthNo = new MetaField { FieldType = FieldType.Number, Name = "MonthNo", TenantId = tenant.Id };
+            var metaAttToId = new MetaField { FieldType = FieldType.ListItem, CustomListId = CLAttentions.Id, Name = "ToId", TenantId = tenant.Id };
+            var metaAttCCId = new MetaField { FieldType = FieldType.ListItem, CustomListId = CLAttentions.Id, Name = "CCId", TenantId = tenant.Id };
+            var metaPostStatus = new MetaField { FieldType = FieldType.Number, Name = "PostStatus", TenantId = tenant.Id };
+            var metaCEOComments = new MetaField { FieldType = FieldType.LargeText, Name = "CEO Comments", TenantId = tenant.Id };
+            context.MetaFields.Add(metaLetterRef);
+            context.MetaFields.Add(metaLetterOutRef);
+            context.MetaFields.Add(metaLetterType);
+            context.MetaFields.Add(metaDeadlineType);
+            context.MetaFields.Add(metaDayNo);
+            context.MetaFields.Add(metaMonthNo);
+            context.MetaFields.Add(metaAttToId);
+            context.MetaFields.Add(metaAttCCId);
+            context.MetaFields.Add(metaPostStatus);
+            context.MetaFields.Add(metaCEOComments);
+            context.MetaFields.Add(metaParentLetter);
 
+            //var fCeoApproval = new MetaField { FieldType = FieldType.Boolean, Name = "CEO Approval", TenantId = tenant.Id };
+            //context.MetaFields.Add(fCeoApproval);
+            //var fCeoFeedback = new MetaField { FieldType = FieldType.LargeText, Name = "CEO Feedback", TenantId = tenant.Id };
+            //context.MetaFields.Add(fCeoFeedback);
+            //var fDeliveryDone = new MetaField { FieldType = FieldType.Boolean, Name = "Delivery Done", TenantId = tenant.Id };
+            //context.MetaFields.Add(fDeliveryDone);
+            //var fDeliveryDate = new MetaField { FieldType = FieldType.Date, Name = "Delivery Date", TenantId = tenant.Id };
+            //context.MetaFields.Add(fDeliveryDate);
+            //var fDeliveryUrl = new MetaField { FieldType = FieldType.Url, Name = "Delivery Url", TenantId = tenant.Id };
+            //context.MetaFields.Add(fDeliveryUrl);
+            context.SaveChanges();
+
+
+            var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterRef.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterOutRef.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterType.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaDeadlineType.Id, Value = "0" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaDayNo.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaMonthNo.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaAttToId.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaAttCCId.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaPostStatus.Id, Value = "0" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCEOComments.Id, Value = "" });
+            context.TicketTypes.Add(ttGeneral);
 
             var t1 = new TodoTaskType { Name = "General", TenantId = tenant.Id };
             context.TodoTaskTypes.Add(t1);
@@ -570,13 +614,7 @@ namespace AMS.Data
 
 
 
-            Client client = new Client
-            {
-                Name = $"Central Bank",
-                ClientTypeId = ctCompany.Id
-            };
-            tenant.Clients.Add(client);
-            context.SaveChanges();
+
 
             var locHO = new Location { Name = "Head Office", LocationTypeId = ltGeneral.Id, TenantId = tenant.Id };
             var locDams = new Location { Name = "DAMASCUS", LocationTypeId = ltGeneral.Id, TenantId = tenant.Id };
@@ -588,10 +626,11 @@ namespace AMS.Data
 
             var hasher = new PasswordHasher<AmsUser>();
             var dic = new Dictionary<int, AmsUser>();
-            var userNames = new[] { "assistant", "ceo", "financeM", "itM", "hrM" };
+            var userNames = new[] { "assistant", "ceo", "fin", "it", "hr" };
+            var userDisplayNames = new[] { "Assistant", "CEO", "Finance Manager", "IT Manager", "HR Manager" };
             for (int i = 1; i <= 4; i++)
             {
-                var user = new AmsUser { UserName = userNames[i-1], DisplayName = userNames[i-1], Email = $"{userNames[i-1]}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User", PictureUrl = $"/images/avatars/{i}.jpg" };
+                var user = new AmsUser { UserName = userNames[i-1], DisplayName = userDisplayNames[i-1], Email = $"{userNames[i-1]}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User", PictureUrl = $"/images/avatars/{i}.jpg" };
                 user.NormalizedEmail = user.Email.ToUpper();
                 user.NormalizedUserName = user.UserName.ToUpper();
                 user.ConcurrencyStamp = Guid.NewGuid().ToString("D");
@@ -601,6 +640,7 @@ namespace AMS.Data
                 dic[i] = user;
                 context.SaveChanges();
                 context.UserClaims.Add(new IdentityUserClaim<int> { UserId = user.Id, ClaimType = "TenantId", ClaimValue = $"{user.TenantId}" });
+                context.UserClaims.Add(new IdentityUserClaim<int> { UserId = user.Id, ClaimType = "BankApp", ClaimValue = "BankApp" });
                 context.SaveChanges();
             }
             context.SaveChanges();

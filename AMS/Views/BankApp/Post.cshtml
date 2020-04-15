@@ -1,0 +1,375 @@
+﻿@model AMS.ViewModels.BankApp.IncomingPost
+
+@{
+    ViewData["Title"] = $"Incoming Letter ({Model.Status.ToString()})";
+    ViewData["Action_ASSISTANT"] = "PostAssistant";
+    ViewData["Action_CEO"] = "PostCeo";
+    ViewData["Action_PROGRESS"] = "PostProgress";
+}
+
+<partial name="_Top" />
+
+<div class="row">
+    <div class="col-12">
+
+        <!-- Assistant Section -->
+        <form asp-action="@ViewBag.Action_ASSISTANT" method="post" enctype="multipart/form-data" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    <strong>@ViewBag.Title</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Id Hidden -->
+                    <input id="idAssistant" type="hidden" asp-for="Id" />
+                    <input id="statusAssistant" type="hidden" asp-for="Status" />
+
+                    <!-- Attachements URL -->
+                    <div class="row mb-2">
+                        <div class="ml-2 col-10">
+                            <strong class="mr-1">Attachments: </strong>
+                            @foreach (var att in Model.Attachments)
+                            {
+                                <a href="@att.Url" class="btn-link m-1 font-weight-bold"><i class="fa fa-file"></i> @att.Title</a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Subject Input -->
+                        <div class="form-group col-12">
+                            <label asp-for="Subject" class="col-md-3 col-form-label"></label>
+                            <div class="col-md-12">
+                                <input asp-for="Subject" class="form-control" />
+                                <span class="help-block"><small></small></span>
+                                <span asp-validation-for="Subject" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Sender Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="SenderId" class="col-md-12 col-form-label">Sender</label>
+                            <div class="col-md-12">
+                                <select asp-for="SenderId" asp-items="@Model.Senders" class="form-control">
+                                    <option value=""></option>
+                                </select>
+                                <input asp-for="SenderName" class="form-control mt-1 invisible" placeholder="Sender Name" />
+                            </div>
+                        </div>
+
+                        <!-- LetterReference Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="LetterReference" class="col-md-12 col-form-label"></label>
+                            <div class="col-md-12">
+                                <input asp-for="LetterReference" class="form-control" />
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.LetterOutReference))
+                            {
+                                <label asp-for="LetterOutReference" class="col-md-12 col-form-label"></label>
+                                <div class="col-md-12">
+                                    <input asp-for="LetterOutReference" class="form-control" />
+                                </div>
+                            }
+                        </div>
+
+                        <!-- ReceivedOn Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="ReceivedOn" class="col-md-12 col-form-label"></label>
+                            <div class="col-md-12">
+                                <input asp-for="ReceivedOn" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!-- IncomingPostType Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="IncomingPostType" class="col-md-12 col-form-label">Type</label>
+                            <div class="col-md-12">
+                                <select asp-for="IncomingPostType" asp-items="@Html.GetEnumSelectList<AMS.ViewModels.BankApp.IncomingPostType>()" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- AttentionToId Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="AttentionToId" class="col-md-12 col-form-label">Attention To</label>
+                            <div class="col-md-12">
+                                <select asp-for="AttentionToId" asp-items="@Model.Attentions" class="form-control">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- CCToId Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="CCToId" class="col-md-12 col-form-label">Copy To</label>
+                            <div class="col-md-12">
+                                <select asp-for="CCToId" asp-items="@Model.Attentions" class="form-control">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- DeadlineType Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="DeadlineType" class="col-md-12 col-form-label"></label>
+                            <div class="col-md-12">
+                                <select asp-for="DeadlineType" asp-items="@Html.GetEnumSelectList<AMS.ViewModels.BankApp.DeadlineType>()" class="form-control">
+                                </select>
+                                <div class="row mt-1">
+                                    <div class="col-6">
+                                        <input asp-for="Deadline" class="form-control" />
+                                    </div>
+                                    <div class="col-3">
+                                        <input asp-for="MonthNo" class="form-control invisible" />
+                                    </div>
+                                    <div class="col-3">
+                                        <input asp-for="DayNo" class="form-control invisible" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Files Input -->
+                        <div class="form-group col-3">
+                            <label asp-for="Files" class="col-md-12 col-form-label"></label>
+                            <div class="col-md-12">
+                                <input type="file" multiple asp-for="Files" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Translation Input -->
+                        <div class="form-group col-12">
+                            <label asp-for="Translation" class="col-md-12 col-form-label"></label>
+                            <div class="col-md-12">
+                                <textarea rows="3" asp-for="Translation" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (User.Identity.Name == "assistant")
+                    {
+                        <div class="row">
+                            <div class="ml-2 col-10">
+                               
+                                <input type="submit" name="submit" value="Save" class="btn btn-primary" />
+                                @if (Model.Status == AMS.ViewModels.BankApp.PostStatus.New)
+                                {
+                                    <input type="submit" name="submit" value="Submit" class="btn btn-primary ml-1" />
+                                }
+
+                                @if (Model.Status == AMS.ViewModels.BankApp.PostStatus.InProgress && Model.PostTasks.All(x => x.IsDone))
+                                {
+                                    <input type="submit" name="submit" value="Create Outgoing Letter" class="btn btn-success ml-1" />
+
+                                }
+
+                                @if (Model.CanBeClosed)
+                                {
+                                    <input type="submit" name="submit" value="Complete" class="btn btn-success ml-1" />
+
+                                }
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </form>
+
+        @if (Model.Status != AMS.ViewModels.BankApp.PostStatus.New)
+        {
+
+            <form asp-action="@ViewBag.Action_CEO" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <input id="idCeo" type="hidden" asp-for="Id" />
+                <!-- CEO -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- CEOComments Input -->
+                            <div class="form-group col-12">
+                                <label asp-for="CEOComments" class="col-md-12 col-form-label"></label>
+                                <div class="col-md-12">
+                                    <textarea rows="3" asp-for="CEOComments" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        @if (User.Identity.Name == "assistant" || User.Identity.Name == "ceo")
+                        {
+                            <!-- Assignments -->
+                            <div class="row">
+                                <div class="col-md-10 mb-1">
+                                    <h5>Responsible People</h5>
+                                    <p>
+                                        @foreach (var a in Model.ResponsiblePeople.Select(x => x.Value))
+                                        {
+                                            <a class="mr-1" href="#">@Model.Users.FirstOrDefault(x => x.Value == a).Text</a>
+                                        }
+                                    </p>
+                                </div>
+                                <div class="col-md-4 col-sm-10">
+                                    <div class="repeater">
+                                        <div class="form-group row">
+                                            <div class="col-md-3">
+                                                <input data-repeater-create class="btn btn-sm btn-success" type="button" value="Add Person" />
+                                            </div>
+                                        </div>
+                                        <div data-repeater-list="ResponsiblePeople">
+                                            <div data-repeater-item class="form-group row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <select type="text" name="Value" asp-items="Model.Users" class="form-control">
+                                                                <option value=""></option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <a data-repeater-delete href="#" class="btn btn-sm btn-danger">Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+
+                        @if (User.Identity.Name == "ceo" || User.Identity.Name == "assistant")
+                        {
+                            <div class="row">
+                                <div class="ml-2 col-10">
+                                    <input type="submit" name="submit" value="Save" class="btn btn-primary" />
+                                    @if (Model.Status == AMS.ViewModels.BankApp.PostStatus.Pending)
+                                    {
+                                        <input type="submit" name="submit" value="Submit" class="btn btn-primary ml-1" />
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </form>
+        }
+
+        @if (Model.Status != AMS.ViewModels.BankApp.PostStatus.New && Model.Status != AMS.ViewModels.BankApp.PostStatus.Pending)
+        {
+            @for (var i = 0; i < Model.PostTasks.Count; i++)
+            {
+                <form asp-action="@ViewBag.Action_PROGRESS" method="post" enctype="multipart/form-data" class="form-horizontal">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <input name="ticketId" type="hidden" asp-for="@Model.Id" />
+                                <input name="taskId" type="hidden" asp-for="@Model.PostTasks[i].Id" />
+                                <input name="userName" type="hidden" asp-for="@Model.PostTasks[i].UserName" />
+                                @if (Model.PostTasks[i].SortId == -1)
+                                {
+                                    <!-- PostTask OutRef Input -->
+                                    <div class="form-group col-12">
+                                        <label asp-for="@Model.LetterOutReference" class="col-md-12 col-form-label"></label>
+                                        <div class="col-md-12 mt-1">
+                                            <input name="outRef" asp-for="@Model.LetterOutReference" class="form-control" />
+                                        </div>
+                                    </div>
+                                }
+                                <!-- PostTask Comments Input -->
+                                <div class="form-group col-12">
+                                    <label asp-for="@Model.PostTasks[i].Comments" class="col-md-12 col-form-label">
+                                        @if (Model.PostTasks[i].SortId == -1)
+                                        {
+                                            <text>Outgoing Letter Comments</text>
+                                        }
+                                        else
+                                        {
+                                            <text>@Model.PostTasks[i].ResponsilePerson Comments</text>
+                                        }
+                                    </label>
+                                    <div class="col-md-12">
+                                        <textarea name="comments" rows="3" asp-for="@Model.PostTasks[i].Comments" class="form-control"></textarea>
+                                    </div>
+                                    <div class="col-md-12 mt-1">
+                                        <input name="workFiles" type="file" multiple asp-for="@Model.PostTasks[i].WorkFiles" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (User.Identity.Name == Model.PostTasks[i].UserName)
+                            {
+                                <div class="row">
+                                    <div class="ml-2 col-10">
+                                        @if (Model.Status == AMS.ViewModels.BankApp.PostStatus.InProgress || Model.Status == AMS.ViewModels.BankApp.PostStatus.Incomplete)
+                                        {
+                                            <input type="submit" name="submit" value="Save" class="btn btn-primary" />
+                                            <input type="submit" name="submit" value="Submit" class="btn btn-primary ml-1" />
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </form>
+            }
+        }
+
+
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(function () {
+            $("#SenderId").on('change', function () {
+                if ($("#SenderId").val() == 3) {
+                    $("#SenderName").removeClass("invisible");
+                } else {
+                    $("#SenderName").addClass("invisible");
+                }
+            });
+
+            function handleDeadline() {
+                if ($("#DeadlineType").val() == 0) {
+                    // OnlyOnce
+                    $("#Deadline").removeAttr("readonly");
+                    $("#DayNo").addClass("invisible");
+                    $("#MonthNo").addClass("invisible");
+                }
+                else if ($("#DeadlineType").val() == 1) {
+                    // Monthly
+                    $("#Deadline").attr("readonly", true);
+                    $("#DayNo").removeClass("invisible");
+                    $("#MonthNo").addClass("invisible");
+                }
+                else if ($("#DeadlineType").val() == 2) {
+                    // Quarterly
+                    $("#Deadline").attr("readonly", true);
+                    $("#DayNo").removeClass("invisible");
+                    $("#MonthNo").removeClass("invisible");
+                }
+                else if ($("#DeadlineType").val() == 3) {
+                    // Annual
+                    $("#Deadline").attr("readonly", true);
+                    $("#DayNo").removeClass("invisible");
+                    $("#MonthNo").removeClass("invisible");
+                }
+                else {
+                    $("#Deadline").removeAttr("readonly");
+                    $("#DayNo").addClass("invisible");
+                    $("#MonthNo").addClass("invisible");
+                }
+            }
+
+            $("#DeadlineType").on('change', function () {
+                handleDeadline();
+            });
+
+            handleDeadline();
+        });
+    </script>
+}
