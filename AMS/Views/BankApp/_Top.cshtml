@@ -17,7 +17,7 @@
                         <a class="dropdown-item" asp-action="Post">New Post</a>
                     </div>
                 </div>
-                <div class="text-value">@context.Tickets.Count(x => x.TicketTypeId == 1)</div>
+                <div class="text-value">@context.Tickets.Count(x => x.TicketTypeId == 1 && (x.Status == WorkStatus.Open || x.Status == WorkStatus.Pending)) / @context.Tickets.Count(x => x.TicketTypeId == 1)</div>
                 <div>Incoming Letters</div>
             </div>
             <div class="chart-wrapper mt-3 mx-3" style="height:50px;">

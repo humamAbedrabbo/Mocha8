@@ -77,6 +77,7 @@ namespace AMS.Controllers
                 post.CEOComments = ticket.FieldValues["CEO Comments"].Value;
                 post.Deadline = ticket.DueDate;
                 post.Attachments = ticket.Attachements.ToList();
+                post.CompletionDate = ticket.CompletionDate;
 
                 post.ResponsiblePeople = ticket.Assignments.Select(x => new ResponsiblePerson(x.User.DisplayName)).ToList();
 
@@ -131,6 +132,7 @@ namespace AMS.Controllers
                 post.CEOComments = ticket.FieldValues["CEO Comments"].Value;
                 post.Deadline = ticket.DueDate;
                 post.Attachments = ticket.Attachements.ToList();
+                post.CompletionDate = ticket.CompletionDate;
 
                 post.ResponsiblePeople = ticket.Assignments.Select(x => new ResponsiblePerson(x.UserId.ToString())).ToList();
 
@@ -418,6 +420,7 @@ namespace AMS.Controllers
 
             if (submit == "Complete")
             {
+                ticket.CompletionDate = DateTime.Today;
                 ticket.Status = WorkStatus.Completed;
                 ticket.FieldValues["PostStatus"].Value = ((int)PostStatus.Completed).ToString();
                 var n = new Notification();

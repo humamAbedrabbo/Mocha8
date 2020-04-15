@@ -43,6 +43,11 @@ namespace AMS.ViewModels.BankApp
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime Deadline { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [Display(Name = "Completion Date")]
+        public DateTime? CompletionDate { get; set; }
+
         public int DayNo { get; set; }
         public int MonthNo { get; set; }
         public string AttentionToId { get; set; }
@@ -66,6 +71,10 @@ namespace AMS.ViewModels.BankApp
         public IFormFile DeliveryNoteFile { get; set; }
 
         public bool CanBeClosed => (Status == PostStatus.InProgress || Status == PostStatus.Incomplete) && PostTasks.All(x => x.IsDone);
+        public bool IsOverdue => (Status != PostStatus.Completed && DateTime.Today >= Deadline);
+        public int Delay => (int)(DateTime.Today - Deadline).TotalDays;
+        public int Duration => CompletionDate.HasValue ? (int)(CompletionDate.Value - ReceivedOn).TotalDays : 0;
+        public int TimeToDue => (DateTime.Today < Deadline) ? ((int)(Deadline - DateTime.Today).TotalDays) : 0;
 
         public SelectList Senders { get; set; }
         public SelectList Attentions { get; set; }

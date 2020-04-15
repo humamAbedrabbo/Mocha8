@@ -21,13 +21,14 @@
                        data-show-export="true"
                        data-filter-control="true"
                        data-show-search-clear-button="true"
+                       data-show-columns="true"
                        class="table">
                     <thead>
                         <tr>
-                            <th data-field="ref" data-sortable="true" data-filter-control="input">
+                            <th data-field="ref" data-switchable="false" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.LetterReference)
                             </th>
-                            <th data-field="outref" data-sortable="true" data-filter-control="input">
+                            <th data-field="outref" data-visible="false" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.LetterOutReference)
                             </th>
                             <th data-field="from" data-sortable="true" data-filter-control="select">
@@ -42,18 +43,51 @@
                                 @Html.DisplayNameFor(model => model.Status)
                             </th>
 
-                            <th data-field="type" data-sortable="true" data-filter-control="select">
+                            <th data-field="type" data-visible="false" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.IncomingPostType)
                             </th>
-                            <th data-field="deadlineType" data-sortable="true" data-filter-control="select">
+                            <th data-field="deadlineType" data-visible="false" data-sortable="true" data-filter-control="select">
                                 @Html.DisplayNameFor(model => model.DeadlineType)
                             </th>
-
+                            <th data-field="startDate" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Received On
+                            </th>
                             <th data-field="deadline" data-sortable="true" data-filter-control="input">
                                 @Html.DisplayNameFor(model => model.Deadline)
                             </th>
-                            <th data-field="responsible" data-sortable="true" data-filter-control="input">
+                            <th data-field="completion" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Completion Date
+                            </th>
+                            <th data-field="responsible" data-visible="false" data-sortable="true" data-filter-control="input">
                                 Assigned To
+                            </th>
+                            <th data-field="month" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Deadline Month
+                            </th>
+                            <th data-field="day" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Deadline Day
+                            </th>
+
+                            <th data-field="desc" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Translation
+                            </th>
+                            <th data-field="ceo" data-visible="false" data-sortable="true" data-filter-control="input">
+                                CEO Comments
+                            </th>
+                            <th data-field="attachments" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Attachments
+                            </th>
+                            <th data-field="overdue" data-visible="false" data-sortable="true" data-filter-control="select">
+                                Overdue
+                            </th>
+                            <th data-field="delay" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Delay
+                            </th>
+                            <th data-field="dueAfter" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Due In (days)
+                            </th>
+                            <th data-field="duration" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Duration (days)
                             </th>
                         </tr>
                     </thead>
@@ -86,9 +120,14 @@
                                 @Html.DisplayFor(modelItem => item.DeadlineType)
                             </td>
                             <td>
+                                @Html.DisplayFor(modelItem => item.ReceivedOn)
+                            </td>
+                            <td>
                                 @Html.DisplayFor(modelItem => item.Deadline)
                             </td>
-
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompletionDate)
+                            </td>
                             <td>
                                 <ul>
                                     @foreach (var person in item.ResponsiblePeople)
@@ -96,6 +135,36 @@
                                         <li>@person.Value</li>
                                     }
                                 </ul>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MonthNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DayNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Translation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CEOComments)
+                            </td>
+                            <td>
+                                @foreach (var att in item.Attachments)
+                                {
+                                    <a href="@att.Url" class="btn-link mr-1"><i class="fa fa-file mr-1"></i>@att.Title</a>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsOverdue)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Delay)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TimeToDue)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Duration)
                             </td>
                         </tr>
                         }
