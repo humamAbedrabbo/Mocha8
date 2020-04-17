@@ -70,12 +70,13 @@ namespace AMS.ViewModels.BankApp
         public DateTime? DeliveryDate { get; set; }
         public IFormFile DeliveryNoteFile { get; set; }
 
-        public bool CanBeClosed => (Status == PostStatus.InProgress || Status == PostStatus.Incomplete) && PostTasks.All(x => x.IsDone);
+        public bool CanBeClosed => (Status == PostStatus.InProgress || Status == PostStatus.Incomplete) && (ResponseTask == null || !ResponseTask.IsLocked);
         public bool IsOverdue => (Status != PostStatus.Completed && DateTime.Today >= Deadline);
         public int Delay => (int)(DateTime.Today - Deadline).TotalDays;
         public int Duration => CompletionDate.HasValue ? (int)(CompletionDate.Value - ReceivedOn).TotalDays : 0;
         public int TimeToDue => (DateTime.Today < Deadline) ? ((int)(Deadline - DateTime.Today).TotalDays) : 0;
 
+        public ResponseTask ResponseTask { get; set; }
         public SelectList Senders { get; set; }
         public SelectList Attentions { get; set; }
         public SelectList Users { get; set; }
@@ -111,6 +112,29 @@ namespace AMS.ViewModels.BankApp
         public string Comments { get; set; }
         public List<IFormFile> WorkFiles { get; set; }
         public string UserName { get; set; }
+    }
+
+    public class ResponseTask
+    {
+        public int Id { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? StartDate { get; set; }
+        public bool IsDone { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? CompletionDate { get; set; }
+        public List<IFormFile> WorkFiles { get; set; }
+        public IFormFile MainFile { get; set; }
+        public bool IsLocked { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? CheckOutDate { get; set; }
+        public string CheckOutBy { get; set; }
+        public string CheckOutByName { get; set; }
     }
 
     public enum IncomingPostType

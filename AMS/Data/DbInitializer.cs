@@ -559,6 +559,11 @@ namespace AMS.Data
             context.CustomLists.Add(CLAttentions);
             context.SaveChanges();
 
+            
+            var metaCheckoutDate = new MetaField { FieldType = FieldType.Date, Name = "CheckoutDate", TenantId = tenant.Id };
+            var metaCheckout = new MetaField { FieldType = FieldType.Boolean, Name = "Checkout", TenantId = tenant.Id };
+            var metaCheckoutBy = new MetaField { FieldType = FieldType.Text, Name = "CheckoutBy", TenantId = tenant.Id };
+            var metaCheckoutByName = new MetaField { FieldType = FieldType.Text, Name = "CheckoutByName", TenantId = tenant.Id };
             var metaParentLetter = new MetaField { FieldType = FieldType.Number, Name = "ParentLetter", TenantId = tenant.Id };
             var metaLetterRef = new MetaField { FieldType = FieldType.Text, Name = "Ref", TenantId = tenant.Id };
             var metaLetterOutRef = new MetaField { FieldType = FieldType.Text, Name = "OutRef", TenantId = tenant.Id };
@@ -570,6 +575,10 @@ namespace AMS.Data
             var metaAttCCId = new MetaField { FieldType = FieldType.ListItem, CustomListId = CLAttentions.Id, Name = "CCId", TenantId = tenant.Id };
             var metaPostStatus = new MetaField { FieldType = FieldType.Number, Name = "PostStatus", TenantId = tenant.Id };
             var metaCEOComments = new MetaField { FieldType = FieldType.LargeText, Name = "CEO Comments", TenantId = tenant.Id };
+            context.MetaFields.Add(metaCheckout);
+            context.MetaFields.Add(metaCheckoutDate);
+            context.MetaFields.Add(metaCheckoutBy);
+            context.MetaFields.Add(metaCheckoutByName);
             context.MetaFields.Add(metaLetterRef);
             context.MetaFields.Add(metaLetterOutRef);
             context.MetaFields.Add(metaLetterType);
@@ -596,6 +605,10 @@ namespace AMS.Data
 
 
             var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCheckout.Id, Value = "False" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCheckoutBy.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCheckoutByName.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCheckoutDate.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterRef.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterOutRef.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterType.Id, Value = "" });
@@ -628,7 +641,7 @@ namespace AMS.Data
             var dic = new Dictionary<int, AmsUser>();
             var userNames = new[] { "assistant", "ceo", "fin", "it", "hr" };
             var userDisplayNames = new[] { "Assistant", "CEO", "Finance Manager", "IT Manager", "HR Manager" };
-            for (int i = 1; i <= 4; i++)
+            for (int i = 1; i <= 5; i++)
             {
                 var user = new AmsUser { UserName = userNames[i-1], DisplayName = userDisplayNames[i-1], Email = $"{userNames[i-1]}@ams", PhoneNumber = $"+963-11-9999-{i}", TenantId = tenant.Id, Company = "AMS", JobTitle = "AMS User", PictureUrl = $"/images/avatars/{i}.jpg" };
                 user.NormalizedEmail = user.Email.ToUpper();

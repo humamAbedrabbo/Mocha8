@@ -81,17 +81,17 @@ namespace AMS.Controllers
 
                 post.ResponsiblePeople = ticket.Assignments.Select(x => new ResponsiblePerson(x.User.DisplayName)).ToList();
 
-                foreach (var task in ticket.TodoTasks)
-                {
-                    var t = new PostTask();
-                    t.Id = task.Id;
-                    t.IsDone = (task.Status == WorkStatus.Completed);
-                    t.ResponsilePerson = task.Assignments.Select(x => x.User.DisplayName).First();
-                    t.UserName = task.Assignments.Select(x => x.User.UserName).First();
-                    t.Comments = task.Description;
-                    t.SortId = 100;
-                    post.PostTasks.Add(t);
-                }
+                //foreach (var task in ticket.TodoTasks)
+                //{
+                //    var t = new PostTask();
+                //    t.Id = task.Id;
+                //    t.IsDone = (task.Status == WorkStatus.Completed);
+                //    t.ResponsilePerson = task.Assignments.Select(x => x.User.DisplayName).First();
+                //    t.UserName = task.Assignments.Select(x => x.User.UserName).First();
+                //    t.Comments = task.Description;
+                //    t.SortId = 100;
+                //    post.PostTasks.Add(t);
+                //}
                 posts.Add(post);
             }
 
@@ -136,29 +136,28 @@ namespace AMS.Controllers
 
                 post.ResponsiblePeople = ticket.Assignments.Select(x => new ResponsiblePerson(x.UserId.ToString())).ToList();
 
-                foreach (var task in ticket.TodoTasks)
+                post.ResponseTask = new ResponseTask();
+                if(ticket.TodoTasks.Count > 0)
                 {
-                    var t = new PostTask();
-                    t.Id = task.Id;
-                    t.IsDone = (task.Status == WorkStatus.Completed);
-                    t.ResponsilePerson = task.Assignments.Select(x => x.User.DisplayName).First();
-                    t.UserName = task.Assignments.Select(x => x.User.UserName).First();
-                    t.Comments = task.Description;
-                    t.SortId = 100;
-                    if(task.Summary.Contains("Outgoing"))
+                    var task = ticket.TodoTasks.First();
+                    post.ResponseTask = new ResponseTask();
+                    if(task.Status == WorkStatus.Pending)
                     {
-                        t.SortId = -1;
+                        post.ResponseTask.StartDate = null;
                     }
-                    post.PostTasks.Add(t);
+                    else
+                    {
+                        post.ResponseTask.StartDate = task.StartDate;
+                    }
+                    post.ResponseTask.IsLocked = ticket.FieldValues["Checkout"].BooleanValue;
+                    post.ResponseTask.CheckOutDate = ticket.FieldValues["CheckoutDate"].DateValue;
+                    post.ResponseTask.CheckOutBy = ticket.FieldValues["CheckoutBy"].Value;
+                    post.ResponseTask.CheckOutByName = ticket.FieldValues["CheckoutByName"].Value;
+                    post.ResponseTask.Id = task.Id;
+                    post.ResponseTask.IsDone = (task.Status == WorkStatus.Completed) ;
+                    post.ResponseTask.CompletionDate = task.CompletionDate;
+                    
                 }
-                var sorter = post.PostTasks.Where(x => x.UserName == user.UserName);
-                foreach (var s in sorter)
-                {
-                    if(s.SortId > 0)
-                        s.SortId = 0;
-                }
-
-                post.PostTasks = post.PostTasks.OrderBy(x => x.SortId).ToList();
             }
             else
             {
@@ -251,6 +250,30 @@ namespace AMS.Controllers
 
             if (post.Id == 0)
             {
+                // Checkout
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "Checkout").Id,
+                    BooleanValue = false
+                });
+                // CheckoutBy
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "CheckoutBy").Id,
+                    Value = null
+                });
+                // CheckoutByName
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "CheckoutByName").Id,
+                    Value = null
+                });
+                // CheckoutDate
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "CheckoutDate").Id,
+                    Value = null
+                });
                 // Letter Type
                 ticket.Values.Add(new MetaFieldValue
                 {
@@ -324,6 +347,10 @@ namespace AMS.Controllers
                 ticket.FieldValues["OutRef"].Value = post.LetterOutReference;
                 ticket.FieldValues["DayNo"].Value = post.DayNo.ToString();
                 ticket.FieldValues["MonthNo"].Value = post.MonthNo.ToString();
+                ticket.FieldValues["CheckoutBy"].Value = post.ResponseTask?.CheckOutBy;
+                ticket.FieldValues["CheckoutByName"].Value = post.ResponseTask?.CheckOutByName;
+                ticket.FieldValues["CheckoutDate"].DateValue = post.ResponseTask?.CheckOutDate;
+                ticket.FieldValues["Checkout"].BooleanValue = post.ResponseTask?.IsLocked ?? false;
             }
 
             // Change Status
@@ -423,6 +450,12 @@ namespace AMS.Controllers
                 ticket.CompletionDate = DateTime.Today;
                 ticket.Status = WorkStatus.Completed;
                 ticket.FieldValues["PostStatus"].Value = ((int)PostStatus.Completed).ToString();
+                var task = ticket.TodoTasks.FirstOrDefault();
+                if(task != null)
+                {
+                    task.Status = WorkStatus.Completed;
+                    task.CompletionDate = DateTime.Now;
+                }
                 var n = new Notification();
                 n.Message = $"{post.LetterReference} letter has been closed successfully";
                 n.EntityId = ticket.Id;
@@ -471,34 +504,44 @@ namespace AMS.Controllers
 
             if (submit == "Submit")
             {
-                var taskAssignments = ticket.TodoTasks.SelectMany(x => x.Assignments);
-                foreach (var a in ticket.Assignments)
+                var path = Path.Combine(env.WebRootPath, "files", "Template.docx");
+                var path2 = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
+                var letterResponsePath = Path.Combine(path2, "LetterResponse.docx");
+
+                if (!Directory.Exists(path2))
                 {
-                    if (a.UserId.HasValue && !taskAssignments.Any(x => x.UserId == a.UserId))
-                    {
-                        var task = new TodoTask();
-                        task.TicketId = ticket.Id;
-                        task.TodoTaskTypeId = 1;
-                        task.Summary = ticket.Summary;
-                        task.StartDate = DateTime.Today;
-                        task.DueDate = ticket.DueDate;
-                        task.Assignments.Add(new Assignment { UserId = a.UserId });
-                        task.Status = WorkStatus.Open;
-                        ticket.TodoTasks.Add(task);
-                        {
-                            var n = new Notification();
-                            n.Message = $"Attention about {ticket.FieldValues["Ref"].Value}";
-                            n.EntityId = ticket.Id;
-                            n.NotificationType = NotificationType.IncomingLetter;
-                            n.UserId = a.UserId.Value;
-                            n.DateCreated = DateTime.Now;
-                            context.Add(n);
-                        }
-                    }
+                    Directory.CreateDirectory(path2);
                 }
 
+                if(!System.IO.File.Exists(letterResponsePath))
+                {
+                    System.IO.File.Copy(path, letterResponsePath);
+                }
+
+
+
+                var taskAssignments = ticket.TodoTasks.SelectMany(x => x.Assignments);
+                var task = new TodoTask();
+                task.TicketId = ticket.Id;
+                task.TodoTaskTypeId = 1;
+                task.Summary = ticket.Summary;
+                task.StartDate = DateTime.Today;
+                task.DueDate = ticket.DueDate;
+                task.Status = WorkStatus.Pending;
+                foreach (var a in ticket.Assignments)
+                {
+                    var n = new Notification();
+                    n.Message = $"You are assigned to {ticket.FieldValues["Ref"].Value}";
+                    n.EntityId = ticket.Id;
+                    n.NotificationType = NotificationType.IncomingLetter;
+                    n.UserId = a.UserId.Value;
+                    n.DateCreated = DateTime.Now;
+                    context.Add(n);
+                }
+                ticket.TodoTasks.Add(task);
                 ticket.Status = WorkStatus.Open;
                 ticket.FieldValues["PostStatus"].Value = ((int)PostStatus.InProgress).ToString();
+                ticket.FieldValues["OutRef"].Value = ticket.FieldValues["Ref"].Value + "/OUT";
                 {
                     var n = new Notification();
                     n.Message = $"Attention about {ticket.FieldValues["Ref"].Value}";
@@ -516,17 +559,11 @@ namespace AMS.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> PostProgress(int ticketId, int taskId, string userName, string comments, string outRef, List<IFormFile> workFiles , string submit = "save")
+        public async Task<IActionResult> PostProgress(int ticketId, int taskId, string userName, List<IFormFile> workFiles, IFormFile mainFile, string submit = "save")
         {
             var user = await userService.GetCurrentUserAsync();
             var users = await userService.GetUsersAsync();
             var meta = await userService.GetMetaFieldsAsync();
-
-            PostTask postTask = new PostTask();
-            postTask.Comments = comments;
-            postTask.Id = taskId;
-            postTask.UserName = userName;
-            postTask.WorkFiles = workFiles;
 
             Ticket ticket = await context.Tickets
                     .Include(x => x.Client)
@@ -539,30 +576,65 @@ namespace AMS.Controllers
                     .Include(x => x.TodoTasks).ThenInclude(x => x.Assignments).ThenInclude(x => x.User)
                     .Where(x => x.Id == ticketId)
                     .FirstOrDefaultAsync();
-            
-            var task = ticket.TodoTasks.First(x => x.Id == postTask.Id);
 
-            task.Description = postTask.Comments;
-
-            if(!string.IsNullOrEmpty(outRef))
+            var task = ticket.TodoTasks.FirstOrDefault();
+            if(task != null)
             {
-                ticket.FieldValues["OutRef"].Value = outRef;
+                // Start Response
+                if(submit == "Start Response" && task.Status == WorkStatus.Pending)
+                {
+                    task.Status = WorkStatus.Open;
+                    ticket.FieldValues["Checkout"].BooleanValue = true;
+                    ticket.FieldValues["CheckoutBy"].Value = user.UserName;
+                    ticket.FieldValues["CheckoutByName"].Value = user.DisplayName;
+                    ticket.FieldValues["CheckoutDate"].DateValue = DateTime.Now;
+                    
+                }
+
+                // Edit Response
+                if(submit == "Edit")
+                {
+                    ticket.FieldValues["Checkout"].BooleanValue = true;
+                    ticket.FieldValues["CheckoutBy"].Value = user.UserName;
+                    ticket.FieldValues["CheckoutByName"].Value = user.DisplayName;
+                    ticket.FieldValues["CheckoutDate"].DateValue = DateTime.Now;
+                }
+
+                // Submit Document
+                if(submit == "Submit" && User.Identity.Name == ticket.FieldValues["CheckoutBy"].Value)
+                {
+                    var docPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
+                    if(mainFile != null && mainFile.Length > 0)
+                    {
+                        var filePath = Path.Combine(docPath, "LetterResponse.docx");
+
+                        using (var stream = System.IO.File.Create(filePath))
+                        {
+                            await mainFile.CopyToAsync(stream);
+                        }
+
+                        ticket.FieldValues["Checkout"].BooleanValue = false;
+                        ticket.FieldValues["CheckoutBy"].Value = null;
+                        ticket.FieldValues["CheckoutByName"].Value = null;
+                        ticket.FieldValues["CheckoutDate"].Value = null;
+                    }
+                }
             }
 
             await context.SaveChangesAsync();
 
             // Upload files
-            if (postTask.WorkFiles != null)
+            if (workFiles != null)
             {
                 // Upload files
-                long size = postTask.WorkFiles.Sum(f => f.Length);
+                long size = workFiles.Sum(f => f.Length);
                 var filesPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
                 if (!Directory.Exists(filesPath))
                 {
                     Directory.CreateDirectory(filesPath);
                 }
 
-                foreach (var formFile in postTask.WorkFiles)
+                foreach (var formFile in workFiles)
                 {
                     if (formFile.Length > 0)
                     {
@@ -590,20 +662,20 @@ namespace AMS.Controllers
                 await context.SaveChangesAsync();
             }
 
-            if (submit == "Submit")
-            {
-                task.Status = WorkStatus.Completed;
-                {
-                    var n = new Notification();
-                    n.Message = $"{user.DisplayName} has updated {ticket.FieldValues["Ref"].Value}";
-                    n.EntityId = ticket.Id;
-                    n.NotificationType = NotificationType.IncomingLetter;
-                    n.UserId = users.First(x => x.NormalizedUserName == "ASSISTANT").Id;
-                    n.DateCreated = DateTime.Now;
-                    context.Add(n);
-                }
-                await context.SaveChangesAsync();
-            }
+            //if (submit == "Submit")
+            //{
+            //    task.Status = WorkStatus.Completed;
+            //    {
+            //        var n = new Notification();
+            //        n.Message = $"{user.DisplayName} has updated {ticket.FieldValues["Ref"].Value}";
+            //        n.EntityId = ticket.Id;
+            //        n.NotificationType = NotificationType.IncomingLetter;
+            //        n.UserId = users.First(x => x.NormalizedUserName == "ASSISTANT").Id;
+            //        n.DateCreated = DateTime.Now;
+            //        context.Add(n);
+            //    }
+            //    await context.SaveChangesAsync();
+            //}
 
             return RedirectToAction(nameof(Post), new { id = ticket.Id });
         }
