@@ -560,6 +560,10 @@ namespace AMS.Data
             context.SaveChanges();
 
             
+            var metaLetterSent = new MetaField { FieldType = FieldType.Boolean, Name = "LetterSent", TenantId = tenant.Id };
+            var metaLetterSentOn = new MetaField { FieldType = FieldType.Date, Name = "LetterSentOn", TenantId = tenant.Id };
+            var metaLetterDelivered = new MetaField { FieldType = FieldType.Boolean, Name = "LetterDelivered", TenantId = tenant.Id };
+            var metaLetterDeliveredOn = new MetaField { FieldType = FieldType.Date, Name = "LetterDeliveredOn", TenantId = tenant.Id };
             var metaCheckoutDate = new MetaField { FieldType = FieldType.Date, Name = "CheckoutDate", TenantId = tenant.Id };
             var metaCheckout = new MetaField { FieldType = FieldType.Boolean, Name = "Checkout", TenantId = tenant.Id };
             var metaCheckoutBy = new MetaField { FieldType = FieldType.Text, Name = "CheckoutBy", TenantId = tenant.Id };
@@ -590,6 +594,10 @@ namespace AMS.Data
             context.MetaFields.Add(metaPostStatus);
             context.MetaFields.Add(metaCEOComments);
             context.MetaFields.Add(metaParentLetter);
+            context.MetaFields.Add(metaLetterSent);
+            context.MetaFields.Add(metaLetterSentOn);
+            context.MetaFields.Add(metaLetterDelivered);
+            context.MetaFields.Add(metaLetterDeliveredOn);
 
             //var fCeoApproval = new MetaField { FieldType = FieldType.Boolean, Name = "CEO Approval", TenantId = tenant.Id };
             //context.MetaFields.Add(fCeoApproval);
@@ -605,6 +613,10 @@ namespace AMS.Data
 
 
             var ttGeneral = new TicketType { Name = "Incoming Post", TenantId = tenant.Id, Code = "P-" };
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterSent.Id, Value = "False" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterSentOn.Id, Value = "" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterDelivered.Id, Value = "False" });
+            ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaLetterDeliveredOn.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCheckout.Id, Value = "False" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCheckoutBy.Id, Value = "" });
             ttGeneral.Values.Add(new MetaFieldValue { FieldId = metaCheckoutByName.Id, Value = "" });

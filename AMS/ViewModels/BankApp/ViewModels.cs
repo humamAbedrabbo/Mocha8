@@ -70,11 +70,22 @@ namespace AMS.ViewModels.BankApp
         public DateTime? DeliveryDate { get; set; }
         public IFormFile DeliveryNoteFile { get; set; }
 
-        public bool CanBeClosed => (Status == PostStatus.InProgress || Status == PostStatus.Incomplete) && (ResponseTask == null || !ResponseTask.IsLocked);
+        public bool CanBeClosed => (Status == PostStatus.InProgress || Status == PostStatus.Incomplete) && (ResponseTask != null && !ResponseTask.IsLocked) && LetterSentOn.HasValue && LetterDeliveredOn.HasValue;
         public bool IsOverdue => (Status != PostStatus.Completed && DateTime.Today >= Deadline);
         public int Delay => (int)(DateTime.Today - Deadline).TotalDays;
         public int Duration => CompletionDate.HasValue ? (int)(CompletionDate.Value - ReceivedOn).TotalDays : 0;
         public int TimeToDue => (DateTime.Today < Deadline) ? ((int)(Deadline - DateTime.Today).TotalDays) : 0;
+
+        public bool LetterSent { get; set; } = false;
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? LetterSentOn { get; set; }
+        public bool LetterDelivered { get; set; } = false;
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")] 
+        public DateTime? LetterDeliveredOn { get; set; }
 
         public ResponseTask ResponseTask { get; set; }
         public SelectList Senders { get; set; }

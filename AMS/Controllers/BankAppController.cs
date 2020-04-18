@@ -78,6 +78,10 @@ namespace AMS.Controllers
                 post.Deadline = ticket.DueDate;
                 post.Attachments = ticket.Attachements.ToList();
                 post.CompletionDate = ticket.CompletionDate;
+                post.LetterSent = ticket.FieldValues["LetterSent"].BooleanValue;
+                post.LetterSentOn = ticket.FieldValues["LetterSentOn"].DateValue;
+                post.LetterDelivered = ticket.FieldValues["LetterDelivered"].BooleanValue;
+                post.LetterDeliveredOn = ticket.FieldValues["LetterDeliveredOn"].DateValue;
 
                 post.ResponsiblePeople = ticket.Assignments.Select(x => new ResponsiblePerson(x.User.DisplayName)).ToList();
 
@@ -133,6 +137,10 @@ namespace AMS.Controllers
                 post.Deadline = ticket.DueDate;
                 post.Attachments = ticket.Attachements.ToList();
                 post.CompletionDate = ticket.CompletionDate;
+                post.LetterSent = ticket.FieldValues["LetterSent"].BooleanValue;
+                post.LetterSentOn = ticket.FieldValues["LetterSentOn"].DateValue;
+                post.LetterDelivered = ticket.FieldValues["LetterDelivered"].BooleanValue;
+                post.LetterDeliveredOn = ticket.FieldValues["LetterDeliveredOn"].DateValue;
 
                 post.ResponsiblePeople = ticket.Assignments.Select(x => new ResponsiblePerson(x.UserId.ToString())).ToList();
 
@@ -250,6 +258,30 @@ namespace AMS.Controllers
 
             if (post.Id == 0)
             {
+                // LetterSent
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "LetterSent").Id,
+                    BooleanValue = false
+                });
+                // LetterSentOn
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "LetterSentOn").Id,
+                    Value = null
+                });
+                // LetterDelivered
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "LetterDelivered").Id,
+                    BooleanValue = false
+                });
+                // LetterDeliveredOn
+                ticket.Values.Add(new MetaFieldValue
+                {
+                    FieldId = meta.First(x => x.Name == "LetterDeliveredOn").Id,
+                    Value = null
+                });
                 // Checkout
                 ticket.Values.Add(new MetaFieldValue
                 {
@@ -351,10 +383,14 @@ namespace AMS.Controllers
                 ticket.FieldValues["CheckoutByName"].Value = post.ResponseTask?.CheckOutByName;
                 ticket.FieldValues["CheckoutDate"].DateValue = post.ResponseTask?.CheckOutDate;
                 ticket.FieldValues["Checkout"].BooleanValue = post.ResponseTask?.IsLocked ?? false;
+                ticket.FieldValues["LetterSent"].BooleanValue = post.LetterSent;
+                ticket.FieldValues["LetterSentOn"].DateValue = post.LetterSentOn;
+                ticket.FieldValues["LetterDelivered"].BooleanValue = post.LetterDelivered;
+                ticket.FieldValues["LetterDeliveredOn"].DateValue = post.LetterDeliveredOn;
             }
 
             // Change Status
-            switch(post.Status)
+            switch (post.Status)
             {
                 case PostStatus.New:
                 case PostStatus.InProgress:
@@ -378,8 +414,21 @@ namespace AMS.Controllers
             }
             await context.SaveChangesAsync();
 
+
+            if(post.LetterSentOn.HasValue)
+            {
+                ticket.FieldValues["LetterSent"].BooleanValue = true;
+                ticket.FieldValues["LetterSentOn"].DateValue = post.LetterSentOn.Value;
+            }
+
+            if (post.LetterDeliveredOn.HasValue)
+            {
+                ticket.FieldValues["LetterDelivered"].BooleanValue = true;
+                ticket.FieldValues["LetterDeliveredOn"].DateValue = post.LetterDeliveredOn.Value;
+            }
+
             // Upload files
-            if(post.Files != null)
+            if (post.Files != null)
             {
                 // Upload files
                 long size = post.Files.Sum(f => f.Length);
@@ -544,7 +593,7 @@ namespace AMS.Controllers
                 ticket.FieldValues["OutRef"].Value = ticket.FieldValues["Ref"].Value + "/OUT";
                 {
                     var n = new Notification();
-                    n.Message = $"Attention about {ticket.FieldValues["Ref"].Value}";
+                    n.Message = $"CEO has assigned {ticket.FieldValues["Ref"].Value} to managers";
                     n.EntityId = ticket.Id;
                     n.NotificationType = NotificationType.IncomingLetter;
                     n.UserId = users.First(x => x.NormalizedUserName == "ASSISTANT").Id;

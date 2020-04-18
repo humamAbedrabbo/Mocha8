@@ -89,6 +89,12 @@
                             <th data-field="duration" data-visible="false" data-sortable="true" data-filter-control="input">
                                 Duration (days)
                             </th>
+                            <th data-field="letterSent" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Response Sent On
+                            </th>
+                            <th data-field="letterDelivered" data-visible="false" data-sortable="true" data-filter-control="input">
+                                Response Delivered On
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -165,6 +171,12 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Duration)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LetterSentOn)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LetterDeliveredOn)
                             </td>
                         </tr>
                         }

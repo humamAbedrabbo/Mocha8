@@ -151,6 +151,26 @@
                         </div>
                     </div>
 
+                    @if(Model.ResponseTask != null  && !Model.ResponseTask.IsLocked)
+                    {
+                <div class="row">
+                    <!-- LetterSentOn Input -->
+                    <div class="form-group col-3">
+                        <label asp-for="LetterSentOn" class="col-md-12 col-form-label">Response Sent On</label>
+                        <div class="col-md-12">
+                            <input asp-for="LetterSentOn" class="form-control" />
+                        </div>
+                    </div>
+                    <!-- LetterDeliveredOn Input -->
+                    <div class="form-group col-3">
+                        <label asp-for="LetterDeliveredOn" class="col-md-12 col-form-label">Response Delivered On</label>
+                        <div class="col-md-12">
+                            <input asp-for="LetterDeliveredOn" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                    }
+
                     @if (User.Identity.Name == "assistant")
                     {
                         <div class="row">
