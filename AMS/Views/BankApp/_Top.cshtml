@@ -32,7 +32,7 @@
                 <button type="button" class="btn btn-transparent p-0 float-right">
                     <i class="fa fa-arrow-up"></i>
                 </button>
-                <div class="text-value">@context.TodoTasks.Count(x => x.Summary == "Outgoing" && x.Status == WorkStatus.Completed)</div>
+                <div class="text-value">@context.Tickets.Count(x => x.Status == WorkStatus.Completed)</div>
                 <div>Outgoing Letters</div>
             </div>
             <div class="chart-wrapper mt-3 mx-3" style="height:50px;">

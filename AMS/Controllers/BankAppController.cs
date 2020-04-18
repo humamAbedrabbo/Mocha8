@@ -415,17 +415,17 @@ namespace AMS.Controllers
             await context.SaveChangesAsync();
 
 
-            if(post.LetterSentOn.HasValue)
-            {
-                ticket.FieldValues["LetterSent"].BooleanValue = true;
-                ticket.FieldValues["LetterSentOn"].DateValue = post.LetterSentOn.Value;
-            }
+            //if(post.LetterSentOn.HasValue)
+            //{
+            //    ticket.FieldValues["LetterSent"].BooleanValue = true;
+            //    ticket.FieldValues["LetterSentOn"].DateValue = post.LetterSentOn.Value;
+            //}
 
-            if (post.LetterDeliveredOn.HasValue)
-            {
-                ticket.FieldValues["LetterDelivered"].BooleanValue = true;
-                ticket.FieldValues["LetterDeliveredOn"].DateValue = post.LetterDeliveredOn.Value;
-            }
+            //if (post.LetterDeliveredOn.HasValue)
+            //{
+            //    ticket.FieldValues["LetterDelivered"].BooleanValue = true;
+            //    ticket.FieldValues["LetterDeliveredOn"].DateValue = post.LetterDeliveredOn.Value;
+            //}
 
             // Upload files
             if (post.Files != null)
@@ -641,7 +641,7 @@ namespace AMS.Controllers
                 }
 
                 // Edit Response
-                if(submit == "Edit")
+                if(submit == "Checkout Response")
                 {
                     ticket.FieldValues["Checkout"].BooleanValue = true;
                     ticket.FieldValues["CheckoutBy"].Value = user.UserName;
@@ -650,7 +650,7 @@ namespace AMS.Controllers
                 }
 
                 // Submit Document
-                if(submit == "Submit" && User.Identity.Name == ticket.FieldValues["CheckoutBy"].Value)
+                if(submit == "Checkin Response" && User.Identity.Name == ticket.FieldValues["CheckoutBy"].Value)
                 {
                     var docPath = Path.Combine(env.WebRootPath, "files", ticket.Id.ToString());
                     if(mainFile != null && mainFile.Length > 0)
@@ -729,6 +729,45 @@ namespace AMS.Controllers
             return RedirectToAction(nameof(Post), new { id = ticket.Id });
         }
 
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> PostMail(int ticketId, string LetterOutReference, DateTime? LetterSentOn, DateTime? LetterDeliveredOn)
+        {
+            var user = await userService.GetCurrentUserAsync();
+            var users = await userService.GetUsersAsync();
+            var meta = await userService.GetMetaFieldsAsync();
+
+            Ticket ticket = await context.Tickets
+                    .Include(x => x.Client)
+                    .Include(x => x.TicketType)
+                    .Include(x => x.Values).ThenInclude(x => x.Field)
+                    .Include(x => x.Attachements)
+                    .Include(x => x.Assignments).ThenInclude(x => x.User)
+                    .Include(x => x.TodoTasks)
+                    .Include(x => x.TodoTasks).ThenInclude(x => x.TodoTaskType)
+                    .Include(x => x.TodoTasks).ThenInclude(x => x.Assignments).ThenInclude(x => x.User)
+                    .Where(x => x.Id == ticketId)
+                    .FirstOrDefaultAsync();
+
+            if(LetterSentOn.HasValue)
+            {
+                ticket.FieldValues["LetterSent"].BooleanValue = true;
+                ticket.FieldValues["LetterSentOn"].DateValue = LetterSentOn;
+            }
+
+            if(LetterDeliveredOn.HasValue)
+            {
+                ticket.FieldValues["LetterDelivered"].BooleanValue = true;
+                ticket.FieldValues["LetterDeliveredOn"].DateValue = LetterSentOn;
+            }
+
+            if(!string.IsNullOrEmpty(LetterOutReference))
+                ticket.FieldValues["OutRef"].Value = LetterOutReference;
+
+            await context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Post), new { id = ticket.Id });
+        }
         public IActionResult Show()
         {
             return View();
